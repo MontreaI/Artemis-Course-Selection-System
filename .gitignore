@@ -8,7 +8,7 @@
 
 # production
 /build
-backend/dist
+/backend/dist
 
 # misc
 .DS_Store
