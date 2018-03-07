@@ -10,7 +10,7 @@
     "build": "npm run build-ts && npm run tslint",
     "serve": "node dist/server.js",
     "build-ts": "tsc",
-    "tslint": "tslint -c tslint.json -p tsconfig.json"
+    "tslint": "tslint --fix -c tslint.json -p tsconfig.json"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.8",
