@@ -19,7 +19,7 @@ class App extends React.Component<{}, State> {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3376/courses')
+    fetch('http://localhost:3376/test')
     .then(response => {
       if (response.ok) {
         return response.json();
