@@ -22,7 +22,7 @@ app.use(cors_1.default());
 cors_1.default({ origin: true });
 app.set('port', port);
 app.get('/courses', apiController.getApi);
-app.get('/test', apiController.getApi);
+app.get('/test', apiController.getYears);
 app.get('/', function (req, res, next) {
     global.console.log('got root request');
 });

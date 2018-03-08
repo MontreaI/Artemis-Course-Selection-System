@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Course } from '../types/course';
+import { Course } from '../types/interface';
 
 interface Props {
     courses: Course[];
