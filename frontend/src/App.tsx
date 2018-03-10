@@ -2,24 +2,28 @@ import * as React from 'react';
 
 import './App.css';
 import CourseList from './components/course-list';
-import { Course } from './types/course';
+import YearList from './components/course-selection-page';
+import { Year, Course } from './types/interface';
 
 const logo = require('./logo.svg');
 
 interface State {
   courses: Course[];
+  years: Year[];
 }
 
 class App extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      courses: []
+      courses: [],
+      years: []
     };
   }
 
   componentDidMount() {
-    fetch('http://localhost:3376/courses')
+      // @TODO: Need to turn this into a module to fetch
+    fetch('http://localhost:3376/test')
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -29,7 +33,7 @@ class App extends React.Component<{}, State> {
     })
     .then(data => {
       global.console.log('got stuff from server');
-      this.setState({courses: data});
+      this.setState({years: data});
     });
   }
 
@@ -40,7 +44,7 @@ class App extends React.Component<{}, State> {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <CourseList courses={this.state.courses} />
+        <YearList years={this.state.years} />
       </div>
     );
   }
