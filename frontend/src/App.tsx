@@ -3,6 +3,7 @@ import * as React from 'react';
 import './App.css';
 import CourseList from './components/course-list';
 import YearList from './components/course-selection-page';
+import SignUp from './components/SignUp'
 import { Year, Course } from './types/interface';
 
 const logo = require('./logo.svg');
