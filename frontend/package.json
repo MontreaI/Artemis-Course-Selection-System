@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+<<<<<<< 04c3eeb13ee6c35ac74cb5f8d1155fc8bc5740d4
     "@types/prop-types": "^15.5.2",
     "@types/react-router-dom": "^4.2.5",
     "material-ui": "^0.20.0",
     "prop-types": "^15.6.1",
+=======
+    "@okta/okta-signin-widget": "^2.3.0",
+>>>>>>> initial attempt, not working
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-dropdown": "^1.4.0",
