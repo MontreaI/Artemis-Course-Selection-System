@@ -1,14 +1,15 @@
 import * as React from 'react';
+import { User } from '../types/interface';
 
 interface Props {
-    years: Year[];
+    users: User[];
 }
 
 class SignUp extends React.Component<Props, {}> {
 	constructor(props){
 		super(props);
 		this.state= {
-			email:''
+			username:''
 			password:''
 		}
 	}
@@ -24,7 +25,7 @@ class SignUp extends React.Component<Props, {}> {
 						className="form-input"
 						type="text"
 						placeholder="username"
-						onChange={event => this.setState({email: event.target.value})}
+						onChange={event => this.setState({username: event.target.value})}
 					/>
 					<input
 						className="form-input"
