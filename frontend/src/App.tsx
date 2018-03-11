@@ -7,9 +7,8 @@ import { BrowserRouter, Route, Link } from 'react-router-dom';
 =======
 import CourseList from './components/course-list';
 import YearList from './components/course-selection-page';
-import SignUp from './components/SignUp'
+import SignUp from './components/signup';
 import { Year, Course } from './types/interface';
-
 const logo = require('./logo.svg');
 
 >>>>>>> initial attempt, not working

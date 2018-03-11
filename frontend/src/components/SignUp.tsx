@@ -1,6 +1,10 @@
 import * as React from 'react';
 
-class SignUp extends Component {
+interface Props {
+    years: Year[];
+}
+
+class SignUp extends React.Component<Props, {}> {
 	constructor(props){
 		super(props);
 		this.state= {
@@ -9,7 +13,7 @@ class SignUp extends Component {
 		}
 	}
 	signUp() {
-		console.log('this.state', this.state)
+		console.log('this.state', this.state);
 	}
 	render() {
 		return (
@@ -40,4 +44,5 @@ class SignUp extends Component {
 		)
 	}
 }
-export default SignUp
+
+export default SignUp;
