@@ -11,7 +11,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import customBaseTheme from 'material-ui/styles/baseThemes/customBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import FontIcon from 'material-ui/FontIcon';
@@ -67,7 +67,7 @@ class YearList extends React.Component<Props, {}> {
         return (
             <div>
             <head><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/></head>
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+            <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
                 <AppBar title="TypeWriter Scheduler" iconElementRight={<this.Logged />}/>
                 <Dropdown className="yeardropdown" options={this._storeInArray()} onChange={this._onSelect} value={undefined} placeholder="Years"/>
                 <RaisedButton label="Search" primary={true}/>
