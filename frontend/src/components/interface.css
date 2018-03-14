@@ -2,3 +2,10 @@
     margin: auto;
     width: 50%;
 } 
+
+.btmnavigation {
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.8);
+    position: fixed;
+    bottom: 0%;
+    width: 100%;
+}
