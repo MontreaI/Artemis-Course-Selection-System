@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import './App.css';
 import CourseList from './components/course-list';
-import YearList from './components/course-selection-page';
+import CourseSelectionLayout from './components/course-selection-layout';
 import { Year, Course } from './types/interface';
 
 interface State {
@@ -38,7 +38,8 @@ class App extends React.Component<{}, State> {
   render() {
     return (
       <div className="App">
-        <YearList years={this.state.years} />
+       <header><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /></header>
+        <CourseSelectionLayout years={this.state.years} />
       </div>
     );
   }
