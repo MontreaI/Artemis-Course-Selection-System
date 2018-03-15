@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { Year } from '../types/interface';
-import Dropdown, { Option } from 'react-dropdown';
-import 'react-dropdown/style.css';
 import './interface.css';
-
+import CourseSelectionForm from './course-selection-form';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
@@ -25,7 +22,7 @@ interface Props {
     years: Year[];
 }
 
-class CourseSelectionForm extends React.Component<Props, {}> {
+class CourseSelectionLayout extends React.Component<Props, {}> {
     state = {
         selectedIndex: 0,
     };
@@ -34,6 +31,7 @@ class CourseSelectionForm extends React.Component<Props, {}> {
         this.setState({ selectedIndex: index });
         global.console.log('Hello');
     }
+    
     Logged = (props: {}) => (
         <IconMenu
             {...props}
@@ -47,28 +45,12 @@ class CourseSelectionForm extends React.Component<Props, {}> {
             <MenuItem primaryText="Sign out" />
         </IconMenu>
     )
-    test() {
-        global.console.log('Hello');
-    }
-    _onSelect(option: Option): void {
-        global.console.log('You selected ' + option.label);
-    }
-
-    _storeInArray(): string[] {
-        let options: string[] = [];
-        for (var i = 0; i < this.props.years.length; i++) {
-            options[i] = this.props.years[i].value;
-        }
-        return options;
-    }
 
     render() {
         return (
             <div>
                 <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
-                    <AppBar title="AGENDUM" iconElementRight={<this.Logged />} />
-                    <Dropdown className="yeardropdown" options={this._storeInArray()} onChange={this._onSelect} value={undefined} placeholder="Years" />
-                    <RaisedButton label="Search" primary={true} />
+                    <AppBar title="Agendum" iconElementRight={<this.Logged />} />
                     <CourseSelectionForm years={this.props.years} />
                     <Paper zDepth={1}>
                         <div className="btmnavigation">
@@ -84,4 +66,4 @@ class CourseSelectionForm extends React.Component<Props, {}> {
     }
 }
 
-export default CourseSelectionForm;
+export default CourseSelectionLayout;
