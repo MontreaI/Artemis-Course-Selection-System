@@ -6,13 +6,14 @@ interface Props {
 }
 
 class SignUp extends React.Component<Props, {}> {
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             username: '',
             password: ''
         };
     }
+    
     render() {
         return (
             <div className="form-signup">
