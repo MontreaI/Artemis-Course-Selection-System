@@ -40,10 +40,30 @@ The year in the format yyyy (e.g. 2015). Alternately, the dynamic variable 'curr
 'registration' - will use the year of the current registration term.
 */
 exports.getTerms = (req, res) => {
-    global.console.log('TEST' + req.params.year);
     http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year, (response) => {
         if (response.statusCode != 200) {
-            console.error('Could not fetch from server');
+            console.error('Could not fetch terms from server');
+        }
+        else {
+            let jsonData = '';
+            response.on('data', (chunk) => { jsonData += chunk; });
+            response.on('end', () => {
+                try {
+                    res.write(jsonData);
+                    res.end();
+                }
+                catch (e) {
+                    console.error(e.message);
+                }
+            });
+        }
+    });
+};
+// Returns a list of courses or the current term
+exports.getDepartments = (req, res) => {
+    http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term, (response) => {
+        if (response.statusCode != 200) {
+            console.error('Could not fetch departments from server ' + req.params.year);
         }
         else {
             let jsonData = '';

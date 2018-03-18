@@ -11,3 +11,8 @@ export interface Term {
     text: string;
     value: string;
 }
+
+export interface Department {
+    text: string;
+    value: string;
+}

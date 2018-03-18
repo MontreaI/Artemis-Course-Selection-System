@@ -1,29 +1,19 @@
 import * as React from 'react';
-import { Year, Term } from '../types/interface';
+import { Year, Term, Department } from '../types/interface';
 import Dropdown, { Option } from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './course-selection-form.css';
 import RaisedButton from 'material-ui/RaisedButton';
 
-/*
-interface Props {
-    years: Year[];
-}
-*/
 interface State {
     selected: number;
     mYearSelected: string;
-    terms: Term[];
+    mTermSelected: string;
+    mDepartmentSelected: string;
+    terms: string[];
     years: string[];
+    departments: string[];
 }
-
-    // Member variables
-// var mYearSelected: string = 'School Years';
-
-var FetchType = Object.freeze({'TERM': 1});
-
-var mTermSelected: string;
-var mTermArray: string[] = [];
 
 class CourseSelectionForm extends React.Component<{}, State> {
     
@@ -32,17 +22,21 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state = {
           selected: 0,
           mYearSelected: 'School Years',
+          mTermSelected: 'Terms',
+          mDepartmentSelected: 'Department',
           terms: [],
           years: [],
+          departments: [],
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
         this.onSelectTerm = this.onSelectTerm.bind(this);
+        this.onSelectDepartment = this.onSelectDepartment.bind(this);
       }
       
       componentDidMount() {
         /*
-         Upon loading pafe, the years must be always fetched because the most basic query requires at least the year...
+         Upon loading page, the years must be always fetched because the most basic query requires at least the year...
          Furthermore, any query can be formed after getting the year.
          */
       fetch('http://localhost:3376/years')
@@ -55,7 +49,6 @@ class CourseSelectionForm extends React.Component<{}, State> {
       })
       .then(data => {
         global.console.log('Successfully fetched school years!');
-        // array1.map(x => x * 2);
         let options: string[] = [];
         for (var i = 0; i < data.length; i++) {
             options[i] = data[i].value;
@@ -65,46 +58,56 @@ class CourseSelectionForm extends React.Component<{}, State> {
     }
 
     fetchUrl(urlString: string) {
-        // global.console.log('d' + this.state.mYearSelected);
         return fetch(urlString)
         .then(response => {
           if (response.ok) {
             return response.json();
           } else {
-            global.console.log('Successfully fetched school terms no');
-            throw new Error('Could not fetch from server fuck');
+            global.console.log('Successfully fetched from server');
+            throw new Error('Could not fetch from server');
           }
         })
         .then(data => {
-            global.console.log('Successfully fetched school terms@ ' + typeof data);
-            // this.setState({terms: data});
             return data;
         });
     }
 
     onSelectYear(option: Option): void {
         this.setState({mYearSelected: option.label});
-        global.console.log('You selected year' + option.label + ':' + this.state.mYearSelected);
-        // let test =  this.fetchUrl('http://localhost:3376/terms/' + option.label);
-        this.setState({terms: this.fetchUrl('http://localhost:3376/terms/' + option.label)});
-        // global.console.log('length: ' + test.length);
-        // this.fetchUrl()
-        // this.mYearSelected = '' + option.label;
+        global.console.log('You selected year ' + option.label);
+        this.fetchUrl('http://localhost:3376/terms/' + option.label).then(data => {
+            let options: string[] = [];
+            for (var i = 0; i < data.length; i++) {
+                options[i] = data[i].value;
+            }
+            this.setState({terms: options});
+        });
     }
 
     onSelectTerm(option: Option): void {
-        // mYearSelected = option.label;
-        // this.setState({mTermSelected: option.label});
-        // global.console.log('You selected year' + mYearSelected);
-        // this.mYearSelected = '' + option.label;
+        this.setState({mTermSelected: option.label});
+        global.console.log('You selected term ' + option.label);
+        this.fetchUrl('http://localhost:3376/terms/' + this.state.mYearSelected + '/' + option.label).then(data => {
+            let options: string[] = [];
+            for (var i = 0; i < data.length; i++) {
+                options[i] = data[i].value;
+            }
+            this.setState({departments: options});
+        });
     }
 
-    storeTerms(): void {
-        if (this.state.terms != null) {
-            for (var i = 0; i < this.state.terms.length; i++) {
-                mTermArray[i] = this.state.terms[i].value;
+    onSelectDepartment(option: Option): void {
+        this.setState({mDepartmentSelected: option.label});
+        global.console.log('You selected department ' + option.label);
+        /*
+        this.fetchUrl('http://localhost:3376/terms/' + this.state.mYearSelected + '/' + option.label).then(data => {
+            let options: string[] = [];
+            for (var i = 0; i < data.length; i++) {
+                options[i] = data[i].value;
             }
-        }
+            this.setState({departments: options});
+        });
+        */
     }
 
     render() {
@@ -114,7 +117,10 @@ class CourseSelectionForm extends React.Component<{}, State> {
                     <Dropdown className="yeardropdown" options={this.state.years} onChange={this.onSelectYear} value={undefined} placeholder={this.state.mYearSelected}/>
                 </div>
                 <div id="term">
-                    <Dropdown className="termdropdown" options={mTermArray} onChange={this.onSelectTerm} value={undefined} placeholder="School Terms" />
+                    <Dropdown className="termdropdown" options={this.state.terms} onChange={this.onSelectTerm} value={undefined} placeholder={this.state.mTermSelected}/>
+                </div>
+                <div id="department">
+                    <Dropdown className="departmentdropdown" options={this.state.departments} onChange={this.onSelectDepartment} value={undefined} placeholder={this.state.mDepartmentSelected}/>
                 </div>
                 <RaisedButton label="Search" primary={true}/>
             </div>

@@ -1,6 +1,6 @@
 .searchform {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 0;
     right: 0;
     margin: auto;
@@ -10,11 +10,11 @@
     padding: 20px;
 }
 
-.yeardropdown, .termdropdown {
+.yeardropdown, .termdropdown, .departmentdropdown {
     padding: 10px;
     text-align: left;
     margin: auto;
-    width: 50%;
+    width: 80%;
 } 
 
 .btmnavigation {

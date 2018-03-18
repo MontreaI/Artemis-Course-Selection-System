@@ -42,10 +42,30 @@ The year in the format yyyy (e.g. 2015). Alternately, the dynamic variable 'curr
 'registration' - will use the year of the current registration term.
 */
 export let getTerms = (req: Request, res: Response) => {
-    global.console.log('TEST' + req.params.year);
     http.get('http://www.sfu.ca/bin/wcm/course-outlines?' +  req.params.year, (response) => {
         if (response.statusCode != 200) {
-            console.error('Could not fetch from server');
+            console.error('Could not fetch terms from server');
+        }
+        else {
+            let jsonData = '';
+            response.on('data', (chunk) => { jsonData += chunk; });
+            response.on('end', () => {
+                try {
+                    res.write(jsonData);
+                    res.end();
+                } catch (e) {
+                    console.error(e.message);
+                }
+            });
+        }
+    });
+};
+
+// Returns a list of courses or the current term
+export let getDepartments = (req: Request, res: Response) => {
+    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' +  req.params.year + '/' + req.params.term, (response) => {
+        if (response.statusCode != 200) {
+            console.error('Could not fetch departments from server ' + req.params.year);
         }
         else {
             let jsonData = '';
@@ -63,12 +83,11 @@ export let getTerms = (req: Request, res: Response) => {
 };
 
 /*
-
 // Returns a list of course numbers that includes the course title for the given department.
-export let getCourseNumbers = (req: Request, res: Response, year: string, term: string, department: string) => {
-    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + year + '/' + term + '/' + department, (response) => {
+export let getCourseNumbers = (req: Request, res: Response) => {
+    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department, (response) => {
         if (response.statusCode != 200) {
-            throw new Error('Could not fetch from server');
+            throw new Error('Could not fetch course numbersfrom server');
         }
         else {
             let jsonData = '';

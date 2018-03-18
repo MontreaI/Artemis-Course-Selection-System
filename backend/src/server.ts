@@ -15,6 +15,7 @@ cors({origin: true});
 app.set('port', port);
 app.get('/years', apiController.getYears);
 app.get('/terms/:year', apiController.getTerms);
+app.get('/terms/:year/:term', apiController.getDepartments);
 
 app.get('/', function(req, res, next) {
     global.console.log('got root request');
