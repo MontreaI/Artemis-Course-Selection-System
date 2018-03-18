@@ -64,9 +64,9 @@ class CourseSelectionForm extends React.Component<{}, State> {
       });
     }
 
-    fetchUrl(urlString: string): void {
-        global.console.log('d' + this.state.mYearSelected);
-        fetch(urlString + this.state.mYearSelected)
+    fetchUrl(urlString: string) {
+        // global.console.log('d' + this.state.mYearSelected);
+        return fetch(urlString)
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -76,15 +76,18 @@ class CourseSelectionForm extends React.Component<{}, State> {
           }
         })
         .then(data => {
-            global.console.log('Successfully fetched school terms@ ');
-            this.setState({terms: data});
+            global.console.log('Successfully fetched school terms@ ' + typeof data);
+            // this.setState({terms: data});
+            return data;
         });
     }
 
     onSelectYear(option: Option): void {
         this.setState({mYearSelected: option.label});
         global.console.log('You selected year' + option.label + ':' + this.state.mYearSelected);
-        // this.fetchUrl('http://localhost:3376/terms/');
+        // let test =  this.fetchUrl('http://localhost:3376/terms/' + option.label);
+        this.setState({terms: this.fetchUrl('http://localhost:3376/terms/' + option.label)});
+        // global.console.log('length: ' + test.length);
         // this.fetchUrl()
         // this.mYearSelected = '' + option.label;
     }
