@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Year } from '../types/interface';
-import './interface.css';
+import './course-selection-layout.css';
 import CourseSelectionForm from './course-selection-form';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -18,20 +18,24 @@ import Paper from 'material-ui/Paper';
 const eventIcon = <FontIcon className="material-icons">event</FontIcon>;
 const profileIcon = <FontIcon className="material-icons">face</FontIcon>;
 
-interface Props {
-    years: Year[];
-}
+interface State {
+    selectedIndex: number;
+  }
 
-class CourseSelectionLayout extends React.Component<Props, {}> {
-    state = {
-        selectedIndex: 0,
-    };
+class CourseSelectionLayout extends React.Component<{}, State> {
 
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+          selectedIndex: 0
+        };
+      }
+    
     select(index: number) {
         this.setState({ selectedIndex: index });
         global.console.log('Hello');
     }
-    
+
     Logged = (props: {}) => (
         <IconMenu
             {...props}
@@ -48,10 +52,10 @@ class CourseSelectionLayout extends React.Component<Props, {}> {
 
     render() {
         return (
-            <div>
+            <div className="courselayout">
                 <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
-                    <AppBar title="Agendum" iconElementRight={<this.Logged />} />
-                    <CourseSelectionForm years={this.props.years} />
+                    <AppBar title="Kalender" iconElementRight={<this.Logged />} />
+                    <CourseSelectionForm/>
                     <Paper zDepth={1}>
                         <div className="btmnavigation">
                             <BottomNavigation selectedIndex={this.state.selectedIndex}>

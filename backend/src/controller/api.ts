@@ -10,6 +10,8 @@ export let getApi = (req: Request, res: Response) => {
     res.end();
 };
 
+
+
 /*
 GET /bin/wcm/course-outlines
 REST wrapper for the Course Outlines data. Returns a list of years.
@@ -39,16 +41,11 @@ The year in the format yyyy (e.g. 2015). Alternately, the dynamic variable 'curr
 'current' - will use the year of the current active term
 'registration' - will use the year of the current registration term.
 */
-export let getTerms = (req: Request, res: Response, year: string, registration?: string) => {
-    if (registration != undefined) {
-        registration = '';
-    }
-    else {
-        registration = '/' + registration;
-    }
-    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + year + registration, (response) => {
+export let getTerms = (req: Request, res: Response) => {
+    global.console.log('TEST' + req.params.year);
+    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' +  req.params.year, (response) => {
         if (response.statusCode != 200) {
-            throw new Error('Could not fetch from server');
+            console.error('Could not fetch from server');
         }
         else {
             let jsonData = '';
@@ -64,6 +61,8 @@ export let getTerms = (req: Request, res: Response, year: string, registration?:
         }
     });
 };
+
+/*
 
 // Returns a list of course numbers that includes the course title for the given department.
 export let getCourseNumbers = (req: Request, res: Response, year: string, term: string, department: string) => {
@@ -127,3 +126,5 @@ export let getCourseOutline = (req: Request, res: Response, year: string, term: 
         }
     });
 };
+
+*/
