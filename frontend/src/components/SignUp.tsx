@@ -5,17 +5,6 @@ interface Props {
     users: User[];
 }
 
-class UsernameValidator {
-    public username: string;
-    constructor(username: string) {    
-        // You can add any validation you want here.
-        if (!username) {
-             throw new Error('Enter a username!');
-        } 
-        this.username = username; 
-    }    
-}
-
 class SignUp extends React.Component<Props, {username: string, password: string}> {
     constructor(props: Props) {
         super(props);
