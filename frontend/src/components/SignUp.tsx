@@ -5,7 +5,18 @@ interface Props {
     users: User[];
 }
 
-class SignUp extends React.Component<Props, {}> {
+class UsernameValidator {
+    public username: string;
+    constructor(username: string) {    
+        // You can add any validation you want here.
+        if (!username) {
+             throw new Error('Enter a username!');
+        } 
+        this.username = username; 
+    }    
+}
+
+class SignUp extends React.Component<Props, {username: string, password: string}> {
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -13,7 +24,16 @@ class SignUp extends React.Component<Props, {}> {
             password: ''
         };
     }
-    
+    validateUsername() {
+        if (!this.state.username) {
+            throw new Error('Enter Username');
+        }
+    }
+    validatePassword() {
+        if (!this.state.password) {
+            throw new Error('Enter Password');
+        }
+    }   
     render() {
         return (
             <div className="form-signup">
@@ -40,7 +60,7 @@ class SignUp extends React.Component<Props, {}> {
                     </button>
                 </div>
             </div>
-        )
+        );
     }
 }
 
