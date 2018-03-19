@@ -63,7 +63,7 @@ exports.getTerms = (req, res) => {
 exports.getDepartments = (req, res) => {
     http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term, (response) => {
         if (response.statusCode != 200) {
-            console.error('Could not fetch departments from server ' + req.params.year);
+            console.error('Could not fetch departments from server');
         }
         else {
             let jsonData = '';
