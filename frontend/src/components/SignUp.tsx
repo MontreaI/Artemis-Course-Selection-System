@@ -22,6 +22,9 @@ class SignUp extends React.Component<Props, {username: string, password: string}
         if (!this.state.password) {
             throw new Error('Enter Password');
         }
+    }
+    register() {
+        alert('Email address is ' + this.state.username + ' Password is ' + this.state.password);            
     }   
     render() {
         return (
@@ -43,7 +46,7 @@ class SignUp extends React.Component<Props, {username: string, password: string}
                     <button
                         className="btn-enter"
                         type="button"
-                        onClick={() => this.SignUp()}
+                        onClick={() => this.register()}
                     >
                         Register
                     </button>
