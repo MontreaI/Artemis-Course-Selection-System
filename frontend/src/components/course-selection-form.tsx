@@ -39,22 +39,9 @@ class CourseSelectionForm extends React.Component<{}, State> {
          Upon loading page, the years must be always fetched because the most basic query requires at least the year...
          Furthermore, any query can be formed after getting the year.
          */
-      fetch('http://localhost:3376/years')
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Could not fetch from server');
-        }
-      })
-      .then(data => {
-        global.console.log('Successfully fetched school years!');
-        let options: string[] = [];
-        for (var i = 0; i < data.length; i++) {
-            options[i] = data[i].value;
-        }
-        this.setState({years: options});
-      });
+        this.fetchUrl('http://localhost:3376/years').then((data: string[]) => {
+            this.setState({years: data});
+        });
     }
 
     fetchUrl(urlString: string) {
@@ -87,12 +74,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
     onSelectTerm(option: Option): void {
         this.setState({mTermSelected: option.label});
         global.console.log('You selected term ' + option.label);
-        this.fetchUrl('http://localhost:3376/terms/' + this.state.mYearSelected + '/' + option.label).then(data => {
-            let options: string[] = [];
-            for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].value;
-            }
-            this.setState({departments: options});
+        this.fetchUrl('http://localhost:3376/terms/' + this.state.mYearSelected + '/' + option.label).then((data: string[]) => {
+            this.setState({departments: data});
         });
     }
 
