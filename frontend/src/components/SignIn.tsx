@@ -13,7 +13,9 @@ class SignIn extends React.Component<Props, {username: string, password: string}
             password: ''
         };
     }
-    
+    authenticate() {
+        alert('Email address is ' + this.state.username + ' Password is ' + this.state.password);            
+    }
     render() {
         return (
             <div className="form-signin">
@@ -34,7 +36,7 @@ class SignIn extends React.Component<Props, {username: string, password: string}
                     <button
                         className="btn-enter"
                         type="button"
-                        onClick={() => this.Authenticate()}
+                        onClick={() => this.authenticate()}
                     >
                         LogIn
                     </button>
