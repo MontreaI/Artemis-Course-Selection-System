@@ -1,6 +1,7 @@
 .searchform {
-    position: absolute;
-    top: 30%;
+    position: relative; 
+    transform: translatey(50%);
+    top: 50%;
     left: 0;
     right: 0;
     margin: auto;
@@ -31,8 +32,8 @@ label {
 
 #buttons {
     margin: 3%;
-    position: absolute;
-    bottom: 0%;
+    position: relative;
+    top: 10%;
     right: 0%;
 }
 
