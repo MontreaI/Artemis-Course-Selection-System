@@ -1,10 +1,11 @@
 .searchform {
     position: absolute;
-    top: 40%;
+    top: 30%;
     left: 0;
     right: 0;
     margin: auto;
-    width: 50%;
+    height: 40%;
+    width: 35%;
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 20px;
@@ -13,13 +14,28 @@
 .yeardropdown, .termdropdown, .departmentdropdown {
     padding: 10px;
     text-align: left;
-    margin: auto;
-    width: 80%;
+    width: 95%;
 } 
+
+label {
+    margin-left: 3%;
+    float: left;
+}
 
 .btmnavigation {
     box-shadow: 0px 2px 4px rgba(0,0,0,0.8);
     position: fixed;
     bottom: 0%;
     width: 100%;
+}
+
+#buttons {
+    margin: 3%;
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+}
+
+.searchbtn {
+    margin: 5px;
 }

@@ -21,8 +21,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
         super(props);
         this.state = {
           selected: 0,
-          mYearSelected: 'School Years',
-          mTermSelected: 'Terms',
+          mYearSelected: 'School Year',
+          mTermSelected: 'Term',
           mDepartmentSelected: 'Department',
           terms: [],
           years: [],
@@ -62,12 +62,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
     onSelectYear(option: Option): void {
         this.setState({mYearSelected: option.label});
         global.console.log('You selected year ' + option.label);
-        this.fetchUrl('http://localhost:3376/terms/' + option.label).then(data => {
-            let options: string[] = [];
-            for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].value;
-            }
-            this.setState({terms: options});
+        this.fetchUrl('http://localhost:3376/terms/' + option.label).then((data: string[]) => {
+            this.setState({terms: data});
         });
     }
 
@@ -96,16 +92,22 @@ class CourseSelectionForm extends React.Component<{}, State> {
     render() {
         return (
             <div className="searchform">
-                <div id="year">
+                <br/><div id="year">
+                    <label>Year</label><br/>
                     <Dropdown className="yeardropdown" options={this.state.years} onChange={this.onSelectYear} value={undefined} placeholder={this.state.mYearSelected}/>
                 </div>
                 <div id="term">
+                    <label>Term</label><br/>
                     <Dropdown className="termdropdown" options={this.state.terms} onChange={this.onSelectTerm} value={undefined} placeholder={this.state.mTermSelected}/>
                 </div>
                 <div id="department">
+                    <label>Department</label><br/>
                     <Dropdown className="departmentdropdown" options={this.state.departments} onChange={this.onSelectDepartment} value={undefined} placeholder={this.state.mDepartmentSelected}/>
                 </div>
-                <RaisedButton label="Search" primary={true}/>
+                <div id="buttons">
+                <RaisedButton className="clearbtn" label="Clear" primary={true}/>
+                <RaisedButton className="searchbtn" label="Search" primary={true}/>
+                </div>
             </div>
         );
     }
