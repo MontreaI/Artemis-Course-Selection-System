@@ -18,9 +18,15 @@ export interface Department {
     value: string;
 }
 
+<<<<<<< dca8490faa26afd10da91519491f99da7f15e801
 export interface User {
     username: string;
     password: string;
 =======
 >>>>>>> Merged individual pages into individual buttons + Cleanup
+=======
+export interface Users {
+    username: string;
+    password: string;
+>>>>>>> added routing capabilities
 }

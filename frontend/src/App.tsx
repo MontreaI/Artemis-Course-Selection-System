@@ -6,6 +6,7 @@ import { Route, Link, BrowserRouter } from 'react-router-dom';
 import './App.css';
 <<<<<<< 04c3eeb13ee6c35ac74cb5f8d1155fc8bc5740d4
 import CourseSelectionLayout from './components/course-selection-layout';
+<<<<<<< dca8490faa26afd10da91519491f99da7f15e801
 import CourseInformationForm from './components/course-information-form';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 =======
@@ -13,9 +14,13 @@ import CourseList from './components/course-list';
 import YearList from './components/course-selection-page';
 import { Year, Course } from './types/interface';
 const logo = require('./logo.svg');
+=======
+import SignIn from './components/SignIn';
+>>>>>>> added routing capabilities
 
 >>>>>>> initial attempt, not working
 interface State {
+<<<<<<< dca8490faa26afd10da91519491f99da7f15e801
 <<<<<<< edab547602d0c348f2625bf303116c6c0b21f238
 }
 
@@ -28,41 +33,24 @@ class App extends React.Component<{}, State> {
   years: Year[];
   username: string;
   password: string;
+=======
+>>>>>>> added routing capabilities
 }
 
 class App extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
     this.state = {
+<<<<<<< dca8490faa26afd10da91519491f99da7f15e801
       showSignIn: false,
       showSignUp: false,
       courses: [],
       years: [],
       username: '',
       password: ''
+=======
+>>>>>>> added routing capabilities
     };
-  }
-  
-  authenticate() {
-    alert('Your username is ' + this.state.username + ' Password is ' + this.state.password);
-    this.setState({showSignIn: false});                
-  }
-
-  validateUsername() {
-    if (!this.state.username) {
-        throw new Error('Enter Username');
-    }
-  }
-  
-  validatePassword() {
-    if (!this.state.password) {
-        throw new Error('Enter Password');
-    }
-  }
-
-  register() {
-    alert('You are now registered as ' + + this.state.username + ' Password is ' + this.state.password);
-    this.setState({showSignIn: false});          
   }
 
   componentDidMount() {
@@ -83,9 +71,9 @@ class App extends React.Component<{}, State> {
 
 >>>>>>> Merged individual pages into individual buttons + Cleanup
   render() {
-    const { showSignIn, showSignUp } = this.state;
     return (
       <div className="App">
+<<<<<<< dca8490faa26afd10da91519491f99da7f15e801
 <<<<<<< edab547602d0c348f2625bf303116c6c0b21f238
        <header><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /></header>
         <CourseSelectionLayout/>
@@ -156,6 +144,12 @@ class App extends React.Component<{}, State> {
             }
         </div> 
 >>>>>>> Merged individual pages into individual buttons + Cleanup
+=======
+        <header>
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        </header>
+        <SignIn/>
+>>>>>>> added routing capabilities
       </div>
     );
   }
