@@ -3,9 +3,16 @@ import * as ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
+import { BrowserRouter, Route } from 'react-router-dom';
+import CourseInformationForm from './components/course-information-form';
 
 ReactDOM.render(
-  <App />,
+  <BrowserRouter>
+    <div>
+      <Route exact={true} path="/" component={App} />
+      <Route path="/course-info" component={CourseInformationForm} />
+    </div>
+  </BrowserRouter>,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();
