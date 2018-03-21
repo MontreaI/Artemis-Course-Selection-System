@@ -1,16 +1,10 @@
 import * as React from 'react';
-import { Route, Link, BrowserRouter } from 'react-router-dom';
 import './App.css';
-import CourseList from './components/course-list';
-import YearList from './components/course-selection-page';
-import { Year, Course } from './types/interface';
-const logo = require('./logo.svg');
+import CourseSelectionLayout from './components/course-selection-layout';
 
 interface State {
   showSignIn: boolean;
   showSignUp: boolean;
-  courses: Course[];
-  years: Year[];
   username: string;
   password: string;
 }
@@ -21,8 +15,6 @@ class App extends React.Component<{}, State> {
     this.state = {
       showSignIn: false,
       showSignUp: false,
-      courses: [],
-      years: [],
       username: '',
       password: ''
     };
@@ -50,31 +42,14 @@ class App extends React.Component<{}, State> {
     this.setState({showSignIn: false});          
   }
 
-  componentDidMount() {
-      // @TODO: Need to turn this into a module to fetch
-    fetch('http://localhost:3376/test')
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Could not fetch from server');
-      }
-    })
-    .then(data => {
-      global.console.log('got stuff from server');
-      this.setState({years: data});
-    });
-  }
-
   render() {
     const { showSignIn, showSignUp } = this.state;
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+        <header>
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         </header>
-        <YearList years={this.state.years} />
+        <CourseSelectionLayout/>
         <div>
           <button onClick={() => this.setState({ showSignIn: !showSignIn, showSignUp: false })}>Log In</button>
             { showSignIn
