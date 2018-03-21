@@ -21,8 +21,9 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use(cors_1.default());
 cors_1.default({ origin: true });
 app.set('port', port);
-app.get('/courses', apiController.getApi);
-app.get('/test', apiController.getYears);
+app.get('/years', apiController.getYears);
+app.get('/terms/:year', apiController.getTerms);
+app.get('/terms/:year/:term', apiController.getDepartments);
 app.get('/', function (req, res, next) {
     global.console.log('got root request');
 });
