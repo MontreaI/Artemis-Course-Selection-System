@@ -14,6 +14,10 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-dropdown": "^1.4.0",
+<<<<<<< edab547602d0c348f2625bf303116c6c0b21f238
+=======
+    "react-router": "^4.2.0",
+>>>>>>> Merged individual pages into individual buttons + Cleanup
     "react-router-dom": "^4.2.2",
     "react-scripts-ts": "2.13.0"
   },
@@ -29,6 +33,7 @@
     "@types/node": "^9.4.6",
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
+    "@types/react-router-dom": "^4.2.5",
     "typescript": "^2.7.2"
   }
 }
