@@ -13,6 +13,14 @@ exports.getApi = (req, res) => {
 /*
 GET /bin/wcm/course-outlines
 REST wrapper for the Course Outlines data. Returns a list of years.
+
+data structure:
+
+[
+  {"value":"2014"},
+  {"value":"2015"}
+]
+
 */
 exports.getYears = (req, res) => {
     http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines', (response) => {
@@ -38,6 +46,15 @@ exports.getYears = (req, res) => {
 The year in the format yyyy (e.g. 2015). Alternately, the dynamic variable 'current' and 'registration can be used.
 'current' - will use the year of the current active term
 'registration' - will use the year of the current registration term.
+
+data structure:
+
+[
+  {value: "spring"},
+  {value: "summer"},
+  {value: "fall"},
+]
+
 */
 exports.getTerms = (req, res) => {
     http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year, (response) => {
@@ -59,7 +76,22 @@ exports.getTerms = (req, res) => {
         }
     });
 };
-// Returns a list of courses or the current term
+/* Returns a list of courses or the current term
+
+data structure:
+
+[
+  {
+    text: "ALS",
+    value: "als"
+  },
+  {
+    text: "ARCH",
+    value: "arch"
+  },
+]
+
+*/
 exports.getDepartments = (req, res) => {
     http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term, (response) => {
         if (response.statusCode != 200) {
