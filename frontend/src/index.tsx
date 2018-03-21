@@ -7,6 +7,7 @@ import CourseSelectionLayout from './components/course-selection-layout';
 import SignUp from './components/SignUp';
 import './index.css';
 import CourseInformationForm from './components/course-information-form';
+import CourseOutline from './components/course-outline/course-outline';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -15,6 +16,7 @@ ReactDOM.render(
       <Route path="/course-info" component={CourseInformationForm} />
       <Route path="/course-selection-layout" component={CourseSelectionLayout} />
       <Route path="/signup" component={SignUp} />
+      <Route path="/course-outline" component={CourseOutline} />
     </div>
   </BrowserRouter>,
   document.getElementById('root') as HTMLElement
