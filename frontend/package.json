@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/react-router": "^4.0.23",
+    "orgchart": "^2.1.1",
     "@types/prop-types": "^15.5.2",
     "@types/react-router": "^4.0.23",
     "@types/react-router-dom": "^4.2.5",
