@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Tree from 'react-d3-tree';
 import './course-outline.css';
+import Course from './course';
 
 interface State {
 }
@@ -8,26 +9,20 @@ interface State {
 const myTreeData = [
     {
       name: 'CMPT255',
-      attributes: {
-      },
       children: [
-        {
-          name: 'CMPT105',
-          children: [
-              {
-                name: 'CMPT107',
-              },
-              {
-                name: 'CMPT107',
-              }
-          ]
-        },
         {
           name: 'CMPT106',
         },
       ],
     },
-  ];
+];
+
+const course = new Course('CMPT70');
+course.addChildren(new Course('CMPT106'));
+course.addChildren(new Course('CMPT777'));
+const couseData = [course];
+global.console.log(couseData);
+global.console.log(myTreeData);
 
 const svgSquare = {
     shape: 'rect',
@@ -104,14 +99,14 @@ class CourseOutline extends React.Component<{}, State> {
         global.console.log(this.props);
     }
 
-    alertMe() {
-        global.console.log(Node.name);
+    alertMe(node: Course) {
+        global.console.log(node.name);
     }
 
     render() {
         return (
             <div className="treeWrapper" >
-                <Tree data={myTreeData} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
+                <Tree data={couseData} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
             </div>
         );
         
