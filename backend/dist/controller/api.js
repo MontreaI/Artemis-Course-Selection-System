@@ -112,4 +112,92 @@ exports.getDepartments = (req, res) => {
         }
     });
 };
+/* Returns a list of course numbers that includes the course title for the given department.
+
+data structure:
+
+[
+   {
+      text:"110",
+      value:"110",
+      title:"Introductory Chemistry"
+   },
+]
+
+*/
+exports.getCourseNumbers = (req, res) => {
+    http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department, (response) => {
+        if (response.statusCode != 200) {
+            throw new Error('Could not fetch course numbersfrom server');
+        }
+        else {
+            let jsonData = '';
+            response.on('data', (chunk) => { jsonData += chunk; });
+            response.on('end', () => {
+                try {
+                    res.write(jsonData);
+                    res.end();
+                }
+                catch (e) {
+                    console.error(e.message);
+                }
+            });
+        }
+    });
+};
+/* Returns a list of course sections for the given course number.
+
+[
+  {
+    text: "C100",
+    value: "c100",
+    title: "Genetics",
+    classType: "e",
+    sectionCode: "SEC",
+    associatedClass: "100"
+  },
+]
+
+*/
+exports.getCourseSections = (req, res) => {
+    http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department + '/' + req.params.courseNumber, (response) => {
+        if (response.statusCode != 200) {
+            throw new Error('Could not fetch from server');
+        }
+        else {
+            let jsonData = '';
+            response.on('data', (chunk) => { jsonData += chunk; });
+            response.on('end', () => {
+                try {
+                    res.write(jsonData);
+                    res.end();
+                }
+                catch (e) {
+                    console.error(e.message);
+                }
+            });
+        }
+    });
+};
+// Returns the content details of a specific course outline.
+exports.getCourseOutline = (req, res) => {
+    http_1.default.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department + '/' + req.params.courseNumber + '/' + req.params.courseSection, (response) => {
+        if (response.statusCode != 200) {
+            throw new Error('Could not fetch from server');
+        }
+        else {
+            let jsonData = '';
+            response.on('data', (chunk) => { jsonData += chunk; });
+            response.on('end', () => {
+                try {
+                    res.write(jsonData);
+                    res.end();
+                }
+                catch (e) {
+                    console.error(e.message);
+                }
+            });
+        }
+    });
+};
 //# sourceMappingURL=api.js.map

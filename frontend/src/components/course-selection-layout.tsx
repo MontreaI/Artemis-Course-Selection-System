@@ -17,6 +17,7 @@ import Paper from 'material-ui/Paper';
 
 const eventIcon = <FontIcon className="material-icons">event</FontIcon>;
 const profileIcon = <FontIcon className="material-icons">face</FontIcon>;
+const courseSearchIcon = <FontIcon className="material-icons">find_in_page</FontIcon>;
 
 interface State {
     selectedIndex: number;
@@ -59,8 +60,9 @@ class CourseSelectionLayout extends React.Component<{}, State> {
                     <Paper zDepth={1}>
                         <div className="btmnavigation">
                             <BottomNavigation selectedIndex={this.state.selectedIndex}>
-                                <BottomNavigationItem label="Calendar" icon={eventIcon} onClick={() => this.select(0)} />
-                                <BottomNavigationItem label="Profile" icon={profileIcon} onClick={() => this.select(1)} />
+                                <BottomNavigationItem label="Course Search" icon={courseSearchIcon} onClick={() => this.select(0)} />
+                                <BottomNavigationItem label="Timetable" icon={eventIcon} onClick={() => this.select(1)} />
+                                <BottomNavigationItem label="My Profile" icon={profileIcon} onClick={() => this.select(2)} />
                             </BottomNavigation>
                         </div>
                     </Paper>

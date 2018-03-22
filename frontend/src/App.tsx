@@ -1,7 +1,8 @@
 import * as React from 'react';
 import './App.css';
 import CourseSelectionLayout from './components/course-selection-layout';
-
+import CourseInformationForm from './components/course-information-form';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 interface State {
 }
 

@@ -114,8 +114,19 @@ export let getDepartments = (req: Request, res: Response) => {
     });
 };
 
-/*
-// Returns a list of course numbers that includes the course title for the given department.
+/* Returns a list of course numbers that includes the course title for the given department.
+
+data structure:
+
+[
+   {
+      text:"110",
+      value:"110",
+      title:"Introductory Chemistry"
+   },
+]
+
+*/
 export let getCourseNumbers = (req: Request, res: Response) => {
     http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department, (response) => {
         if (response.statusCode != 200) {
@@ -136,46 +147,59 @@ export let getCourseNumbers = (req: Request, res: Response) => {
     });
 };
 
-// Returns a list of course sections for the given course number.
-export let getCourseSections = (req: Request, res: Response, year: string, term: string, department: string, courseNumber: string) => {
-    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + year + '/' + term + '/' + department + '/' + courseNumber, (response) => {
-        if (response.statusCode != 200) {
-            throw new Error('Could not fetch from server');
-        }
-        else {
-            let jsonData = '';
-            response.on('data', (chunk) => { jsonData += chunk; });
-            response.on('end', () => {
-                try {
-                    res.write(jsonData);
-                    res.end();
-                } catch (e) {
-                    console.error(e.message);
-                }
-            });
-        }
-    });
-};
+/* Returns a list of course sections for the given course number.
 
-// Returns the content details of a specific course outline.
-export let getCourseOutline = (req: Request, res: Response, year: string, term: string, department: string, courseNumber: string, courseSection: string) => {
-    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + year + '/' + term + '/' + department + '/' + courseNumber + '/' + courseSection, (response) => {
-        if (response.statusCode != 200) {
-            throw new Error('Could not fetch from server');
-        }
-        else {
-            let jsonData = '';
-            response.on('data', (chunk) => { jsonData += chunk; });
-            response.on('end', () => {
-                try {
-                    res.write(jsonData);
-                    res.end();
-                } catch (e) {
-                    console.error(e.message);
-                }
-            });
-        }
-    });
-};
+[
+  {
+    text: "C100",
+    value: "c100",
+    title: "Genetics",
+    classType: "e",
+    sectionCode: "SEC",
+    associatedClass: "100"
+  },
+]
 
 */
+export let getCourseSections = (req: Request, res: Response) => {
+    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params. department + '/' + req.params.courseNumber, (response) => {
+        if (response.statusCode != 200) {
+            throw new Error('Could not fetch from server');
+        }
+        else {
+            let jsonData = '';
+            response.on('data', (chunk) => { jsonData += chunk; });
+            response.on('end', () => {
+                try {
+                    res.write(jsonData);
+                    res.end();
+                } catch (e) {
+                    console.error(e.message);
+                }
+            });
+        }
+    });
+};
+
+
+// Returns the content details of a specific course outline.
+export let getCourseOutline = (req: Request, res: Response) => {
+    http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department + '/' + req.params.courseNumber + '/' + req.params.courseSection, (response) => {
+        if (response.statusCode != 200) {
+            throw new Error('Could not fetch from server');
+        }
+        else {
+            let jsonData = '';
+            response.on('data', (chunk) => { jsonData += chunk; });
+            response.on('end', () => {
+                try {
+                    res.write(jsonData);
+                    res.end();
+                } catch (e) {
+                    console.error(e.message);
+                }
+            });
+        }
+    });
+};
+
