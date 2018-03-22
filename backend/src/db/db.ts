@@ -18,12 +18,12 @@ export function createTableUsers() {
 }
 
 export function createTableCourses() {
-    db.none('CREATE TABLE IF NOT EXIST courses ' + 
+    db.none('CREATE TABLE IF NOT EXIST courses ' +
             '(' +
-            'id integer PRIMARY KEY,' +  
+            'id integer PRIMARY KEY,' +
             'department varchar(4) NOT NULL,' +
             'number integer NOT NULL' +
-            'section integer NOT NULL' + 
+            'section integer NOT NULL' +
             ')')
       .catch((error: Error) => {
         global.console.log(error);

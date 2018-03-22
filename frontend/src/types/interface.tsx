@@ -16,3 +16,8 @@ export interface Department {
     text: string;
     value: string;
 }
+
+export interface User {
+    username: string;
+    password: string;
+}
