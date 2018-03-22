@@ -3,27 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-<<<<<<< dca8490faa26afd10da91519491f99da7f15e801
-<<<<<<< 04c3eeb13ee6c35ac74cb5f8d1155fc8bc5740d4
     "@types/prop-types": "^15.5.2",
     "@types/react-router-dom": "^4.2.5",
     "material-ui": "^0.20.0",
     "prop-types": "^15.6.1",
-=======
     "@okta/okta-signin-widget": "^2.3.0",
->>>>>>> initial attempt, not working
-=======
-    "@types/prop-types": "^15.5.2",
-    "material-ui": "^0.20.0",
-    "prop-types": "^15.6.1",
->>>>>>> added routing capabilities
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-dropdown": "^1.4.0",
-<<<<<<< edab547602d0c348f2625bf303116c6c0b21f238
-=======
     "react-router": "^4.2.0",
->>>>>>> Merged individual pages into individual buttons + Cleanup
     "react-router-dom": "^4.2.2",
     "react-scripts-ts": "2.13.0"
   },

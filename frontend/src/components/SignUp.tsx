@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Users } from '../types/interface';
+import { User } from '../types/interface';
 import * as PropTypes from 'prop-types';
 
 interface Props { 
-    users: Users[];
+    users: User[];
 }
 
 class SignUp extends React.Component<Props, {username: string, password: string}> {

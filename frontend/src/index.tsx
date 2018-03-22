@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { BrowserRouter, Route } from 'react-router-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import CourseSelectionLayout from './components/course-selection-layout';
