@@ -10,7 +10,7 @@ ReactDOM.render(
   <BrowserRouter>
     <div>
       <Route exact={true} path="/" component={App} />
-      <Route path="/course-outline" component={CourseOutline} />
+      <Route path="/course-outline/:id" component={CourseOutline} />
     </div>
   </BrowserRouter>,
   document.getElementById('root') as HTMLElement
