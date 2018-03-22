@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "npm": "^5.7.1"
+    "@types/pg-promise": "^5.4.3",
+    "npm": "^5.7.1",
+    "pg-promise": "^8.2.2"
   },
   "scripts": {
     "start": "npm run serve",

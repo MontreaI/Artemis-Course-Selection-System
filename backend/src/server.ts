@@ -4,6 +4,8 @@ import http from 'http';
 import cors from 'cors';
 
 import * as apiController from './controller/api';
+import * as db from './db/db';
+
 const port = process.env.port || 3376;
 
 const app = express();
@@ -26,3 +28,5 @@ app.get('/', function(req, res, next) {
 
 http.createServer(app).listen(port);
 console.log('running on port', port);
+db.createTableCourses();
+db.createTableUsers();
