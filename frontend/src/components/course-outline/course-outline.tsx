@@ -12,6 +12,17 @@ const myTreeData = [
       children: [
         {
           name: 'CMPT106',
+          children: [
+            {
+              name: 'CMPT101',
+            },
+            {
+              name: 'CMPT102',
+            },
+          ],
+        },
+        {
+          name: 'CMPT105',
         },
       ],
     },
@@ -24,6 +35,7 @@ const couseData = [course];
 global.console.log(couseData);
 global.console.log(myTreeData);
 
+// * STYLING *//
 const svgSquare = {
     shape: 'rect',
     shapeProps: {
@@ -37,8 +49,8 @@ const svgSquare = {
 }; 
 
 const position = {
-    x: 250,
-    y: 250
+    x: 1000,
+    y: 100
 };
 
 const anchor = {
@@ -85,6 +97,7 @@ const styles = {
     },
   },
 };
+// * END OF STYLING *//
 
 class CourseOutline extends React.Component<{}, State> {
     constructor(props: {}) {
@@ -106,7 +119,7 @@ class CourseOutline extends React.Component<{}, State> {
     render() {
         return (
             <div className="treeWrapper" >
-                <Tree data={couseData} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
+                <Tree data={myTreeData} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
             </div>
         );
         
