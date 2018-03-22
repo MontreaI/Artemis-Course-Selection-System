@@ -28,5 +28,6 @@ app.get('/', function(req, res, next) {
 
 http.createServer(app).listen(port);
 console.log('running on port', port);
-db.createTableCourses();
-db.createTableUsers();
+// Enable when integrate database
+// db.createTableCourses();
+// db.createTableUsers();
