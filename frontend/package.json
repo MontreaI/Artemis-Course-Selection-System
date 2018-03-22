@@ -4,15 +4,10 @@
   "private": true,
   "dependencies": {
     "@types/prop-types": "^15.5.2",
-<<<<<<< HEAD
     "@types/react-router-dom": "^4.2.5",
     "material-ui": "^0.20.0",
     "prop-types": "^15.6.1",
     "@okta/okta-signin-widget": "^2.3.0",
-=======
-    "material-ui": "^0.20.0",
-    "prop-types": "^15.6.1",
->>>>>>> e6df6b7ae261e6ad09502edcb131c6db76d662a4
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-dropdown": "^1.4.0",
