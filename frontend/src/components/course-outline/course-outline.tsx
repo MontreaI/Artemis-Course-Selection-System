@@ -28,11 +28,6 @@ const myTreeData = [
     },
 ];
 
-const course = new Course('CMPT70');
-course.addChildren(new Course('CMPT106'));
-course.addChildren(new Course('CMPT777'));
-const couseData = [course];
-global.console.log(couseData);
 global.console.log(myTreeData);
 
 // * STYLING *//
