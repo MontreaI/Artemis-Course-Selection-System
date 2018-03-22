@@ -9,13 +9,14 @@
     "material-ui": "^0.20.0",
     "prop-types": "^15.6.1",
     "@okta/okta-signin-widget": "^2.3.0",
+    "orgchart": "^2.1.1",
     "react": "^16.2.0",
+    "react-d3-tree": "^1.10.1",
     "react-dom": "^16.2.0",
     "react-dropdown": "^1.4.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts-ts": "2.13.0",
-    "treant-js": "1.0.0"
+    "react-scripts-ts": "2.13.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",

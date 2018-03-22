@@ -17,6 +17,7 @@ ReactDOM.render(
       <Route path="/course-selection-layout" component={CourseSelectionLayout} />
       <Route path="/signup" component={SignUp} />
       <Route path="/course-outline" component={CourseOutline} />
+      <Route path="/course-outline/:id" component={CourseOutline} />
     </div>
   </BrowserRouter>,
   document.getElementById('root') as HTMLElement
