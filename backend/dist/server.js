@@ -32,4 +32,7 @@ app.get('/', function (req, res, next) {
 });
 http_1.default.createServer(app).listen(port);
 console.log('running on port', port);
+// Enable when integrate database
+// db.createTableCourses();
+// db.createTableUsers();
 //# sourceMappingURL=server.js.map
