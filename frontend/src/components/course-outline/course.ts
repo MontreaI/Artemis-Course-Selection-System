@@ -1,12 +1,13 @@
 class Course {
-    public name: String;
-    public desc: String;
+    public name: string;
+    public courseNum: string;
+    public desc: string;
     public children: Course[];
 
-    constructor(name: String) {
+    constructor(courseNum: string, name: string) {
         this.name = name;
+        this.courseNum = courseNum;
         this.children = new Array();
-        this.desc = name;
     }
 
     public addChildren(course: Course) {
