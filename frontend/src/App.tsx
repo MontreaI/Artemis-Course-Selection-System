@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import SignIn from './components/SignIn';
-
+import SignUp from './components/SignUp';
 interface State {
 }
 

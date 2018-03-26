@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { Users } from '../types/interface';
 import * as PropTypes from 'prop-types';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 
@@ -41,7 +40,7 @@ class SignIn extends React.Component<{}, State> {
     render() {
         return (
             <div className="form-signin">
-                <h1>Register Account</h1>
+                <h1>Artemis</h1>
                 <div className="form-information">
                     <input
                         className="form-input"
@@ -57,6 +56,10 @@ class SignIn extends React.Component<{}, State> {
                     />
                     <Link to={'/course-selection-layout'}>
                         Log In
+                    </Link>
+                    <br />
+                    <Link to={'/signup'}>
+                        Don't Have an Account?
                     </Link>
                 </div>
             </div>
