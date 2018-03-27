@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { User } from '../types/interface';
+import { User } from '../../../types/interface';
 import * as PropTypes from 'prop-types';
 
 interface Props { 

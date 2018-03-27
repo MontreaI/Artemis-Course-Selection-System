@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './App.css';
-import SignIn from './components/SignIn';
+import SignIn from '../src/components/pages/login/SignIn';
 
 interface State {
 }

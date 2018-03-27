@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Year, Term, Department } from '../types/interface';
+import { Year, Term, Department } from '../../../types/interface';
 import Dropdown, { Option } from 'react-dropdown';
 import 'react-dropdown/style.css';
 import './course-selection-form.css';
 import RaisedButton from 'material-ui/RaisedButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
-import CourseApi from '../utils/course-api';
-import Course from './course-outline/course';
+import CourseApi from '../../../utils/course-api';
+import Course from '../course-outline/course';
 
 interface State {
     selected: number;
