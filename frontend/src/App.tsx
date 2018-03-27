@@ -15,9 +15,6 @@ class App extends React.Component<{}, State> {
   render() {
     return (
       <div className="App">
-        <header>
-          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-        </header>
         <SignIn/>
       </div>
     );

@@ -6,6 +6,8 @@ import './course-selection-form.css';
 import RaisedButton from 'material-ui/RaisedButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
+import CourseApi from '../utils/course-api';
+import Course from './course-outline/course';
 
 interface State {
     selected: number;
@@ -17,6 +19,7 @@ interface State {
     years: string[];
     departments: string[];
     courses: string[];
+    api: CourseApi;
 }
 
 class CourseSelectionForm extends React.Component<{}, State> {
@@ -36,6 +39,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
           years: [],
           departments: [],
           courses: [],
+          api: new CourseApi(),
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -50,8 +54,9 @@ class CourseSelectionForm extends React.Component<{}, State> {
          Upon loading page, the years must be always fetched because the most basic query requires at least the year...
          Furthermore, any query can be formed after getting the year.
          */
-        this.fetchUrl('http://localhost:3376/years').then((data: string[]) => {
+        this.state.api.getYears().then(data => {
             this.setState({years: data});
+            global.console.log('call to year...');
         });
     }
 
@@ -72,32 +77,30 @@ class CourseSelectionForm extends React.Component<{}, State> {
 
     onSelectYear(option: Option): void {
         this.setState({mYearSelected: option.label});
-        global.console.log('You selected year ' + option.label);
-        this.fetchUrl('http://localhost:3376/terms/' + option.label).then((data: string[]) => {
+        
+        this.state.api.getTerms(option.label).then(data => {
             this.setState({terms: data});
         });
     }
 
     onSelectTerm(option: Option): void {
         this.setState({mTermSelected: option.label});
-        global.console.log('You selected term ' + option.label);
-        this.fetchUrl('http://localhost:3376/terms/' + this.state.mYearSelected + '/' + option.label).then((data: string[]) => {
+
+        this.state.api.getDepartments(this.state.mYearSelected, option.label).then(data => {
             this.setState({departments: data});
         });
     }
 
     onSelectDepartment(option: Option): void {
         this.setState({mDepartmentSelected: option.label});
-        global.console.log('You selected department ' + option.label);
-        
-        this.fetchUrl('http://localhost:3376/terms/' + this.state.mYearSelected + '/' + this.state.mTermSelected + '/' + option.label).then(data => {
+
+        this.state.api.getCourses(this.state.mYearSelected, this.state.mTermSelected, option.label).then(data => {
             let options: string[] = [];
             for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].value + ' - ' + data[i].title;
+                options[i] = data[i].courseNum + ' - ' + data[i].name;
             }
             this.setState({courses: options});
         });
-        
     }
 
     onSelectCourse(option: Option): void {
@@ -118,7 +121,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
 
     loadPage(): void {
        this.context.router.history.push({
-        pathname: '/course-info',
+        pathname: '/course-outline',
         state: {
             // insert props here, currently coursenumber coursesections not yet implemented, but will be by tomorrow.
           mYearSelected: this.state.mYearSelected,

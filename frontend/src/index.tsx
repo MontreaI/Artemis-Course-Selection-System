@@ -6,13 +6,15 @@ import registerServiceWorker from './registerServiceWorker';
 import CourseSelectionLayout from './components/course-selection-layout';
 import SignUp from './components/SignUp';
 import './index.css';
+import CourseOutline from './components/course-outline/course-outline';
 import CourseInformationForm from './components/course-information-form';
 
 ReactDOM.render(
   <BrowserRouter>
     <div>
+    <header><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /></header>
       <Route exact={true} path="/" component={App} />
-      <Route path="/course-info" component={CourseInformationForm} />
+      <Route path="/course-outline" component={CourseOutline} />
       <Route path="/course-selection-layout" component={CourseSelectionLayout} />
       <Route path="/signup" component={SignUp} />
     </div>
