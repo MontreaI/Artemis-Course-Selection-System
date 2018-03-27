@@ -1,6 +1,6 @@
 import Dropdown, { Option } from 'react-dropdown';
 import Config from './config';
-import Course from '../components/course-outline/course';
+import Course from '../components/pages/course-outline/course';
 
 class CourseApi {
 

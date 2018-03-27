@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Year } from '../types/interface';
+import { Year } from '../../types/interface';
 import './course-selection-layout.css';
-import CourseSelectionForm from './course-selection-form';
+import CourseSelectionForm from '../pages/course-selection/course-selection-form';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -9,7 +9,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import customBaseTheme from '../components/customBaseTheme';
+import customBaseTheme from '../themes/customBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
