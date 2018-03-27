@@ -3,11 +3,10 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import CourseSelectionLayout from './components/course-selection-layout';
-import SignUp from './components/SignUp';
+import CourseSelectionLayout from '../src/components/layouts/course-selection-layout';
+import SignUp from '../src/components/pages/login/SignUp';
 import './index.css';
-import CourseOutline from './components/course-outline/course-outline';
-import CourseInformationForm from './components/course-information-form';
+import CourseOutline from './components/pages/course-outline/course-outline';
 
 ReactDOM.render(
   <BrowserRouter>
