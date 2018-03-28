@@ -55,7 +55,7 @@ class CourseSelectionLayout extends React.Component<{}, State> {
         return (
             <div className="courselayout">
                 <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
-                    <AppBar title="Kalender" iconElementRight={<this.Logged />} />
+                    <AppBar title="Artemis" iconElementRight={<this.Logged />} />
                     <CourseSelectionForm/>
                     <Paper zDepth={1}>
                         <div className="btmnavigation">
