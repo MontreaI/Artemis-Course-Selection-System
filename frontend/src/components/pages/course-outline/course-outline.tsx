@@ -2,8 +2,21 @@ import * as React from 'react';
 import Tree from 'react-d3-tree';
 import './course-outline.css';
 import Course from './course';
+import CourseApi from '../../../utils/course-api';
+import CSection from './csection';
+import { withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 
 interface State {
+  mYearSelected: string;
+  mTermSelected: string;
+  mDepartmentSelected: string;
+  mCourseNumberSelected: string;
+  mCourseSection: CSection[];
+  api: CourseApi;
+}
+
+interface CourseOutlineProps extends RouteComponentProps<CourseOutline> {
 }
 
 const myTreeData = [
@@ -27,8 +40,6 @@ const myTreeData = [
       ],
     },
 ];
-
-global.console.log(myTreeData);
 
 // * STYLING *//
 const svgSquare = {
@@ -94,21 +105,49 @@ const styles = {
 };
 // * END OF STYLING *//
 
-class CourseOutline extends React.Component<{}, State> {
-    constructor(props: {}) {
+class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, State> {
+
+    constructor(props: RouteComponentProps<CourseOutline>) {
         super(props);
         this.state = {
-          selectedIndex: 0,
-          myChart: null
+          mYearSelected: this.props.location.state.mYearSelected,
+          mTermSelected: this.props.location.state.mTermSelected,
+          mDepartmentSelected: this.props.location.state.mDepartmentSelected,
+          mCourseNumberSelected: this.props.location.state.mCourseNumberSelected,
+          mCourseSection: this.props.location.state.mCourseSection,
+          api: new CourseApi(),
         }; 
     }
 
     componentDidMount() {
-        global.console.log(this.props);
+      global.console.log('mounted');
+      this.fetchOutline().then(data => {
+          data.parsePrerequisites();
+      });
+    }
+
+    fetchOutline(): Promise<Course> {
+      let mSection = this.getMainSection(this.state.mCourseSection);
+      return this.state.api.getCourseOutline(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseNumberSelected, mSection).then(data => {
+          global.console.log(data);
+          return data;
+      });
+    }
+
+    getMainSection(sections: CSection[]): string {
+      let mSection = '';
+
+      for (var section of sections) {
+        if (section.sectionCode === 'LEC' || section.sectionCode === 'SEM') {
+          return mSection = section.sectionNum;
+        }
+      }
+
+      return mSection;
     }
 
     alertMe(node: Course) {
-        global.console.log(node.name);
+      global.console.log(node.name);
     }
 
     render() {
@@ -121,4 +160,4 @@ class CourseOutline extends React.Component<{}, State> {
     }
 }
 
-export default CourseOutline;
+export default withRouter(CourseOutline);
