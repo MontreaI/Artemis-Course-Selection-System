@@ -1,21 +1,23 @@
 body {
-    background-color: #8B0000;
+    background-color: #008B8B;
 }
 h1 {
+    background-color: #000;
     text-align: center;
     font: Verdana;
     color: #fff;
     font-size: 50px;
 }
 h2 {
+    display: block;
     font: Verdana;
-    color: #fff;
-    background-color: #000;
+    color: #eee;
     font-size: 20px;
 }
 div.form-information{
+    display: block;
     text-align: center;
-    padding: 0.5%;
+    padding: 5%;
 }
 input.form-input{
     height:20px;
