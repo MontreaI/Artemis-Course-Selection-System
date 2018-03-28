@@ -1,21 +1,26 @@
 import * as React from 'react';
 import { User } from '../../../types/interface';
 import * as PropTypes from 'prop-types';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
+import './SignIn.css';
 
-interface Props { 
-    users: User[];
+interface State {
+    username: string; 
+    password: string;
+    conPass: string;
 }
 
-class SignUp extends React.Component<Props, {username: string, password: string}> {
+class SignUp extends React.Component<{}, State> {
     static contextTypes = {
         router: PropTypes.object
     };
 
-    constructor(props: Props) {
-        super(props);
+    constructor(props: {}, context: {}) {
+        super(props, context);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            conPass: ''
         };
     }
     validateUsername() {
@@ -42,19 +47,24 @@ class SignUp extends React.Component<Props, {username: string, password: string}
                         placeholder="username"
                         onChange={event => this.validateUsername && this.setState({username: event.target.value})}
                     />
+                    <br />
                     <input
                         className="form-input"
                         type="password"
                         placeholder="password"
                         onChange={event => this.validatePassword && this.setState({password: event.target.value})}
                     />
-                    <button
-                        className="btn-enter"
-                        type="button"
-                        onClick={() => this.register()}
-                    >
+                    <br />
+                    <input
+                        className="form-input"
+                        type="conPass"
+                        placeholder="confirm password"
+                        onChange={event => this.validatePassword && this.setState({conPass: event.target.value})}
+                    />
+                    <br />
+                    <Link to={'/course-selection-layout'}>
                         Register
-                    </button>
+                    </Link>
                 </div>
             </div>
         );

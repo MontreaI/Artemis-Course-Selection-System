@@ -1,0 +1,23 @@
+body {
+    background-color: #8B0000;
+}
+h1 {
+    text-align: center;
+    font: Verdana;
+    color: #fff;
+    font-size: 50px;
+}
+h2 {
+    font: Verdana;
+    color: #fff;
+    background-color: #000;
+    font-size: 20px;
+}
+div.form-information{
+    text-align: center;
+    padding: 0.5%;
+}
+input.form-input{
+    height:20px;
+    font-size:16pt;
+}
