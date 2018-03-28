@@ -2,6 +2,7 @@ import * as React from 'react';
 import Tree from 'react-d3-tree';
 import './course-outline.css';
 import Course from './course';
+import CourseNode from './course-node';
 import CourseApi from '../../../utils/course-api';
 import CSection from './csection';
 import { withRouter } from 'react-router-dom';
@@ -13,6 +14,8 @@ interface State {
   mDepartmentSelected: string;
   mCourseNumberSelected: string;
   mCourseSection: CSection[];
+  courseTree: Course[];
+  courseOutline: Course;
   api: CourseApi;
 }
 
@@ -21,7 +24,7 @@ interface CourseOutlineProps extends RouteComponentProps<CourseOutline> {
 
 const myTreeData = [
     {
-      name: 'CMPT255',
+      name: 'CMPT 255',
       children: [
         {
           name: 'CMPT106',
@@ -40,6 +43,9 @@ const myTreeData = [
       ],
     },
 ];
+
+global.console.log(myTreeData);
+// global.console.log(nodeTree);
 
 // * STYLING *//
 const svgSquare = {
@@ -115,22 +121,27 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
           mDepartmentSelected: this.props.location.state.mDepartmentSelected,
           mCourseNumberSelected: this.props.location.state.mCourseNumberSelected,
           mCourseSection: this.props.location.state.mCourseSection,
+          courseOutline: new Course('CMPT', '222'),
+          courseTree: [],
           api: new CourseApi(),
         }; 
     }
 
     componentDidMount() {
       global.console.log('mounted');
-      this.fetchOutline().then(data => {
-          data.parsePrerequisites();
-      });
+      this.fetchOutline();
     }
 
-    fetchOutline(): Promise<Course> {
+    fetchOutline() {
       let mSection = this.getMainSection(this.state.mCourseSection);
-      return this.state.api.getCourseOutline(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseNumberSelected, mSection).then(data => {
-          global.console.log(data);
-          return data;
+      this.state.api.getCourseOutline(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseNumberSelected, mSection).then(data => {
+          data.parsePrerequisites();
+          
+          var tree: Course[] = [];
+          tree[0] = data;
+
+          this.setState({courseTree: tree});
+          this.setState({courseOutline: data});
       });
     }
 
@@ -151,12 +162,16 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
     }
 
     render() {
+
+      if (this.state.courseTree.length > 0) {
         return (
-            <div className="treeWrapper" >
-                <Tree data={myTreeData} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
-            </div>
+          <div className="treeWrapper" >
+              <Tree data={this.state.courseTree} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
+          </div>
         );
-        
+      }
+      
+      return <h1>Loading</h1>;
     }
 }
 

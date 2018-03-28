@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
 import CourseApi from '../../../utils/course-api';
-import Course from '../course-outline/course';
+import CourseOutline from '../course-outline/course';
 import CSection from '../course-outline/csection';
 
 interface State {
@@ -100,7 +100,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state.api.getCourses(this.state.mYearSelected, this.state.mTermSelected, option.label).then(data => {
             let options: string[] = [];
             for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].courseNum + ' - ' + data[i].name;
+                options[i] = data[i].courseNum + ' - ' + data[i].title;
             }
             this.setState({courses: options});
         });
