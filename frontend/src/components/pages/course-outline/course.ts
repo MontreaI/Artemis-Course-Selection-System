@@ -18,34 +18,20 @@ class Course {
         this.children = new Array();
     }
 
-    /*
-    public addChildren(course: Course) {
-        this.children.push(course);
-    }
-    */
-
-    //
-    // "CMPT 225, MACM 201, MATH 151 (or MATH 150), and MATH 232 or 240."
-    //
+    // eg. "CMPT 225, MACM 201, MATH 151 (or MATH 150), and MATH 232 or 240."
     public parsePrerequisites() {
         var arr = this.prerequisites.split(',');
-        if (arr[0] !== '' ) { // Check if there is prereqs
-            for (var i = 0; i < arr.length; i++) {
-                arr[i] = arr[i].replace(/[^ A-Z0-9]/g, '');
-                arr[i] = this.filter(arr[i]);
-            }
+        
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = arr[i].replace(/[^ A-Z0-9]/g, '');
+            arr[i] = this.filter(arr[i]);
+        }
     
+        if (arr[0] !== '' ) { // Check if there is prereqs
             this.addChildren(arr);
-            global.console.log(this);
         }
-    }
 
-    private addChildren(preReqs: string[]) {
-        for (var i = 0; i < preReqs.length; i++) {
-            var arr = preReqs[i].split(' ');
-            var course = new Course(arr[0], arr[1]);
-            this.children.push(course);
-        }
+        // global.console.log(this);
     }
 
     private filter(str: string): string {
@@ -65,6 +51,14 @@ class Course {
         }
 
         return modifiedStr.trim();
+    }
+
+    private addChildren(preReqs: string[]) {
+        for (var i = 0; i < preReqs.length; i++) {
+            var arr = preReqs[i].split(' ');
+            var course = new Course(arr[0], arr[1]);
+            this.children.push(course);
+        }
     }
 }
 

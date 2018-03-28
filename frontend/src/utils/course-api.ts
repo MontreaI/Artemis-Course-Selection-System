@@ -64,6 +64,8 @@ class CourseApi {
         return this.fetchUrl(Config.termsURL + year + '/' + term + '/' + department + '/' + courseNum + '/' + courseSec).then(data => {
 
             if (data.info !== undefined) {
+                global.console.log('getting course data-outline info...');
+                global.console.log(data.info);
                 course = new Course(data.info.dept, data.info.number);
                 course.title = data.info.title;
                 course.desc = data.info.description;
