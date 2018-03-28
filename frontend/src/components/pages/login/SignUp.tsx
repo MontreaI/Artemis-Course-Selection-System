@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { User } from '../../../types/interface';
 import * as PropTypes from 'prop-types';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 
