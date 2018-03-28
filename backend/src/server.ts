@@ -28,6 +28,21 @@ app.get('/', function(req, res, next) {
 
 http.createServer(app).listen(port);
 console.log('running on port', port);
-// Enable when integrate database
-// db.createTableCourses();
-// db.createTableUsers();
+
+db.createTableCourses().then((result: boolean) => {
+    if (result) {
+        db.createTableUsers().then((result: boolean) => {
+            if (result) {
+                db.createTableUserCourse().then((result: boolean) => {
+                    if (!result) {
+                        global.console.log("couldn't create table usercourse");
+                    }
+                });
+            } else {
+                global.console.log("couldn't create table users");
+            }
+        });
+    } else {
+        global.console.log("couldn't create table courses");
+    }
+});
