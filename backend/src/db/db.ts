@@ -99,6 +99,9 @@ export function findUser(user: User) {
     }
 }
 
+/*
+ * Create an user
+ */
 export function createUser(user: User) {
     return db.none('INSERT INTO users(username, password, email) VALUES($1, $2, $3)', [user.username, user.password, user.email])
              .then(() => true)
@@ -108,6 +111,10 @@ export function createUser(user: User) {
              });
 }
 
+/*
+ * Create a course
+ * return the created course's id
+ */
 export function createCourse(course: Course) {
     return db.none('SELECT * FROM courses WHERE department = $1 AND number = $2 AND section = $3 AND year = $4 AND term = $5',
                   [ course.department,
@@ -136,6 +143,9 @@ export function createCourse(course: Course) {
             });
 }
 
+/*
+ * Add a course to an user
+ */
 export function addUserCourse(username: string, courseID: number) {
     return db.none('INSERT INTO UserCourse(username, id) VALUES ($1, $2)', [username, courseID])
         .then(() => {
