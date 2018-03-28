@@ -97,6 +97,7 @@ const styles = {
         circle: {
         stroke: 'black',
         strokeWidth: 3,
+        fill: 'white',
       },
       name: {
         fontSize: 15,

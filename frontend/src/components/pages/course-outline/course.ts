@@ -29,13 +29,15 @@ class Course {
     //
     public parsePrerequisites() {
         var arr = this.prerequisites.split(',');
-        for (var i = 0; i < arr.length; i++) {
-            arr[i] = arr[i].replace(/[^ A-Z0-9]/g, '');
-            arr[i] = this.filter(arr[i]);
+        if (arr[0] !== '' ) { // Check if there is prereqs
+            for (var i = 0; i < arr.length; i++) {
+                arr[i] = arr[i].replace(/[^ A-Z0-9]/g, '');
+                arr[i] = this.filter(arr[i]);
+            }
+    
+            this.addChildren(arr);
+            global.console.log(this);
         }
-        // global.console.log(arr);
-        this.addChildren(arr);
-        global.console.log(this);
     }
 
     private addChildren(preReqs: string[]) {

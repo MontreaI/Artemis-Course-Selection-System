@@ -69,10 +69,10 @@ class CourseApi {
                 course.desc = data.info.description;
                 course.prerequisites =  data.info.prerequisites;
             } else {
+                global.console.log(data);
                 throw new Error('Data is perhaps corrupted');
             }
            
-            // global.console.log(data.info);
             return course;
         });
     }
