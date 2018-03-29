@@ -6,40 +6,20 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import './weekly.css';
 
 class WeeklyView extends React.Component {
-    //render() {
-    //    let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    //    let daysCols = days.map((day: string) => <TableHeaderColumn key={day} >{day}</TableHeaderColumn>);
-    //    let cell = <TableRowColumn className={'timeCell'}>=</TableRowColumn>;
-    //    let cells = Array(days.length).fill(cell);
-    //    let row = <TableRow className={'timerow'}>{cells}</TableRow>;
-    //    let rows = Array((22 - 8) * 2).fill(row);
-    //    return (
-    //        <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
-    //            <Table selectable={false}>
-    //                <TableHeader
-    //                    adjustForCheckbox={false}
-    //                    enableSelectAll={false}
-    //                    displaySelectAll={false}
-    //                >
-    //                    {daysCols}
-    //                </TableHeader>
-    //                <TableBody
-    //                    displayRowCheckbox={false}
-    //                >
-    //                    {rows}
-    //                </TableBody>
-    //            </Table>
-    //        </MuiThemeProvider>
-    //    );
-    //}
-
     render() {
         let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         let daysCols = days.map((day: string) => <th key={day} >{day}</th>);
-        let cell = <td className={'timeCell'}>=</td>;
-        let cells = Array(days.length).fill(cell);
-        let row = <tr className={'timerow'}>{cells}</tr>;
-        let rows = Array((22 - 8) * 2).fill(row);
+
+        var times = Array.apply(0, Array((22 - 8) * 2)).map((_: number, index: number) => {
+            return index % 2 === 0 ?  `${(index / 2) + 8}:00` : `${((index - 1) / 2) + 8}:30`;
+        });
+
+        let rows = times.map((time: string, i: number) => {
+            let cells = Array.apply(0, Array(days.length))
+                             .map((_: number, di: number) => <td className={'timeCell'} key={`${i}${di}`}> {time} </td>);
+            return <tr className={'timeRow'} key={i}>{cells}</tr>;
+        }); 
+
         return (
             <table>
                 <tr>
