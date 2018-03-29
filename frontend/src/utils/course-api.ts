@@ -65,11 +65,26 @@ class CourseApi {
 
             if (data.info !== undefined) {
                 global.console.log('getting course data-outline info...');
-                global.console.log(data.info);
+                global.console.log(data);
                 course = new Course(data.info.dept, data.info.number);
+
+                // INFO:
+                course.degreeLevel = data.info.degreeLevel;
+                course.deliveryMethod = data.info.deliveryMethod;
+                course.description = data.info.description;
+                course.designation = data.info.designation;
                 course.title = data.info.title;
-                course.desc = data.info.description;
                 course.prerequisites =  data.info.prerequisites;
+                course.units = data.info.units;
+                course.term = data.info.term;
+
+                // COURSE SCHEDULE:
+                course.campus = data.courseSchedule[0].campus;
+                course.days = data.courseSchedule[0].days;
+                course.startTime = data.courseSchedule[0].startTime;
+                course.endTime = data.courseSchedule[0].endTime;
+                course.buildingCode = data.courseSchedule[0].buildingCode;
+                course.roomNumber = data.courseSchedule[0].roomNumber;
             } else {
                 global.console.log(data);
                 throw new Error('Data is perhaps corrupted');
