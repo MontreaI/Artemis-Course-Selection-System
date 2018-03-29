@@ -11,7 +11,7 @@ enum Day {
     Wednesday   = 'Wednesday',
     Thursday    = 'Thursday',
     Friday      = 'Friday'
-};
+}
 
 interface ClassTime {
     hour: number;
@@ -55,7 +55,7 @@ class WeeklyView extends React.Component<{}, State> {
                     ]
                 }
             ]
-        }
+        };
     }
 
     render() {
