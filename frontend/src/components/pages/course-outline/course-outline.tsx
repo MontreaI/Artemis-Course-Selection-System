@@ -44,7 +44,7 @@ const myTreeData = [
     },
 ];
 
-global.console.log(myTreeData);
+// global.console.log(myTreeData);
 // global.console.log(nodeTree);
 
 // * STYLING *//
@@ -97,6 +97,7 @@ const styles = {
         circle: {
         stroke: 'black',
         strokeWidth: 3,
+        fill: 'white',
       },
       name: {
         fontSize: 15,
@@ -128,10 +129,11 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
     }
 
     componentDidMount() {
-      global.console.log('mounted');
+      global.console.log('course-outline comp mounted');
       this.fetchOutline();
     }
 
+    // Constructs tree
     fetchOutline() {
       let mSection = this.getMainSection(this.state.mCourseSection);
       this.state.api.getCourseOutline(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseNumberSelected, mSection).then(data => {
@@ -154,9 +156,10 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
         }
       }
 
-      return mSection;
+      return mSection = sections[0].sectionNum;
     }
 
+    // Dummy function right now
     alertMe(node: Course) {
       global.console.log(node.name);
     }

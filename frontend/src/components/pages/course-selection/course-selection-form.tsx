@@ -24,6 +24,12 @@ interface State {
     api: CourseApi;
 }
 
+// dropdown titles
+var yearDropdownTitle: string = 'School Year';
+var termDropdownTitle: string = 'Term';
+var departmentDropdownTitle: string = 'Department';
+var courseDropdownTitle: string = 'Course';
+
 class CourseSelectionForm extends React.Component<{}, State> {
     static contextTypes = {
         router: PropTypes.object
@@ -33,10 +39,10 @@ class CourseSelectionForm extends React.Component<{}, State> {
         super(props, context);
         this.state = {
           selected: 0,
-          mYearSelected: 'School Year',
-          mTermSelected: 'Term',
-          mDepartmentSelected: 'Department',
-          mCourseSelected: 'Course',
+          mYearSelected: yearDropdownTitle,
+          mTermSelected: termDropdownTitle,
+          mDepartmentSelected: departmentDropdownTitle,
+          mCourseSelected: courseDropdownTitle,
           terms: [],
           years: [],
           departments: [],
@@ -50,6 +56,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.onSelectDepartment = this.onSelectDepartment.bind(this);
         this.loadPage = this.loadPage.bind(this);
         this.onSelectCourse = this.onSelectCourse.bind(this);
+        this.onChangeClearChildOptions = this.onChangeClearChildOptions.bind(this);
       }
       
     componentDidMount() {
@@ -84,6 +91,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state.api.getTerms(option.label).then(data => {
             this.setState({terms: data});
         });
+
+        this.onChangeClearChildOptions(yearDropdownTitle);
     }
 
     onSelectTerm(option: Option): void {
@@ -92,6 +101,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state.api.getDepartments(this.state.mYearSelected, option.label).then(data => {
             this.setState({departments: data});
         });
+
+        this.onChangeClearChildOptions(termDropdownTitle);
     }
 
     onSelectDepartment(option: Option): void {
@@ -104,6 +115,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
             }
             this.setState({courses: options});
         });
+
+        this.onChangeClearChildOptions(departmentDropdownTitle);
     }
 
     onSelectCourse(option: Option): void {
@@ -126,6 +139,32 @@ class CourseSelectionForm extends React.Component<{}, State> {
           mCourseSection: this.state.mCourseSection,
         }
       });
+    }
+
+    onChangeClearChildOptions(dropdown: string): void {
+        switch (dropdown) {
+            case yearDropdownTitle:
+                global.console.log('Clearing child dropdowns of year dropdown');
+                this.setState({
+                    mTermSelected: termDropdownTitle,
+                    mDepartmentSelected: departmentDropdownTitle,
+                    mCourseSelected: courseDropdownTitle});
+                break;
+            case termDropdownTitle:
+                global.console.log('Clearing child dropdowns of term dropdown');
+                this.setState({
+                    mDepartmentSelected: departmentDropdownTitle,
+                    mCourseSelected: courseDropdownTitle});
+                break;
+            case departmentDropdownTitle:
+                global.console.log('Clearing child dropdowns of department dropdown');
+                this.setState({
+                    mCourseSelected: courseDropdownTitle});
+                break;
+            default:
+                global.console.log('default');
+        }
+
     }
 
     render() {
