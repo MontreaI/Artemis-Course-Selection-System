@@ -52,11 +52,10 @@ class SignIn extends React.Component<{}, State> {
            }
        });
      }
+     
     authenticate() {
         this.setState({}, () => {
-            this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
-                this.setState({authenticated: data});
-            });
+            this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email);
         });
     }
 
