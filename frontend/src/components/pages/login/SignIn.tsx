@@ -1,11 +1,15 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Redirect } from 'react-router-dom';
 import './SignIn.css';
+import SignInApi from '../../../utils/signin-api';
 
 interface State {
     username: string; 
     password: string;
+    email: string;
+    authenticated: boolean;
+    api: SignInApi;
 }
 
 class SignIn extends React.Component<{}, State> {
@@ -17,7 +21,10 @@ class SignIn extends React.Component<{}, State> {
         super(props, context);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            email: '',
+            authenticated: false,
+            api: new SignInApi(),
         };
     }
     validateUsername() {
@@ -30,6 +37,14 @@ class SignIn extends React.Component<{}, State> {
             throw new Error('Enter Password');
         }
     }
+    onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({username: e.target.value});
+    }
+
+    onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({password: e.target.value});
+    }
+
     loadPage(): void {
         this.context.router.history.push({
          pathname: '/course-selection-form',
@@ -37,7 +52,14 @@ class SignIn extends React.Component<{}, State> {
            }
        });
      }
- 
+    authenticate() {
+        this.setState({}, () => {
+            this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
+                this.setState({authenticated: data});
+            });
+        });
+    }
+
     render() {
         return (
             <div className="form-signin">
@@ -48,19 +70,21 @@ class SignIn extends React.Component<{}, State> {
                         className="form-input"
                         type="text"
                         placeholder="username"
-                        onChange={event => this.validateUsername && this.setState({username: event.target.value})}
+                        onChange={this.onUsernameChange}
                     />
                     <br />
                     <input
                         className="form-input"
                         type="password"
                         placeholder="password"
-                        onChange={event => this.validatePassword && this.setState({password: event.target.value})}
+                        onChange={this.onPasswordChange}
                     />
                     <br />
+                    <input type="submit" className="button" value="Log in" />
                     <Link to={'/course-selection-layout'}>
                         Log In
                     </Link>
+                    <input type="submit" className="button" value="Log in" />
                     <br />
                     <Link to={'/signup'}>
                         Don't Have an Account?

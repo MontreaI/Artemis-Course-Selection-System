@@ -39,8 +39,9 @@ class SignUp extends React.Component<{}, State> {
     render() {
         return (
             <div className="form-signup">
-                <h1>Register Account</h1>
+                <h1>Artemis</h1>
                 <div className="form-information">
+                    <h2>Register Account</h2>
                     <input
                         className="form-input"
                         type="text"
