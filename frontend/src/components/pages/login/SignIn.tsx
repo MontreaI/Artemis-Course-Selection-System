@@ -1,7 +1,7 @@
 import * as React from 'react';
-// import { Users } from '../types/interface';
 import * as PropTypes from 'prop-types';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
+import './SignIn.css';
 
 interface State {
     username: string; 
@@ -41,22 +41,29 @@ class SignIn extends React.Component<{}, State> {
     render() {
         return (
             <div className="form-signin">
-                <h1>Register Account</h1>
+                <h1>Artemis</h1>
                 <div className="form-information">
+                    <h2>Please Enter Your Credentials</h2>
                     <input
                         className="form-input"
                         type="text"
                         placeholder="username"
                         onChange={event => this.validateUsername && this.setState({username: event.target.value})}
                     />
+                    <br />
                     <input
                         className="form-input"
                         type="password"
                         placeholder="password"
                         onChange={event => this.validatePassword && this.setState({password: event.target.value})}
                     />
+                    <br />
                     <Link to={'/course-selection-layout'}>
                         Log In
+                    </Link>
+                    <br />
+                    <Link to={'/signup'}>
+                        Don't Have an Account?
                     </Link>
                 </div>
             </div>

@@ -7,7 +7,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
 import CourseApi from '../../../utils/course-api';
-import Course from '../course-outline/course';
+import CourseOutline from '../course-outline/course';
+import CSection from '../course-outline/csection';
 
 interface State {
     selected: number;
@@ -19,8 +20,15 @@ interface State {
     years: string[];
     departments: string[];
     courses: string[];
+    mCourseSection: CSection[];
     api: CourseApi;
 }
+
+// dropdown titles
+var yearDropdownTitle: string = 'School Year';
+var termDropdownTitle: string = 'Term';
+var departmentDropdownTitle: string = 'Department';
+var courseDropdownTitle: string = 'Course';
 
 class CourseSelectionForm extends React.Component<{}, State> {
     static contextTypes = {
@@ -31,14 +39,15 @@ class CourseSelectionForm extends React.Component<{}, State> {
         super(props, context);
         this.state = {
           selected: 0,
-          mYearSelected: 'School Year',
-          mTermSelected: 'Term',
-          mDepartmentSelected: 'Department',
-          mCourseSelected: 'Course',
+          mYearSelected: yearDropdownTitle,
+          mTermSelected: termDropdownTitle,
+          mDepartmentSelected: departmentDropdownTitle,
+          mCourseSelected: courseDropdownTitle,
           terms: [],
           years: [],
           departments: [],
           courses: [],
+          mCourseSection: [],
           api: new CourseApi(),
         };
 
@@ -47,9 +56,10 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.onSelectDepartment = this.onSelectDepartment.bind(this);
         this.loadPage = this.loadPage.bind(this);
         this.onSelectCourse = this.onSelectCourse.bind(this);
+        this.onChangeClearChildOptions = this.onChangeClearChildOptions.bind(this);
       }
       
-      componentDidMount() {
+    componentDidMount() {
         /*
          Upon loading page, the years must be always fetched because the most basic query requires at least the year...
          Furthermore, any query can be formed after getting the year.
@@ -81,6 +91,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state.api.getTerms(option.label).then(data => {
             this.setState({terms: data});
         });
+
+        this.onChangeClearChildOptions(yearDropdownTitle);
     }
 
     onSelectTerm(option: Option): void {
@@ -89,6 +101,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state.api.getDepartments(this.state.mYearSelected, option.label).then(data => {
             this.setState({departments: data});
         });
+
+        this.onChangeClearChildOptions(termDropdownTitle);
     }
 
     onSelectDepartment(option: Option): void {
@@ -97,26 +111,20 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state.api.getCourses(this.state.mYearSelected, this.state.mTermSelected, option.label).then(data => {
             let options: string[] = [];
             for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].courseNum + ' - ' + data[i].name;
+                options[i] = data[i].courseNum + ' - ' + data[i].title;
             }
             this.setState({courses: options});
         });
+
+        this.onChangeClearChildOptions(departmentDropdownTitle);
     }
 
     onSelectCourse(option: Option): void {
-        this.setState({mCourseSelected: option.label});
-        global.console.log('You selected course ' + option.label);
-        /*
-        this.fetchUrl('http://localhost:3376/terms/' + this.state.mYearSelected + '/' + this.state.mTermSelected + '/' + option.label).then(data => {
-            let options: string[] = [];
-            global.console.log('rayco' + data.length);
-            for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].value + ' - ' + data[i].text;
-                global.console.log('rayco' + options[i]);
-            }
-            this.setState({courses: options});
+        this.setState({mCourseSelected: option.label}, () => {
+            this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseSelected.split('-')[0].trim()).then(data => {
+                this.setState({mCourseSection: data});
+            });
         });
-        */
     }
 
     loadPage(): void {
@@ -127,11 +135,36 @@ class CourseSelectionForm extends React.Component<{}, State> {
           mYearSelected: this.state.mYearSelected,
           mTermSelected: this.state.mTermSelected,
           mDepartmentSelected: this.state.mDepartmentSelected,
-          mCourseNumberSelected: this.state.mCourseSelected,
-          // This last prop may not be required to be passed
-          mCourseSectionSelected: 'd100'
+          mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
+          mCourseSection: this.state.mCourseSection,
         }
       });
+    }
+
+    onChangeClearChildOptions(dropdown: string): void {
+        switch (dropdown) {
+            case yearDropdownTitle:
+                global.console.log('Clearing child dropdowns of year dropdown');
+                this.setState({
+                    mTermSelected: termDropdownTitle,
+                    mDepartmentSelected: departmentDropdownTitle,
+                    mCourseSelected: courseDropdownTitle});
+                break;
+            case termDropdownTitle:
+                global.console.log('Clearing child dropdowns of term dropdown');
+                this.setState({
+                    mDepartmentSelected: departmentDropdownTitle,
+                    mCourseSelected: courseDropdownTitle});
+                break;
+            case departmentDropdownTitle:
+                global.console.log('Clearing child dropdowns of department dropdown');
+                this.setState({
+                    mCourseSelected: courseDropdownTitle});
+                break;
+            default:
+                global.console.log('default');
+        }
+
     }
 
     render() {
