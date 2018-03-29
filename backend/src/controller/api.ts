@@ -2,15 +2,13 @@
 import { Response, Request } from 'express';
 import http from 'http';
 import { isUndefined } from 'util';
-
+import { findUser, User  } from '../db/db';
 export let getApi = (req: Request, res: Response) => {
     const courses = [{ name: 'CMPT470' }];
     res.writeHead(200);
     res.write(JSON.stringify(courses));
     res.end();
 };
-
-
 
 /*
 GET /bin/wcm/course-outlines
@@ -203,3 +201,25 @@ export let getCourseOutline = (req: Request, res: Response) => {
     });
 };
 
+// Returns if user password is correct or not
+export let getUserPassword = (req: Request, res: Response) => {
+    const user: User = { username: req.params.username, password: req.params.password, email: req.params.email};
+    findUser(user).then((u: User) => {
+       if (u.username == req.params.username) {
+            this.context.router.history.push({
+                pathname: '/course-outline',
+                state: {
+                    authenticated: true
+                }
+            });
+       }
+       else {
+        this.context.router.history.push({
+            pathname: '/signin',
+            state: {
+                authenticated: false
+            }
+        });
+       }
+    });
+};
