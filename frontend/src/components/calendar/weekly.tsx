@@ -14,16 +14,50 @@ enum Day {
 };
 
 interface ClassTime {
-    day: Day;
+    hour: number;
+    half: boolean;
+}
 
+interface ClassDateTime {
+    day: Day;
+    start: ClassTime;
+    end: ClassTime;
 }
 
 interface Course {
     name: string;
-    
+    time: ClassDateTime[];
 }
 
-class WeeklyView extends React.Component {
+interface State {
+    courses: Course[];
+}
+
+class WeeklyView extends React.Component<{}, State> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            courses: [
+                {
+                    name: 'CMPT470',
+                    time: [
+                        {
+                            day: Day.Thursday,
+                            start: {
+                                hour: 13,
+                                half: true
+                            },
+                            end: {
+                                hour: 15,
+                                half: true
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+
     render() {
         let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         let daysCols = days.map((day: string) => <th className={'timeCell'} key={day} >{day}</th>);
