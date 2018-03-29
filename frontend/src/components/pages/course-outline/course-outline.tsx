@@ -128,8 +128,8 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
         }; 
     }
 
-    componentDidMount() {
-      global.console.log('course-outline comp mounted');
+    componentWillMount() {
+      global.console.log('course-outline comp being mounted');
       this.fetchOutline();
     }
 
@@ -168,8 +168,46 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
 
       if (this.state.courseTree.length > 0) {
         return (
-          <div className="treeWrapper" >
-              <Tree data={this.state.courseTree} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
+          <div className="Wrapper">
+              <div className="treeWrapper">
+                <Tree data={this.state.courseTree} onClick={this.alertMe} translate={position} nodeSvgShape={svgSquare} textLayout={anchor} orientation={'vertical'} styles={styles} pathFunc={'diagonal'}/>
+              </div>
+
+              {(this.state.courseOutline.prerequisites !== '') &&
+                <div>
+                  <h1>Prerequisites</h1>
+                  <span>{this.state.courseOutline.prerequisites}</span>
+                </div>
+              }
+
+              <div>
+                <h1>Overview</h1>
+                <ul>
+                  <li>Title: {this.state.courseOutline.title}</li>
+                  <li>Department: {this.state.courseOutline.dept}</li>
+                  <li>Course Number: {this.state.courseOutline.number}</li>
+                  <li>Term: {this.state.courseOutline.term}</li>
+                  <li>Degree Level: {this.state.courseOutline.degreeLevel}</li>
+                  <li>Delivery Method: {this.state.courseOutline.deliveryMethod}</li>
+                  <li>Units: {this.state.courseOutline.units}</li>
+                  <li>Description: {this.state.courseOutline.description}</li>
+                </ul>
+              </div>
+
+              {(this.state.courseOutline.deliveryMethod === 'In Person') &&
+                <div>
+                  <h1>Course Time + Location</h1>
+                  <ul>
+                    <li>Campus: {this.state.courseOutline.campus}</li>
+                    <li>Building code: {this.state.courseOutline.buildingCode}</li>
+                    <li>Room Number: {this.state.courseOutline.roomNumber}</li>
+                    <li>Days: {this.state.courseOutline.days}</li>
+                    <li>Start Time: {this.state.courseOutline.startTime}</li>
+                    <li>End Time: {this.state.courseOutline.endTime}</li>
+                  </ul>
+                </div>
+              }
+              
           </div>
         );
       }
