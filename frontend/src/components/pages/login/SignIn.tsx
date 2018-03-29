@@ -27,36 +27,37 @@ class SignIn extends React.Component<{}, State> {
             api: new SignInApi(),
         };
     }
-    validateUsername() {
+    onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({username: e.target.value});
         if (!this.state.username) {
             throw new Error('Enter Username');
         }
     }
-    validatePassword() {
+
+    onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({password: e.target.value});
         if (!this.state.password) {
             throw new Error('Enter Password');
         }
     }
-    onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({username: e.target.value});
-    }
-
-    onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({password: e.target.value});
-    }
 
     loadPage(): void {
         this.context.router.history.push({
-         pathname: '/course-selection-form',
-         state: {
-           }
+        pathname: '/course-selection-form',
+        state: {
+        }
        });
      }
      
     authenticate() {
-        this.setState({}, () => {
-            this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email);
+        this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
+            this.setState({authenticated: data});
         });
+        if (this.state.authenticated === true) {
+            this.loadPage();
+        } else {
+            throw new Error('Incorrect Credentials');
+        }
     }
 
     render() {
@@ -83,8 +84,6 @@ class SignIn extends React.Component<{}, State> {
                     <Link to={'/course-selection-layout'}>
                         Log In
                     </Link>
-                    <input type="submit" className="button" value="Log in" />
-                    <br />
                     <Link to={'/signup'}>
                         Don't Have an Account?
                     </Link>
