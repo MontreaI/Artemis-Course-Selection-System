@@ -5,6 +5,24 @@ import customBaseTheme from '../themes/customBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import './weekly.css';
 
+enum Day {
+    Monday      = 'Monday',
+    Tuesday     = 'Tuesday',
+    Wednesday   = 'Wednesday',
+    Thursday    = 'Thursday',
+    Friday      = 'Friday'
+};
+
+interface ClassTime {
+    day: Day;
+
+}
+
+interface Course {
+    name: string;
+    
+}
+
 class WeeklyView extends React.Component {
     render() {
         let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
