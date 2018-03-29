@@ -26,19 +26,18 @@ class SignIn extends React.Component<{}, State> {
             authenticated: false,
             api: new SignInApi(),
         };
+        this.onUsernameChange = this.onUsernameChange.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.loadPage = this.loadPage.bind(this);
+        this.authenticate = this.authenticate.bind(this);
     }
+    
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({username: e.target.value});
-        if (!this.state.username) {
-            throw new Error('Enter Username');
-        }
     }
 
     onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({password: e.target.value});
-        if (!this.state.password) {
-            throw new Error('Enter Password');
-        }
     }
 
     loadPage(): void {
