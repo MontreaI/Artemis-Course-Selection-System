@@ -5,13 +5,21 @@ import customBaseTheme from '../themes/customBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import './weekly.css';
 
+//enum Day {
+//    Monday      = 'Monday',
+//    Tuesday     = 'Tuesday',
+//    Wednesday   = 'Wednesday',
+//    Thursday    = 'Thursday',
+//    Friday      = 'Friday'
+//}
+
 enum Day {
-    Monday      = 'Monday',
-    Tuesday     = 'Tuesday',
-    Wednesday   = 'Wednesday',
-    Thursday    = 'Thursday',
-    Friday      = 'Friday'
-};
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday
+}
 
 interface ClassTime {
     hour: number;
@@ -51,26 +59,64 @@ class WeeklyView extends React.Component<{}, State> {
                                 hour: 15,
                                 half: true
                             }
+                        },
+                        {
+                            day: Day.Monday,
+                            start: {
+                                hour: 13,
+                                half: true
+                            },
+                            end: {
+                                hour: 14,
+                                half: true
+                            }
                         }
                     ]
                 }
             ]
-        }
+        };
     }
 
     render() {
         let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         let daysCols = days.map((day: string) => <th className={'timeCell'} key={day} >{day}</th>);
 
-        var times = Array.apply(0, Array((22 - 8) * 2)).map((_: number, index: number) => {
-            return index % 2 === 0 ?  `${(index / 2) + 8}:00` : `${((index - 1) / 2) + 8}:30`;
-        });
+        let rows = [];
+        for (let t = 0; t < (22 - 8) * 2; t++) {
+            let elems = [];
+            for (let d = 0; d < days.length; d++) {
+                let hasCourse = false;
+                for (let course of this.state.courses) {
+                    for (let time of course.time) {
+                        if (time.day === d) {
+                            hasCourse = true;
+                            let hour = 0;
+                            let timeString = '';
 
-        let rows = times.map((time: string, i: number) => {
-            let cells = Array.apply(0, Array(days.length))
-                             .map((_: number, di: number) => <td className={'timeCell'} key={`${i}${di}`}> {time} </td>);
-            return <tr className={'timeRow'} key={i}>{cells}</tr>;
-        }); 
+                            if (t % 2 === 0) {
+                                hour = (t / 2) + 8;
+                                timeString = `${hour}:00`;
+                            } else {
+                                hour = ((t - 1) / 2) + 8;
+                                timeString = `${hour}:30`;
+                            }
+
+                            if (hour >= time.start.hour && hour <= time.end.hour) {
+                                elems.push(<td className={'timeCell classTime'} key={`${course.name}${time.day}`}>{course.name}</td>);
+                            } else {
+                                elems.push(<td className={'timeCell'} key={`${d}${t}`}>{timeString}</td>);
+                            }
+                        }
+                    }
+                }
+                if (!hasCourse) {
+                    let timeString = t % 2 === 0 ? `${(t / 2) + 8}:00` : `${((t - 1) / 2) + 8}:30`;
+                    elems.push(<td className={'timeCell'} key={`${d}${t}`}>{timeString}</td>);
+                }
+            }
+
+            rows.push(<tr className={'timeRow'} key={t}>{elems}</tr>);
+        }
 
         return (
             <table>

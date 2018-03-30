@@ -2,8 +2,13 @@
 }
 
 .timeCell {
+    background-color: white;
     height: 5px;
     border: solid black 1px;
     padding: 5px 20px;
     margin: 0;
+}
+
+.classTime {
+    background-color: palevioletred;
 }
