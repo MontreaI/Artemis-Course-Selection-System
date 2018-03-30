@@ -188,7 +188,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 </div>
                 <div id="buttons">
                 <RaisedButton className="clearbtn" label="Clear" primary={true}/>
-                <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage}/>
+                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.loadPage} disabled={courseDropdownTitle === this.state.mCourseSelected}/>
+                <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={courseDropdownTitle === this.state.mCourseSelected}/>
                 </div>
             </div>
         );

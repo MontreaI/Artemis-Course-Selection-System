@@ -16,7 +16,6 @@ import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNaviga
 import Paper from 'material-ui/Paper';
 
 const eventIcon = <FontIcon className="material-icons">event</FontIcon>;
-const profileIcon = <FontIcon className="material-icons">face</FontIcon>;
 const courseSearchIcon = <FontIcon className="material-icons">find_in_page</FontIcon>;
 
 interface State {
@@ -62,7 +61,6 @@ class CourseSelectionLayout extends React.Component<{}, State> {
                             <BottomNavigation selectedIndex={this.state.selectedIndex}>
                                 <BottomNavigationItem label="Course Search" icon={courseSearchIcon} onClick={() => this.select(0)} />
                                 <BottomNavigationItem label="Timetable" icon={eventIcon} onClick={() => this.select(1)} />
-                                <BottomNavigationItem label="My Profile" icon={profileIcon} onClick={() => this.select(2)} />
                             </BottomNavigation>
                         </div>
                     </Paper>
