@@ -167,6 +167,20 @@ class CourseSelectionForm extends React.Component<{}, State> {
 
     }
 
+    saveCourse() {
+        global.console.log('Storing data to user database');
+        fetch('http://localhost:3376/user')
+        .then(response => {
+          if (response.ok) {
+            global.console.log('Successfully fetched from server');
+          } else {
+            global.console.log('Successfully fetched from server');
+            throw new Error('Could not fetch from server');
+          }
+        });
+       // this.fetchUrl('http://localhost:3376/user');
+    }
+
     render() {
         return (
             <div className="searchform">
@@ -188,7 +202,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 </div>
                 <div id="buttons">
                 <RaisedButton className="clearbtn" label="Clear" primary={true}/>
-                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.loadPage} disabled={courseDropdownTitle === this.state.mCourseSelected}/>
+                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse}/>
                 <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={courseDropdownTitle === this.state.mCourseSelected}/>
                 </div>
             </div>
