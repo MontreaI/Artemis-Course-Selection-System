@@ -21,8 +21,21 @@ app.get('/terms/:year/:term', apiController.getDepartments);
 app.get('/terms/:year/:term/:department', apiController.getCourseNumbers);
 app.get('/terms/:year/:term/:department/:courseNumber', apiController.getCourseSections);
 app.get('/terms/:year/:term/:department/:courseNumber/:courseSection', apiController.getCourseOutline);
-app.get('/user/:username/:password/:email', apiController.insertUser);
+app.get('/insert/user/:username/:password/:email', apiController.insertUser);
+app.get('/insert/course/:department/:number/:section/:year/:term/:description', apiController.insertCourse);
 
+
+/*
+export interface Course {
+    id: number;
+    department: string;
+    number: number;
+    section: string;
+    year: number;
+    term: string;
+    description: string;
+}
+*/
 app.get('/', function(req, res, next) {
     global.console.log('got root request');
 });

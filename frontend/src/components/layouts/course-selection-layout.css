@@ -1,0 +1,16 @@
+.app-bar h1 {
+    background-color: #cd5c5c;
+    font-family: "Quicksand";
+    font-size: 50px !important;
+}
+
+.bottom-nav {
+    font-size: 50px;
+}
+
+
+label {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: "Quicksand";
+    font-size: 20px;
+}

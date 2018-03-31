@@ -232,13 +232,11 @@ export interface Course {
     term: string;
     description: string;
 }
-
-
 */
 
 export let insertCourse = (req: Request, res: Response) => {
     const course: db.Course = {
-        id: req.params.id,
+        id: 0,
         department: req.params.department,
         number: req.params.number,
         section: req.params.section,
