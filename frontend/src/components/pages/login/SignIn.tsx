@@ -42,10 +42,10 @@ class SignIn extends React.Component<{}, State> {
 
     loadPage(): void {
         this.context.router.history.push({
-        pathname: '/course-selection-form',
-        state: {
-        }
-       });
+            pathname: '/course-selection-form',
+            state: {
+            }
+        });
      }
      
     authenticate() {
@@ -55,7 +55,8 @@ class SignIn extends React.Component<{}, State> {
         if (this.state.authenticated === true) {
             this.loadPage();
         } else {
-            throw new Error('Incorrect Credentials');
+            alert('Incorrect Credentials');
+            this.setState({username: '', password: ''});
         }
     }
 
@@ -79,10 +80,10 @@ class SignIn extends React.Component<{}, State> {
                         onChange={this.onPasswordChange}
                     />
                     <br />
-                    <input type="submit" className="button" value="Log in" />
-                    <Link to={'/course-selection-layout'}>
+                    <button onClick={this.authenticate}>
                         Log In
-                    </Link>
+                    </button>
+                    <br />
                     <Link to={'/signup'}>
                         Don't Have an Account?
                     </Link>
