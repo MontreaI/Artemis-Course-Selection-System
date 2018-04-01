@@ -20,37 +20,47 @@ import {
     TableRowColumn,
   } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
-
-const tableData = [
+var mCourseSectionsSelected: CSection[];
+var courseSectionDataEmpty: CSection[] = [
     {
-      section: '',
-      code: '',
-      name: '',
+        name: '',
+        sectionNum: '',
+        courseTitle: '',
+        classType: '',
+        sectionCode: '',
+        associatedClass: '',
     },
     {
-        section: '',
-        code: '',
         name: '',
+        sectionNum: '',
+        courseTitle: '',
+        classType: '',
+        sectionCode: '',
+        associatedClass: '',
     },
     {
-        section: '',
-        code: '',
         name: '',
+        sectionNum: '',
+        courseTitle: '',
+        classType: '',
+        sectionCode: '',
+        associatedClass: '',
     },
     {
-        section: '',
-        code: '',
         name: '',
+        sectionNum: '',
+        courseTitle: '',
+        classType: '',
+        sectionCode: '',
+        associatedClass: '',
     },
     {
-        section: '',
-        code: '',
         name: '',
-    },
-    {
-        section: '',
-        code: '',
-        name: '',
+        sectionNum: '',
+        courseTitle: '',
+        classType: '',
+        sectionCode: '',
+        associatedClass: '',
     },
   ];
   
@@ -77,7 +87,7 @@ interface State {
     enableSelectAll: boolean;
     deselectOnClickaway: boolean;
     showCheckboxes: boolean;
-    tableData: string[];
+    courseSectionData: CSection[];
 }
 
 // dropdown titles
@@ -116,7 +126,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
           enableSelectAll: false,
           deselectOnClickaway: true,
           showCheckboxes: true,
-          tableData: [],
+          courseSectionData: courseSectionDataEmpty,
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -127,6 +137,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.onChangeClearChildOptions = this.onChangeClearChildOptions.bind(this);
         this.generalFetch = this.generalFetch.bind(this);
         this.saveCourse = this.saveCourse.bind(this);
+        this.onSectionSelect = this.onSectionSelect.bind(this);
       }
     
     componentDidMount() {
@@ -192,7 +203,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     onSelectCourse(option: Option): void {
         this.setState({mCourseSelected: option.label}, () => {
             this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseSelected.split('-')[0].trim()).then(data => {
-                this.setState({mCourseSection: data});
+                this.setState({mCourseSection: data, courseSectionData: data});
             });
         });
     }
@@ -207,6 +218,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
           mDepartmentSelected: this.state.mDepartmentSelected,
           mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
           mCourseSection: this.state.mCourseSection,
+          // courseSectionData: this.state.courseSectionData,
         }
       });
     }
@@ -218,18 +230,21 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 this.setState({
                     mTermSelected: termDropdownTitle,
                     mDepartmentSelected: departmentDropdownTitle,
-                    mCourseSelected: courseDropdownTitle});
+                    mCourseSelected: courseDropdownTitle,
+                    courseSectionData: courseSectionDataEmpty});
                 break;
             case termDropdownTitle:
                 global.console.log('Clearing child dropdowns of term dropdown');
                 this.setState({
                     mDepartmentSelected: departmentDropdownTitle,
-                    mCourseSelected: courseDropdownTitle});
+                    mCourseSelected: courseDropdownTitle,
+                    courseSectionData: courseSectionDataEmpty});
                 break;
             case departmentDropdownTitle:
                 global.console.log('Clearing child dropdowns of department dropdown');
                 this.setState({
-                    mCourseSelected: courseDropdownTitle});
+                    mCourseSelected: courseDropdownTitle,
+                    courseSectionData: courseSectionDataEmpty});
                 break;
             default:
                 global.console.log('default');
@@ -247,6 +262,15 @@ class CourseSelectionForm extends React.Component<{}, State> {
             throw new Error('Could not fetch from server');
           }
         });
+    }
+
+    onSectionSelect(rows: number[]) {
+        let options: CSection[] = [];
+        for (var i = 0; i < rows.length; i++) {
+            options[i] = this.state.courseSectionData[i];
+        }
+        mCourseSectionsSelected = options;
+        global.console.log(mCourseSectionsSelected);
     }
 
     // /get/course/:department/:number/:section/:year/:term/'
@@ -306,6 +330,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
           fixedFooter={this.state.fixedFooter}
           selectable={this.state.selectable}
           multiSelectable={this.state.multiSelectable}
+          onRowSelection={this.onSectionSelect}
         >
           <TableHeader
             displaySelectAll={this.state.showCheckboxes}
@@ -315,7 +340,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
             <TableRow>
               <TableHeaderColumn tooltip="The Section">Section</TableHeaderColumn>
               <TableHeaderColumn tooltip="The Course Code">Code</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
+              <TableHeaderColumn tooltip="Index">Type</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody
@@ -324,11 +349,11 @@ class CourseSelectionForm extends React.Component<{}, State> {
             showRowHover={this.state.showRowHover}
             stripedRows={this.state.stripedRows}
           >
-            {tableData.map( (row, index) => (
+            {this.state.courseSectionData.map( (row, index) => (
               <TableRow key={index}>
-                <TableRowColumn>{row.section}</TableRowColumn>
-                <TableRowColumn>{row.code}</TableRowColumn>
+                <TableRowColumn>{row.sectionCode}</TableRowColumn>
                 <TableRowColumn>{row.name}</TableRowColumn>
+                <TableRowColumn>{row.classType}</TableRowColumn>
               </TableRow>
               ))}
           </TableBody>
