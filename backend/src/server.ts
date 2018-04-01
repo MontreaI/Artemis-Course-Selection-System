@@ -15,15 +15,19 @@ app.use(cors());
 cors({origin: true});
 
 app.set('port', port);
+
+// General Course Information GET requests
 app.get('/years', apiController.getYears);
 app.get('/terms/:year', apiController.getTerms);
 app.get('/terms/:year/:term', apiController.getDepartments);
 app.get('/terms/:year/:term/:department', apiController.getCourseNumbers);
 app.get('/terms/:year/:term/:department/:courseNumber', apiController.getCourseSections);
 app.get('/terms/:year/:term/:department/:courseNumber/:courseSection', apiController.getCourseOutline);
+
+// General Database Information
 app.get('/insert/user/:username/:password/:email', apiController.insertUser);
 app.get('/insert/course/:department/:number/:section/:year/:term/:description', apiController.insertCourse);
-
+app.get('/insert/userCourse/:department/:number/:section/:year/:term/:description', apiController.insertCourse);
 
 /*
 export interface Course {

@@ -10,6 +10,50 @@ import CourseApi from '../../../utils/course-api';
 import CourseOutline from '../course-outline/course';
 import CSection from '../course-outline/csection';
 
+import {
+    Table,
+    TableBody,
+    TableFooter,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+  } from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
+
+const tableData = [
+    {
+      section: '',
+      code: '',
+      name: '',
+    },
+    {
+        section: '',
+        code: '',
+        name: '',
+    },
+    {
+        section: '',
+        code: '',
+        name: '',
+    },
+    {
+        section: '',
+        code: '',
+        name: '',
+    },
+    {
+        section: '',
+        code: '',
+        name: '',
+    },
+    {
+        section: '',
+        code: '',
+        name: '',
+    },
+  ];
+  
 interface State {
     selected: number;
     mYearSelected: string;
@@ -22,6 +66,18 @@ interface State {
     courses: string[];
     mCourseSection: CSection[];
     api: CourseApi;
+    username: string;
+    height: string;
+    fixedHeader: boolean;
+    fixedFooter: boolean;
+    stripedRows: boolean;
+    showRowHover: boolean;
+    selectable: boolean;
+    multiSelectable: boolean;
+    enableSelectAll: boolean;
+    deselectOnClickaway: boolean;
+    showCheckboxes: boolean;
+    tableData: string[];
 }
 
 // dropdown titles
@@ -49,6 +105,18 @@ class CourseSelectionForm extends React.Component<{}, State> {
           courses: [],
           mCourseSection: [],
           api: new CourseApi(),
+          username: 'rca71',
+          height: '238px',
+          fixedHeader: true,
+          fixedFooter: true,
+          stripedRows: false,
+          showRowHover: false,
+          selectable: true,
+          multiSelectable: true,
+          enableSelectAll: false,
+          deselectOnClickaway: true,
+          showCheckboxes: true,
+          tableData: [],
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -57,8 +125,10 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.loadPage = this.loadPage.bind(this);
         this.onSelectCourse = this.onSelectCourse.bind(this);
         this.onChangeClearChildOptions = this.onChangeClearChildOptions.bind(this);
+        this.generalFetch = this.generalFetch.bind(this);
+        this.saveCourse = this.saveCourse.bind(this);
       }
-      
+    
     componentDidMount() {
         /*
          Upon loading page, the years must be always fetched because the most basic query requires at least the year...
@@ -167,7 +237,25 @@ class CourseSelectionForm extends React.Component<{}, State> {
 
     }
 
+    generalFetch(mURL: string) {
+        fetch(mURL)
+        .then(response => {
+          if (response.ok) {
+            global.console.log('Successfully fetched from server');
+          } else {
+            global.console.log('Successfully fetched from server');
+            throw new Error('Could not fetch from server');
+          }
+        });
+    }
+
+    // /get/course/:department/:number/:section/:year/:term/'
     saveCourse() {
+        // find course and retrieve ID
+         // let courseData = this.fetchUrl('http://localhost:3376/get/course/' + this.state.mDepartmentSelected + '/' + this.state.mCourseSelected.split('-')[0].trim() );
+        // if ID is -1 insert course
+        // insert course to user
+        /*
         global.console.log('Storing data to user database');
         fetch('http://localhost:3376/user')
         .then(response => {
@@ -178,12 +266,15 @@ class CourseSelectionForm extends React.Component<{}, State> {
             throw new Error('Could not fetch from server');
           }
         });
+        */
        // this.fetchUrl('http://localhost:3376/user');
     }
 
     render() {
         return (
-            <div className="searchform">
+            <div>
+            <div className="searchform" id="testw">
+                <div className="courseSelect">
                 <br/><div id="year">
                     <label>Year</label><br/>
                     <Dropdown className="yeardropdown" options={this.state.years} onChange={this.onSelectYear} value={undefined} placeholder={this.state.mYearSelected}/>
@@ -202,9 +293,47 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 </div>
                 <div id="buttons">
                 <RaisedButton className="clearbtn" label="Clear" primary={true}/>
-                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse}/>
+                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse}  disabled={courseDropdownTitle === this.state.mCourseSelected}/>
                 <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={courseDropdownTitle === this.state.mCourseSelected}/>
                 </div>
+                </div>
+            </div>
+            <div className="courseSection">
+            <p>Course Sections and Tutorials</p>
+        <Table
+          height={this.state.height}
+          fixedHeader={this.state.fixedHeader}
+          fixedFooter={this.state.fixedFooter}
+          selectable={this.state.selectable}
+          multiSelectable={this.state.multiSelectable}
+        >
+          <TableHeader
+            displaySelectAll={this.state.showCheckboxes}
+            adjustForCheckbox={this.state.showCheckboxes}
+            enableSelectAll={this.state.enableSelectAll}
+          >
+            <TableRow>
+              <TableHeaderColumn tooltip="The Section">Section</TableHeaderColumn>
+              <TableHeaderColumn tooltip="The Course Code">Code</TableHeaderColumn>
+              <TableHeaderColumn tooltip="The Name">Name</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            displayRowCheckbox={this.state.showCheckboxes}
+            deselectOnClickaway={this.state.deselectOnClickaway}
+            showRowHover={this.state.showRowHover}
+            stripedRows={this.state.stripedRows}
+          >
+            {tableData.map( (row, index) => (
+              <TableRow key={index}>
+                <TableRowColumn>{row.section}</TableRowColumn>
+                <TableRowColumn>{row.code}</TableRowColumn>
+                <TableRowColumn>{row.name}</TableRowColumn>
+              </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+            </div>
             </div>
         );
     }
