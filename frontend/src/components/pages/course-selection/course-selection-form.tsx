@@ -88,7 +88,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
           selectable: true,
           multiSelectable: false,
           enableSelectAll: false,
-          deselectOnClickaway: true,
+          deselectOnClickaway: false,
           showCheckboxes: true,
           courseSectionData: courseSectionDataEmpty,
           rowsSelected: [false],
@@ -180,6 +180,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     }
 
     loadPage(): void {
+       global.console.log('enter here');
        this.context.router.history.push({
         pathname: '/course-outline',
         state: {
@@ -236,17 +237,15 @@ class CourseSelectionForm extends React.Component<{}, State> {
     }
 
     onSectionSelect(rows: number[]) {
-        let isLEC = true;
+        let isLEC = false;
         let isSEC = true;
         let options: CSection[] = [];
         if (rows.length > 0 && rowSizeArray.length > 0) {
             for (var r = 0; r < rowSizeArray.length; r++) {
                 for (var t = 0; t < rows.length; t ++) {
                     if (r === rows[t] && rowSizeArray[r] !== true) {
-                        global.console.log('shit');
                         rowSizeArray[r] = true;
                     } else {
-                        global.console.log('fuck');
                         rowSizeArray[r] = false;
                     }
                 }
@@ -255,9 +254,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 options[i] = this.state.courseSectionData[rows[i]];
             }
             mCourseSectionsSelected = options;
-            if (mCourseSectionsSelected[0].sectionCode === 'LEC') {
-                global.console.log('Test');
-                isLEC = false;
+            if (mCourseSectionsSelected[0].sectionCode !== 'LEC') {
+                isLEC = true;
             }
             isSEC = false;
         } else if (rows.length === 0) {
