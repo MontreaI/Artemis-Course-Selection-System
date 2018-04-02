@@ -144,6 +144,27 @@ export function createCourse(course: Course) {
 }
 
 /*
+ * Return a course object
+ * Couldn't find course if returned id is -1
+ */ 
+export function findCourse(course: Course) {
+    return db.one('SELECT * FROM courses WHERE department = $1 AND number = $2 AND section = $3 AND year = $4 AND term = $5',
+        [course.department,
+        course.number,
+        course.section,
+        course.year,
+        course.term])
+        .then((data: Course) => {
+            return data;
+        })
+        .catch((err: Error) => {
+            return {
+                id: -1
+            };
+        });
+}
+
+/*
  * Add a course to an user
  */
 export function addUserCourse(username: string, courseID: number) {
