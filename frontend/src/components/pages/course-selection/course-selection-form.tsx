@@ -203,20 +203,26 @@ class CourseSelectionForm extends React.Component<{}, State> {
                     mTermSelected: termDropdownTitle,
                     mDepartmentSelected: departmentDropdownTitle,
                     mCourseSelected: courseDropdownTitle,
-                    courseSectionData: courseSectionDataEmpty});
+                    courseSectionData: courseSectionDataEmpty,
+                    isLECSelected: true,
+                    isSECSelected: true});
                 break;
             case termDropdownTitle:
                 global.console.log('Clearing child dropdowns of term dropdown');
                 this.setState({
                     mDepartmentSelected: departmentDropdownTitle,
                     mCourseSelected: courseDropdownTitle,
-                    courseSectionData: courseSectionDataEmpty});
+                    courseSectionData: courseSectionDataEmpty,
+                    isLECSelected: true,
+                    isSECSelected: true});
                 break;
             case departmentDropdownTitle:
                 global.console.log('Clearing child dropdowns of department dropdown');
                 this.setState({
                     mCourseSelected: courseDropdownTitle,
-                    courseSectionData: courseSectionDataEmpty});
+                    courseSectionData: courseSectionDataEmpty,
+                    isLECSelected: true,
+                    isSECSelected: true});
                 break;
             default:
                 global.console.log('default');
@@ -237,7 +243,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     }
 
     onSectionSelect(rows: number[]) {
-        let isLEC = false;
+        let isLEC = true;
         let isSEC = true;
         let options: CSection[] = [];
         if (rows.length > 0 && rowSizeArray.length > 0) {
@@ -254,8 +260,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 options[i] = this.state.courseSectionData[rows[i]];
             }
             mCourseSectionsSelected = options;
-            if (mCourseSectionsSelected[0].sectionCode !== 'LEC') {
-                isLEC = true;
+            if (mCourseSectionsSelected[0].sectionCode === 'LEC') {
+                isLEC = false;
             }
             isSEC = false;
         } else if (rows.length === 0) {
