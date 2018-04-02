@@ -20,49 +20,10 @@ import {
     TableRowColumn,
   } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+
+var rowSizeArray: boolean[] = new Array(1);
 var mCourseSectionsSelected: CSection[];
-var courseSectionDataEmpty: CSection[] = [
-    {
-        name: '',
-        sectionNum: '',
-        courseTitle: '',
-        classType: '',
-        sectionCode: '',
-        associatedClass: '',
-    },
-    {
-        name: '',
-        sectionNum: '',
-        courseTitle: '',
-        classType: '',
-        sectionCode: '',
-        associatedClass: '',
-    },
-    {
-        name: '',
-        sectionNum: '',
-        courseTitle: '',
-        classType: '',
-        sectionCode: '',
-        associatedClass: '',
-    },
-    {
-        name: '',
-        sectionNum: '',
-        courseTitle: '',
-        classType: '',
-        sectionCode: '',
-        associatedClass: '',
-    },
-    {
-        name: '',
-        sectionNum: '',
-        courseTitle: '',
-        classType: '',
-        sectionCode: '',
-        associatedClass: '',
-    },
-  ];
+var courseSectionDataEmpty: CSection[] = [];
   
 interface State {
     selected: number;
@@ -88,6 +49,9 @@ interface State {
     deselectOnClickaway: boolean;
     showCheckboxes: boolean;
     courseSectionData: CSection[];
+    rowsSelected: boolean[];
+    isLECSelected: boolean;
+    isSECSelected: boolean;
 }
 
 // dropdown titles
@@ -122,11 +86,14 @@ class CourseSelectionForm extends React.Component<{}, State> {
           stripedRows: false,
           showRowHover: false,
           selectable: true,
-          multiSelectable: true,
+          multiSelectable: false,
           enableSelectAll: false,
           deselectOnClickaway: true,
           showCheckboxes: true,
           courseSectionData: courseSectionDataEmpty,
+          rowsSelected: [false],
+          isLECSelected: true,
+          isSECSelected: true,
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -203,7 +170,11 @@ class CourseSelectionForm extends React.Component<{}, State> {
     onSelectCourse(option: Option): void {
         this.setState({mCourseSelected: option.label}, () => {
             this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseSelected.split('-')[0].trim()).then(data => {
-                this.setState({mCourseSection: data, courseSectionData: data});
+                rowSizeArray = new Array(data.length);
+                for (var i = 0; i < data.length; i++) {
+                    rowSizeArray[i] = false;
+                }
+                this.setState({mCourseSection: data, courseSectionData: data, rowsSelected: rowSizeArray});
             });
         });
     }
@@ -265,12 +236,37 @@ class CourseSelectionForm extends React.Component<{}, State> {
     }
 
     onSectionSelect(rows: number[]) {
+        let isLEC = true;
+        let isSEC = true;
         let options: CSection[] = [];
-        for (var i = 0; i < rows.length; i++) {
-            options[i] = this.state.courseSectionData[i];
+        if (rows.length > 0 && rowSizeArray.length > 0) {
+            for (var r = 0; r < rowSizeArray.length; r++) {
+                for (var t = 0; t < rows.length; t ++) {
+                    if (r === rows[t] && rowSizeArray[r] !== true) {
+                        global.console.log('shit');
+                        rowSizeArray[r] = true;
+                    } else {
+                        global.console.log('fuck');
+                        rowSizeArray[r] = false;
+                    }
+                }
+            }
+            for (var i = 0; i < rows.length; i++) {
+                options[i] = this.state.courseSectionData[rows[i]];
+            }
+            mCourseSectionsSelected = options;
+            if (mCourseSectionsSelected[0].sectionCode === 'LEC') {
+                global.console.log('Test');
+                isLEC = false;
+            }
+            isSEC = false;
+        } else if (rows.length === 0) {
+            var index = rowSizeArray.indexOf(true);
+            rowSizeArray[index] = false;
         }
-        mCourseSectionsSelected = options;
-        global.console.log(mCourseSectionsSelected);
+
+        this.setState({rowsSelected: rowSizeArray, isLECSelected: isLEC, isSECSelected: isSEC});
+        global.console.log(rowSizeArray);
     }
 
     // /get/course/:department/:number/:section/:year/:term/'
@@ -317,8 +313,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 </div>
                 <div id="buttons">
                 <RaisedButton className="clearbtn" label="Clear" primary={true}/>
-                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse}  disabled={courseDropdownTitle === this.state.mCourseSelected}/>
-                <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={courseDropdownTitle === this.state.mCourseSelected}/>
+                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse}  disabled={this.state.isSECSelected}/>
+                <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={this.state.isLECSelected}/>
                 </div>
                 </div>
             </div>
@@ -350,7 +346,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
             stripedRows={this.state.stripedRows}
           >
             {this.state.courseSectionData.map( (row, index) => (
-              <TableRow key={index}>
+              <TableRow key={index} selected={this.state.rowsSelected[index]}>
                 <TableRowColumn>{row.sectionCode}</TableRowColumn>
                 <TableRowColumn>{row.name}</TableRowColumn>
                 <TableRowColumn>{row.classType}</TableRowColumn>
