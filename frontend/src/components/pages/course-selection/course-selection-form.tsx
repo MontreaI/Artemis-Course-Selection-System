@@ -111,7 +111,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.state.api.getCourses(this.state.mYearSelected, this.state.mTermSelected, option.label).then(data => {
             let options: string[] = [];
             for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].courseNum + ' - ' + data[i].title;
+                options[i] = data[i].number + ' - ' + data[i].title;
             }
             this.setState({courses: options});
         });

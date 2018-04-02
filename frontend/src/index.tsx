@@ -8,6 +8,7 @@ import SignUp from '../src/components/pages/login/SignUp';
 import SignIn from '../src/components/pages/login/SignIn';
 import './index.css';
 import CourseOutline from './components/pages/course-outline/course-outline';
+import WeeklyView from './components/calendar/weekly';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -18,6 +19,7 @@ ReactDOM.render(
       <Route path="/course-selection-layout" component={CourseSelectionLayout} />
       <Route path="/signup" component={SignUp} />
       <Route path="/signin" component={SignIn} />
+      <Route path="/weekly" component={WeeklyView} />
     </div>
   </BrowserRouter>,
   document.getElementById('root') as HTMLElement
