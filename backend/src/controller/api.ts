@@ -2,7 +2,7 @@
 import { Response, Request } from 'express';
 import http from 'http';
 import { isUndefined } from 'util';
-import { findUser, User  } from '../db/db';
+import { findUser, createUser, User  } from '../db/db';
 export let getApi = (req: Request, res: Response) => {
     const courses = [{ name: 'CMPT470' }];
     res.writeHead(200);
@@ -212,4 +212,15 @@ export let getUserPassword = (req: Request, res: Response) => {
             res.end();
         }
     });
+};
+
+// Creates user with defined credentials
+export let createAccount = (req: Request, res: Response) => {
+    const user: User = { username: req.params.username, password: req.params.password, email: req.params.email};
+    if (createUser(user) == true) {
+        res.writeHead(200);
+    }
+    else {
+        res.end();
+    }
 };

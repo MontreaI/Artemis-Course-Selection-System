@@ -12,7 +12,7 @@ interface State {
     api: SignInApi;
 }
 
-class SignIn extends React.Component<{}, State> {
+class ForgotPass extends React.Component<{}, State> {
     static contextTypes = {
         router: PropTypes.object
     };
@@ -46,7 +46,7 @@ class SignIn extends React.Component<{}, State> {
             state: {
             }
         });
-    }
+     }
      
     authenticate() {
         this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
@@ -93,4 +93,4 @@ class SignIn extends React.Component<{}, State> {
     }
 }
 
-export default SignIn;
+export default ForgotPass;
