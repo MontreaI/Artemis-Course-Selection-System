@@ -29,6 +29,8 @@ class SignIn extends React.Component<{}, State> {
         this.onUsernameChange = this.onUsernameChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.loadPage = this.loadPage.bind(this);
+        this.goSignUp = this.goSignUp.bind(this);
+        this.goForgot = this.goForgot.bind(this);
         this.authenticate = this.authenticate.bind(this);
     }
     
@@ -42,24 +44,40 @@ class SignIn extends React.Component<{}, State> {
 
     loadPage(): void {
         this.context.router.history.push({
-            pathname: '/course-selection-form',
+            pathname: '/course-selection-layout',
             state: {
             }
         });
     }
-     
+    
+    goSignUp() {
+        this.context.router.history.push({
+            pathname: '/signup',
+            state: {
+            }
+        });
+    }
+
+    goForgot() {
+        this.context.router.history.push({
+            pathname: '/forgotpass',
+            state: {
+            }
+        });
+    }
+
     authenticate() {
         this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
             this.setState({authenticated: data});
+            if (this.state.authenticated === true) {
+                this.loadPage();
+            } else {
+                alert('Incorrect Credentials');
+                this.setState({username: '', password: ''});
+            }
         });
-        if (this.state.authenticated === true) {
-            this.loadPage();
-        } else {
-            alert('Incorrect Credentials');
-            this.setState({username: '', password: ''});
-        }
     }
-
+    
     render() {
         return (
             <div className="form-signin">
@@ -84,9 +102,13 @@ class SignIn extends React.Component<{}, State> {
                         Log In
                     </button>
                     <br />
-                    <Link to={'/signup'}>
-                        Don't Have an Account?
-                    </Link>
+                    <button onClick={this.goSignUp}>
+                        Sign Up
+                    </button>
+                    <br />
+                    <button onClick={this.goForgot}>
+                        Forgot Password
+                    </button>
                 </div>
             </div>
         );

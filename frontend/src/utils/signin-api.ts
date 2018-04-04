@@ -2,10 +2,11 @@ import Config from './config';
 class SignInApi {
 
     public getUserPassword(username: string, password: string, email: string): Promise<boolean> {
+        global.console.log(username);
         return this.fetchUrl('/login/username/password');
     }
 
-    public createAccount(sername: string, password: string, email: string): Promise<boolean> {
+    public createAccount(username: string, password: string, email: string): Promise<boolean> {
       return this.fetchUrl('/login/username/password/email');
     }
     

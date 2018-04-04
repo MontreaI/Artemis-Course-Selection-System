@@ -15,6 +15,8 @@ app.use(cors());
 cors({origin: true});
 
 app.set('port', port);
+
+// General Course Information GET requests
 app.get('/years', apiController.getYears);
 app.get('/terms/:year', apiController.getTerms);
 app.get('/terms/:year/:term', apiController.getDepartments);
@@ -23,6 +25,22 @@ app.get('/terms/:year/:term/:department/:courseNumber', apiController.getCourseS
 app.get('/terms/:year/:term/:department/:courseNumber/:courseSection', apiController.getCourseOutline);
 app.get('/users/:username/:password/:email', apiController.getUserPassword);
 
+// General Database Information
+app.get('/insert/user/:username/:password/:email', apiController.insertUser);
+app.get('/insert/course/:department/:number/:section/:year/:term/:description', apiController.insertCourse);
+app.get('/insert/userCourse/:department/:number/:section/:year/:term/:description', apiController.insertCourse);
+
+/*
+export interface Course {
+    id: number;
+    department: string;
+    number: number;
+    section: string;
+    year: number;
+    term: string;
+    description: string;
+}
+*/
 app.get('/', function(req, res, next) {
     global.console.log('got root request');
 });

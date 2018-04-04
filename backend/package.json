@@ -5,7 +5,8 @@
   "dependencies": {
     "@types/pg-promise": "^5.4.3",
     "npm": "^5.7.1",
-    "pg-promise": "^8.2.2"
+    "pg-promise": "^8.2.2",
+    "server.js": "^1.0.0"
   },
   "scripts": {
     "start": "npm run serve",
