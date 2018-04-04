@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { User } from '../../../types/interface';
 import * as PropTypes from 'prop-types';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Redirect } from 'react-router-dom';
 import './SignIn.css';
+import SignInApi from '../../../utils/signin-api';
 
 interface State {
-    username: string; 
+    username: string;
+    email: string; 
     password: string;
     conPass: string;
+    created: boolean;
+    api: SignInApi;
 }
 
 class SignUp extends React.Component<{}, State> {
@@ -19,52 +23,104 @@ class SignUp extends React.Component<{}, State> {
         super(props, context);
         this.state = {
             username: '',
+            email: '',
             password: '',
-            conPass: ''
+            conPass: '',
+            created: false,
+            api: new SignInApi()
         };
+        this.onUsernameChange = this.onUsernameChange.bind(this);
+        this.onConPassChange = this.onConPassChange.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.onEmailChange = this.onEmailChange.bind(this);
+        this.confirmPass = this.confirmPass.bind(this);
+        this.loadPage = this.loadPage.bind(this);
+        this.register = this.register.bind(this);
     }
-    validateUsername() {
-        if (!this.state.username) {
-            throw new Error('Enter Username');
+    onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({username: e.target.value});
+    }
+
+    onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({password: e.target.value});
+    }
+
+    onConPassChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({conPass: e.target.value});
+    }
+
+    onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (emailRegex.test(e.target.value)) {
+            this.setState({email: e.target.value});
+        } else {
+            alert('Email not valid!');
+            this.setState({email: ''});
         }
     }
-    validatePassword() {
-        if (!this.state.password) {
-            throw new Error('Enter Password');
+
+    loadPage(): void {
+        this.context.router.history.push({
+            pathname: '/course-selection-form',
+            state: {
+            }
+        });
+    }
+
+    confirmPass() {
+        if (this.state.password === this.state.conPass) {
+            this.register();
+        } else {
+            alert('Passwords do not match! Please enter passwords again');
+            this.setState({password: '', conPass: ''});
         }
     }
     register() {
-        alert('Email address is ' + this.state.username + ' Password is ' + this.state.password);            
+        this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
+            this.setState({created: data});
+            global.console.log(data);
+            if (this.state.created === true) {
+                this.loadPage();
+            } else {
+                alert('Could Not Connect to SignUp API');
+            }      
+        });   
     }   
     render() {
         return (
             <div className="form-signup">
-                <h1>Register Account</h1>
+                <h1>Artemis</h1>
                 <div className="form-information">
+                    <h2>Register Account</h2>
                     <input
                         className="form-input"
                         type="text"
                         placeholder="username"
-                        onChange={event => this.validateUsername && this.setState({username: event.target.value})}
+                        onChange={this.onUsernameChange}
+                    />
+                    <input
+                        className="form-input"
+                        type="text"
+                        placeholder="email"
                     />
                     <br />
                     <input
                         className="form-input"
                         type="password"
                         placeholder="password"
-                        onChange={event => this.validatePassword && this.setState({password: event.target.value})}
+                        onChange={this.onPasswordChange}
                     />
                     <br />
                     <input
                         className="form-input"
-                        type="conPass"
+                        type="password"
                         placeholder="confirm password"
-                        onChange={event => this.validatePassword && this.setState({conPass: event.target.value})}
+                        onChange={this.onConPassChange}
                     />
                     <br />
-                    <Link to={'/course-selection-layout'}>
-                        Register
-                    </Link>
+                    <button onClick={this.confirmPass}>
+                        Sign Up
+                    </button>
                 </div>
             </div>
         );

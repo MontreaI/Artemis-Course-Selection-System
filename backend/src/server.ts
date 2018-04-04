@@ -23,6 +23,7 @@ app.get('/terms/:year/:term', apiController.getDepartments);
 app.get('/terms/:year/:term/:department', apiController.getCourseNumbers);
 app.get('/terms/:year/:term/:department/:courseNumber', apiController.getCourseSections);
 app.get('/terms/:year/:term/:department/:courseNumber/:courseSection', apiController.getCourseOutline);
+app.get('/users/:username/:password/:email', apiController.getUserPassword);
 
 // General Database Information
 app.get('/insert/user/:username/:password/:email', apiController.insertUser);

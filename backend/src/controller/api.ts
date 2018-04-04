@@ -2,6 +2,7 @@
 import { Response, Request } from 'express';
 import http from 'http';
 import { isUndefined } from 'util';
+import { findUser, createUser, User  } from '../db/db';
 import * as db from '../db/db';
 
 export let getApi = (req: Request, res: Response) => {
@@ -10,8 +11,6 @@ export let getApi = (req: Request, res: Response) => {
     res.write(JSON.stringify(courses));
     res.end();
 };
-
-
 
 /*
 GET /bin/wcm/course-outlines
@@ -200,6 +199,36 @@ export let getCourseOutline = (req: Request, res: Response) => {
                     console.error(e.message);
                 }
             });
+        }
+    });
+};
+
+// Returns if user password is correct or not
+export let getUserPassword = (req: Request, res: Response) => {
+    const user: User = { username: req.params.username, password: req.params.password, email: req.params.email};
+    findUser(user).then((u: User) => {
+        if (u.username == req.params.username) {
+            res.writeHead(200);
+            res.end();
+        }
+        else {
+            res.writeHead(502);
+            res.end();
+        }
+    });
+};
+
+// Creates user with defined credentials
+export let createAccount = (req: Request, res: Response) => {
+    const user: User = { username: req.params.username, password: req.params.password, email: req.params.email};
+    createUser(user).then((result: boolean) => {
+        if (result == true) {
+            res.writeHead(200);
+            res.end();
+        }
+        else {
+            res.writeHead(502);
+            res.end();
         }
     });
 };

@@ -12,7 +12,7 @@ interface State {
     api: SignInApi;
 }
 
-class SignIn extends React.Component<{}, State> {
+class ForgotPass extends React.Component<{}, State> {
     static contextTypes = {
         router: PropTypes.object
     };
@@ -42,22 +42,22 @@ class SignIn extends React.Component<{}, State> {
 
     loadPage(): void {
         this.context.router.history.push({
-            pathname: '/course-selection-layout',
+            pathname: '/course-selection-form',
             state: {
             }
         });
-    }
+     }
      
     authenticate() {
         this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
             this.setState({authenticated: data});
-            if (this.state.authenticated === true) {
-                this.loadPage();
-            } else {
-                alert('Incorrect Credentials');
-                this.setState({username: '', password: ''});
-            }
         });
+        if (this.state.authenticated === true) {
+            this.loadPage();
+        } else {
+            alert('Incorrect Credentials');
+            this.setState({username: '', password: ''});
+        }
     }
 
     render() {
@@ -93,4 +93,4 @@ class SignIn extends React.Component<{}, State> {
     }
 }
 
-export default SignIn;
+export default ForgotPass;
