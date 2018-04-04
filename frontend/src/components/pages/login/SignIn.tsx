@@ -51,13 +51,13 @@ class SignIn extends React.Component<{}, State> {
     authenticate() {
         this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
             this.setState({authenticated: data});
+            if (this.state.authenticated === true) {
+                this.loadPage();
+            } else {
+                alert('Incorrect Credentials');
+                this.setState({username: '', password: ''});
+            }
         });
-        if (this.state.authenticated === true) {
-            this.loadPage();
-        } else {
-            alert('Incorrect Credentials');
-            this.setState({username: '', password: ''});
-        }
     }
 
     render() {

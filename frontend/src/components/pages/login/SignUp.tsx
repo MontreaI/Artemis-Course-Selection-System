@@ -78,12 +78,13 @@ class SignUp extends React.Component<{}, State> {
     register() {
         this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
             this.setState({created: data});
-        });
-        if (this.state.created === true) {
-            this.loadPage();
-        } else {
-            alert('Could Not Connect to SignUp API');
-        }            
+            global.console.log(data);
+            if (this.state.created === true) {
+                this.loadPage();
+            } else {
+                alert('Could Not Connect to SignUp API');
+            }      
+        });   
     }   
     render() {
         return (
@@ -101,7 +102,6 @@ class SignUp extends React.Component<{}, State> {
                         className="form-input"
                         type="text"
                         placeholder="email"
-                        onChange={this.onEmailChange}
                     />
                     <br />
                     <input
