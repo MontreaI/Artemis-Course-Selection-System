@@ -35,6 +35,7 @@ class SignUp extends React.Component<{}, State> {
         this.onEmailChange = this.onEmailChange.bind(this);
         this.confirmPass = this.confirmPass.bind(this);
         this.loadPage = this.loadPage.bind(this);
+        this.goBack = this.goBack.bind(this);
         this.register = this.register.bind(this);
     }
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -67,6 +68,13 @@ class SignUp extends React.Component<{}, State> {
         });
     }
 
+    goBack(): void {
+        this.context.router.history.push({
+            pathname: '/signin',
+            state: {
+            }
+        });
+    }
     confirmPass() {
         if (this.state.password === this.state.conPass) {
             this.register();
@@ -98,6 +106,7 @@ class SignUp extends React.Component<{}, State> {
                         placeholder="username"
                         onChange={this.onUsernameChange}
                     />
+                    <br />
                     <input
                         className="form-input"
                         type="text"
@@ -120,6 +129,10 @@ class SignUp extends React.Component<{}, State> {
                     <br />
                     <button onClick={this.confirmPass}>
                         Sign Up
+                    </button>
+                    <br />
+                    <button onClick={this.goBack}>
+                        Go back
                     </button>
                 </div>
             </div>

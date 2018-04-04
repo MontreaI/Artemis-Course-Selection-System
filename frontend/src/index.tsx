@@ -6,6 +6,7 @@ import registerServiceWorker from './registerServiceWorker';
 import CourseSelectionLayout from '../src/components/layouts/course-selection-layout';
 import SignUp from '../src/components/pages/login/SignUp';
 import SignIn from '../src/components/pages/login/SignIn';
+import ForgotPass from '../src/components/pages/login/ForgotPass';
 import './index.css';
 import CourseOutline from './components/pages/course-outline/course-outline';
 import WeeklyView from './components/calendar/weekly';
@@ -22,6 +23,7 @@ ReactDOM.render(
       <Route path="/course-selection-layout" component={CourseSelectionLayout} />
       <Route path="/signup" component={SignUp} />
       <Route path="/signin" component={SignIn} />
+      <Route path="/forgotpass" component={ForgotPass} />
       <Route path="/weekly" component={WeeklyView} />
     </div>
   </BrowserRouter>,
