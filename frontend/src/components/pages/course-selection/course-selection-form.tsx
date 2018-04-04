@@ -124,7 +124,6 @@ class CourseSelectionForm extends React.Component<{}, State> {
           if (response.ok) {
             return response.json();
           } else {
-            global.console.log('Successfully fetched from server');
             throw new Error('Could not fetch from server');
           }
         })
@@ -276,22 +275,36 @@ class CourseSelectionForm extends React.Component<{}, State> {
     // /get/course/:department/:number/:section/:year/:term/'
     saveCourse() {
         // find course and retrieve ID
-         // let courseData = this.fetchUrl('http://localhost:3376/get/course/' + this.state.mDepartmentSelected + '/' + this.state.mCourseSelected.split('-')[0].trim() );
-        // if ID is -1 insert course
-        // insert course to user
-        /*
-        global.console.log('Storing data to user database');
-        fetch('http://localhost:3376/user')
-        .then(response => {
-          if (response.ok) {
-            global.console.log('Successfully fetched from server');
-          } else {
-            global.console.log('Successfully fetched from server');
-            throw new Error('Could not fetch from server');
-          }
-        });
-        */
-       // this.fetchUrl('http://localhost:3376/user');
+         let findCourseURL = 'http://localhost:3376/get/userCourse/' + this.state.mDepartmentSelected + '/' + 
+         this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[0].sectionNum + '/' + 
+         this.state.mYearSelected + '/' + this.state.mTermSelected;
+         let courseData = this.fetchUrl(findCourseURL).then((data) => {
+            global.console.log('here' + data);
+            if (data === -1) {
+                global.console.log('Congrats its undefined');
+                let insertCourseURL = 'http://localhost:3376/insert/course/' + this.state.mDepartmentSelected + '/' +
+                    this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[0].sectionNum + '/' +
+                    this.state.mYearSelected + '/' + this.state.mTermSelected;
+                let createdCourseData = this.fetchUrl(insertCourseURL).then((data1) => {
+                    if (data1 === -1) {
+                        global.console.log('Please try again or refresh the page');
+                    } else {
+                       global.console.log('Grats, the ID is ' + data1);
+                    }
+                });
+   
+            } else {
+               global.console.log('Congratulations course id returned is' + data);
+               let createdCourseData = this.fetchUrl('http://localhost:3376/insert/userCourse/rca71/' + data).then((data1) => {
+                if (data1 === -1) {
+                    global.console.log('Please try again or refresh the page');
+                } else {
+                   global.console.log('Grats, course inserted');
+                }
+            });
+
+            }
+       });
     }
 
     render() {

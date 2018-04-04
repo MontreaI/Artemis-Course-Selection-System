@@ -27,8 +27,9 @@ app.get('/users/:username/:password/:email', apiController.getUserPassword);
 
 // General Database Information
 app.get('/insert/user/:username/:password/:email', apiController.insertUser);
-app.get('/insert/course/:department/:number/:section/:year/:term/:description', apiController.insertCourse);
-app.get('/insert/userCourse/:department/:number/:section/:year/:term/:description', apiController.insertCourse);
+app.get('/insert/course/:department/:number/:section/:year/:term', apiController.insertCourse);
+app.get('/get/userCourse/:department/:number/:section/:year/:term', apiController.findCourse);
+app.get('/insert/userCourse/:username/:courseID', apiController.insertUserCourse);
 
 /*
 export interface Course {
