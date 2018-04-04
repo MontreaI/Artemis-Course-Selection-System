@@ -33,6 +33,7 @@ class SignUp extends React.Component<{}, State> {
         this.onConPassChange = this.onConPassChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onEmailChange = this.onEmailChange.bind(this);
+        this.emailRegexCheck = this.emailRegexCheck.bind(this);
         this.confirmPass = this.confirmPass.bind(this);
         this.loadPage = this.loadPage.bind(this);
         this.goBack = this.goBack.bind(this);
@@ -51,9 +52,13 @@ class SignUp extends React.Component<{}, State> {
     }
 
     onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({email: e.target.value});
+    }
+
+    emailRegexCheck() {
         const emailRegex = /\S+@\S+\.\S+/;
-        if (emailRegex.test(e.target.value)) {
-            this.setState({email: e.target.value});
+        if (emailRegex.test(this.state.email)) {
+            this.confirmPass();
         } else {
             alert('Email not valid!');
             this.setState({email: ''});
@@ -127,7 +132,7 @@ class SignUp extends React.Component<{}, State> {
                         onChange={this.onConPassChange}
                     />
                     <br />
-                    <button onClick={this.confirmPass}>
+                    <button onClick={this.emailRegexCheck}>
                         Sign Up
                     </button>
                     <br />

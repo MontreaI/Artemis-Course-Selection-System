@@ -46,6 +46,7 @@ class SignIn extends React.Component<{}, State> {
         this.context.router.history.push({
             pathname: '/course-selection-layout',
             state: {
+                username: this.state.username
             }
         });
     }

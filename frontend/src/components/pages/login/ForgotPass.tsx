@@ -25,6 +25,7 @@ class ForgotPass extends React.Component<{}, State> {
         this.onEmailChange = this.onEmailChange.bind(this);
         this.loadPage = this.loadPage.bind(this);
         this.authenticate = this.authenticate.bind(this);
+        this.userRegret = this.userRegret.bind(this);
     }
 
     onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -42,15 +43,22 @@ class ForgotPass extends React.Component<{}, State> {
     authenticate() {
         this.state.api.getUserPassword('', '', this.state.email).then(data => {
             this.setState({sent: data});
+            if (this.state.sent === true) {
+                this.loadPage();
+            } else {
+                alert('Email is not registered');
+                this.setState({email: ''});
+            }
         });
-        if (this.state.sent === true) {
-            this.loadPage();
-        } else {
-            alert('Email is not registered');
-            this.setState({email: ''});
-        }
     }
 
+    userRegret(): void {
+        this.context.router.history.push({
+            pathname: '/signup',
+            state: {
+            }
+        });
+    }
     render() {
         return (
             <div className="form-signin">
@@ -68,9 +76,9 @@ class ForgotPass extends React.Component<{}, State> {
                         Send Password
                     </button>
                     <br />
-                    <Link to={'/signup'}>
+                    <button onClick={this.userRegret}>
                         Don't Have an Account?
-                    </Link>
+                    </button>
                 </div>
             </div>
         );
