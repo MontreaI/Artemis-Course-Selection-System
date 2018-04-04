@@ -207,8 +207,10 @@ export let getUserPassword = (req: Request, res: Response) => {
     findUser(user).then((u: User) => {
         if (u.username == req.params.username) {
             res.writeHead(200);
+            res.end();
         }
         else {
+            res.writeHead(502);
             res.end();
         }
     });
@@ -217,10 +219,14 @@ export let getUserPassword = (req: Request, res: Response) => {
 // Creates user with defined credentials
 export let createAccount = (req: Request, res: Response) => {
     const user: User = { username: req.params.username, password: req.params.password, email: req.params.email};
-    if (createUser(user) == true) {
-        res.writeHead(200);
-    }
-    else {
-        res.end();
-    }
+    createUser(user).then((result: boolean) => {
+        if (result == true) {
+            res.writeHead(200);
+            res.end();
+        }
+        else {
+            res.writeHead(502);
+            res.end();
+        }
+    });
 };
