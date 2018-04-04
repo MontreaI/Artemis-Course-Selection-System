@@ -13,7 +13,10 @@ import WeeklyView from './components/calendar/weekly';
 ReactDOM.render(
   <BrowserRouter>
     <div>
-    <header><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" /></header>
+    <header>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      <link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/>
+      </header>
       <Route exact={true} path="/" component={App} />
       <Route path="/course-outline" component={CourseOutline} />
       <Route path="/course-selection-layout" component={CourseSelectionLayout} />
