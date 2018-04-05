@@ -9,6 +9,7 @@ import * as PropTypes from 'prop-types';
 import CourseApi from '../../../utils/course-api';
 import CourseOutline from '../course-outline/course';
 import CSection from '../course-outline/csection';
+import Snackbar from 'material-ui/Snackbar';
 
 import {
     Table,
@@ -21,6 +22,8 @@ import {
   } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 
+var savedCourseSuccess = 'Course has been successfully saved to your timetable!';
+var savedCourseFailure = 'Course has failed to be saved to your timetable, please try again!';
 var rowSizeArray: boolean[] = new Array(1);
 var mCourseSectionsSelected: CSection[];
 var courseSectionDataEmpty: CSection[] = [];
@@ -52,6 +55,8 @@ interface State {
     rowsSelected: boolean[];
     isLECSelected: boolean;
     isSECSelected: boolean;
+    open: boolean;
+    snackbarMessage: string;
 }
 
 // dropdown titles
@@ -94,6 +99,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
           rowsSelected: [false],
           isLECSelected: true,
           isSECSelected: true,
+          open: false,
+          snackbarMessage: '',
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -106,8 +113,13 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.saveCourse = this.saveCourse.bind(this);
         this.onSectionSelect = this.onSectionSelect.bind(this);
         this.clearForm = this.clearForm.bind(this);
+        this.onUnloadCleanup = this.onUnloadCleanup.bind(this);
       }
-    
+      onUnloadCleanup(event: Event) {
+        global.console.log('unloading');
+        event.preventDefault();
+        return 'unloading';
+      }
     componentDidMount() {
         /*
          Upon loading page, the years must be always fetched because the most basic query requires at least the year...
@@ -117,8 +129,12 @@ class CourseSelectionForm extends React.Component<{}, State> {
             this.setState({years: data});
             global.console.log('call to year...');
         });
-    }
 
+        window.addEventListener('beforeunload', this.onUnloadCleanup);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('beforeunload', this.onUnloadCleanup);
+      }
     fetchUrl(urlString: string) {
         return fetch(urlString)
         .then(response => {
@@ -287,20 +303,30 @@ class CourseSelectionForm extends React.Component<{}, State> {
     saveCourse() {
         // find course and retrieve ID
          let findCourseURL = 'http://localhost:3376/get/userCourse/' + this.state.mDepartmentSelected + '/' + 
-         this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[0].sectionNum + '/' + 
+         this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[this.state.rowsSelected.indexOf(true)].sectionNum + '/' + 
          this.state.mYearSelected + '/' + this.state.mTermSelected;
          let courseData = this.fetchUrl(findCourseURL).then((data) => {
             global.console.log('here' + data);
             if (data === -1) {
                 global.console.log('Congrats its undefined');
                 let insertCourseURL = 'http://localhost:3376/insert/course/' + this.state.mDepartmentSelected + '/' +
-                    this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[0].sectionNum + '/' +
+                    this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
                     this.state.mYearSelected + '/' + this.state.mTermSelected;
                 let createdCourseData = this.fetchUrl(insertCourseURL).then((data1) => {
                     if (data1 === -1) {
                         global.console.log('Please try again or refresh the page');
+                        this.setState({snackbarMessage: savedCourseFailure});
                     } else {
                        global.console.log('Grats, the ID is ' + data1);
+                       let createdCourseData2 = this.fetchUrl('http://localhost:3376/insert/userCourse/rca71/' + data1).then((data2) => {
+                        if (data2 === -1) {
+                            global.console.log('Please try again or refresh the page');
+                            this.setState({snackbarMessage: savedCourseFailure});
+                        } else {
+                           global.console.log('Grats, course inserted');
+                           this.setState({snackbarMessage: savedCourseSuccess});
+                        }
+                    });
                     }
                 });
    
@@ -309,15 +335,23 @@ class CourseSelectionForm extends React.Component<{}, State> {
                let createdCourseData = this.fetchUrl('http://localhost:3376/insert/userCourse/rca71/' + data).then((data1) => {
                 if (data1 === -1) {
                     global.console.log('Please try again or refresh the page');
+                    this.setState({snackbarMessage: savedCourseFailure});
                 } else {
                    global.console.log('Grats, course inserted');
+                   this.setState({snackbarMessage: savedCourseSuccess});
                 }
             });
 
             }
        });
+         this.setState({open: true});
     }
-
+    handleRequestClose = () => {
+        this.setState({
+          open: false,
+        });
+      }
+      
     render() {
         return (
             <div>
@@ -383,6 +417,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
           </TableBody>
         </Table>
             </div>
+            <Snackbar open={this.state.open} message={this.state.snackbarMessage} autoHideDuration={4000} onRequestClose={this.handleRequestClose}/>
             </div>
         );
     }

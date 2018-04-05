@@ -280,10 +280,10 @@ export let insertCourse = (req: Request, res: Response) => {
         description: '',
     };
     const courseID = db.createCourse(course);
-    courseID.then((data: db.Course) => {
-        if (data.id != -1) {
+    courseID.then((data: number) => {
+        if (data != -1) {
             try {
-                res.write('' + data.id);
+                res.write('' + data);
                 res.end();
             } catch (e) {
                 console.error(e.message);
