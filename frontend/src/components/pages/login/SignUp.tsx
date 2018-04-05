@@ -33,8 +33,10 @@ class SignUp extends React.Component<{}, State> {
         this.onConPassChange = this.onConPassChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onEmailChange = this.onEmailChange.bind(this);
+        this.emailRegexCheck = this.emailRegexCheck.bind(this);
         this.confirmPass = this.confirmPass.bind(this);
         this.loadPage = this.loadPage.bind(this);
+        this.goBack = this.goBack.bind(this);
         this.register = this.register.bind(this);
     }
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -50,9 +52,13 @@ class SignUp extends React.Component<{}, State> {
     }
 
     onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({email: e.target.value});
+    }
+
+    emailRegexCheck() {
         const emailRegex = /\S+@\S+\.\S+/;
-        if (emailRegex.test(e.target.value)) {
-            this.setState({email: e.target.value});
+        if (emailRegex.test(this.state.email)) {
+            this.confirmPass();
         } else {
             alert('Email not valid!');
             this.setState({email: ''});
@@ -67,6 +73,13 @@ class SignUp extends React.Component<{}, State> {
         });
     }
 
+    goBack(): void {
+        this.context.router.history.push({
+            pathname: '/signin',
+            state: {
+            }
+        });
+    }
     confirmPass() {
         if (this.state.password === this.state.conPass) {
             this.register();
@@ -98,6 +111,7 @@ class SignUp extends React.Component<{}, State> {
                         placeholder="username"
                         onChange={this.onUsernameChange}
                     />
+                    <br />
                     <input
                         className="form-input"
                         type="text"
@@ -118,8 +132,12 @@ class SignUp extends React.Component<{}, State> {
                         onChange={this.onConPassChange}
                     />
                     <br />
-                    <button onClick={this.confirmPass}>
+                    <button onClick={this.emailRegexCheck}>
                         Sign Up
+                    </button>
+                    <br />
+                    <button onClick={this.goBack}>
+                        Go back
                     </button>
                 </div>
             </div>

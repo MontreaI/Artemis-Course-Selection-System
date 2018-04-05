@@ -29,6 +29,8 @@ class SignIn extends React.Component<{}, State> {
         this.onUsernameChange = this.onUsernameChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.loadPage = this.loadPage.bind(this);
+        this.goSignUp = this.goSignUp.bind(this);
+        this.goForgot = this.goForgot.bind(this);
         this.authenticate = this.authenticate.bind(this);
     }
     
@@ -44,22 +46,47 @@ class SignIn extends React.Component<{}, State> {
         this.context.router.history.push({
             pathname: '/course-selection-layout',
             state: {
+                username: this.state.username
             }
         });
     }
-     
-    authenticate() {
-        this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
-            this.setState({authenticated: data});
-            if (this.state.authenticated === true) {
-                this.loadPage();
-            } else {
-                alert('Incorrect Credentials');
-                this.setState({username: '', password: ''});
+    
+    goSignUp() {
+        this.context.router.history.push({
+            pathname: '/signup',
+            state: {
             }
         });
     }
 
+    goForgot() {
+        this.context.router.history.push({
+            pathname: '/forgotpass',
+            state: {
+            }
+        });
+    }
+
+    authenticate() {
+        global.console.log(this.state.authenticated);
+        if (this.state.password === '') {
+            alert('Enter a password!');
+        } else if (this.state.username === '') {
+            alert('Enter a username!');
+        } else { 
+            this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
+                this.setState({authenticated: data});
+                global.console.log(this.state.authenticated);
+                if (this.state.authenticated === true) {
+                    this.loadPage();
+                } else {
+                    alert('Incorrect Credentials');
+                    this.setState({username: '', password: ''});
+                }
+            });
+        }
+    }
+    
     render() {
         return (
             <div className="form-signin">
@@ -84,9 +111,13 @@ class SignIn extends React.Component<{}, State> {
                         Log In
                     </button>
                     <br />
-                    <Link to={'/signup'}>
-                        Don't Have an Account?
-                    </Link>
+                    <button onClick={this.goSignUp}>
+                        Sign Up
+                    </button>
+                    <br />
+                    <button onClick={this.goForgot}>
+                        Forgot Password
+                    </button>
                 </div>
             </div>
         );

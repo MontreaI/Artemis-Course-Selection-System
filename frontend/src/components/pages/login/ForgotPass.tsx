@@ -5,10 +5,8 @@ import './SignIn.css';
 import SignInApi from '../../../utils/signin-api';
 
 interface State {
-    username: string; 
-    password: string;
     email: string;
-    authenticated: boolean;
+    sent: boolean;
     api: SignInApi;
 }
 
@@ -20,46 +18,47 @@ class ForgotPass extends React.Component<{}, State> {
     constructor(props: {}, context: {}) {
         super(props, context);
         this.state = {
-            username: '',
-            password: '',
             email: '',
-            authenticated: false,
+            sent: false,
             api: new SignInApi(),
         };
-        this.onUsernameChange = this.onUsernameChange.bind(this);
-        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.onEmailChange = this.onEmailChange.bind(this);
         this.loadPage = this.loadPage.bind(this);
         this.authenticate = this.authenticate.bind(this);
-    }
-    
-    onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({username: e.target.value});
+        this.userRegret = this.userRegret.bind(this);
     }
 
-    onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({password: e.target.value});
+    onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({email: e.target.value});
     }
 
     loadPage(): void {
         this.context.router.history.push({
-            pathname: '/course-selection-form',
+            pathname: '/signin',
             state: {
             }
         });
      }
      
     authenticate() {
-        this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
-            this.setState({authenticated: data});
+        this.state.api.getUserPassword('', '', this.state.email).then(data => {
+            this.setState({sent: data});
+            if (this.state.sent === true) {
+                this.loadPage();
+            } else {
+                alert('Email is not registered');
+                this.setState({email: ''});
+            }
         });
-        if (this.state.authenticated === true) {
-            this.loadPage();
-        } else {
-            alert('Incorrect Credentials');
-            this.setState({username: '', password: ''});
-        }
     }
 
+    userRegret(): void {
+        this.context.router.history.push({
+            pathname: '/signup',
+            state: {
+            }
+        });
+    }
     render() {
         return (
             <div className="form-signin">
@@ -69,24 +68,17 @@ class ForgotPass extends React.Component<{}, State> {
                     <input
                         className="form-input"
                         type="text"
-                        placeholder="username"
-                        onChange={this.onUsernameChange}
-                    />
-                    <br />
-                    <input
-                        className="form-input"
-                        type="password"
-                        placeholder="password"
-                        onChange={this.onPasswordChange}
+                        placeholder="email"
+                        onChange={this.onEmailChange}
                     />
                     <br />
                     <button onClick={this.authenticate}>
-                        Log In
+                        Send Password
                     </button>
                     <br />
-                    <Link to={'/signup'}>
+                    <button onClick={this.userRegret}>
                         Don't Have an Account?
-                    </Link>
+                    </button>
                 </div>
             </div>
         );
