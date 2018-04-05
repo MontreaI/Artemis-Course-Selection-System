@@ -211,7 +211,11 @@ export let getUserPassword = (req: Request, res: Response) => {
             res.writeHead(200);
             res.end();
         }
-        //Have something that will match email and send password off to that email
+        else if (u.email == req.params.email) {
+            //Something for emailing password
+            res.writeHead(200);
+            res.end();
+        }
         else {
             res.writeHead(502);
             res.end();

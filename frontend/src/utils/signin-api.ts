@@ -13,6 +13,7 @@ class SignInApi {
     private fetchUrl(urlString: string) {
         return fetch(urlString)
         .then(response => {
+          global.console.log(response);
           if (response.ok) {
             return true;
           } else {
