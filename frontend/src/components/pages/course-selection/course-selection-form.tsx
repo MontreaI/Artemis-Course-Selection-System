@@ -105,6 +105,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.generalFetch = this.generalFetch.bind(this);
         this.saveCourse = this.saveCourse.bind(this);
         this.onSectionSelect = this.onSectionSelect.bind(this);
+        this.clearForm = this.clearForm.bind(this);
       }
     
     componentDidMount() {
@@ -241,6 +242,16 @@ class CourseSelectionForm extends React.Component<{}, State> {
         });
     }
 
+    clearForm(): void {
+        this.setState({
+            mYearSelected: yearDropdownTitle,
+            mTermSelected: termDropdownTitle,
+            mDepartmentSelected: departmentDropdownTitle,
+            mCourseSelected: courseDropdownTitle,
+            courseSectionData: courseSectionDataEmpty,
+            isLECSelected: true,
+            isSECSelected: true});
+    }
     onSectionSelect(rows: number[]) {
         let isLEC = true;
         let isSEC = true;
@@ -329,7 +340,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
                     <Dropdown className="coursedropdown" options={this.state.courses} onChange={this.onSelectCourse} value={undefined} placeholder={this.state.mCourseSelected}/>
                 </div>
                 <div id="buttons">
-                <RaisedButton className="clearbtn" label="Clear" primary={true}/>
+                <RaisedButton className="clearbtn" label="Clear" primary={true} onClick={this.clearForm}/>
                 <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse}  disabled={this.state.isSECSelected}/>
                 <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={this.state.isLECSelected}/>
                 </div>
