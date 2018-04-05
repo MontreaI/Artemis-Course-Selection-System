@@ -29,7 +29,7 @@ class ForgotPass extends React.Component<{}, State> {
     }
 
     onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({email: e.target.value});
+        this.setState({email: e.target.value.toLowerCase()});
     }
 
     loadPage(): void {

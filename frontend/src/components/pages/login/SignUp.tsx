@@ -40,7 +40,7 @@ class SignUp extends React.Component<{}, State> {
         this.register = this.register.bind(this);
     }
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({username: e.target.value});
+        this.setState({username: e.target.value.toLowerCase()});
     }
 
     onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -52,7 +52,7 @@ class SignUp extends React.Component<{}, State> {
     }
 
     onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({email: e.target.value});
+        this.setState({email: e.target.value.toLowerCase()});
     }
 
     emailRegexCheck() {
