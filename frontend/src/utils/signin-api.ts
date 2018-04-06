@@ -7,7 +7,7 @@ class SignInApi {
     }
 
     public createAccount(username: string, password: string, email: string): Promise<boolean> {
-      return this.fetchUrl(`${Config.loginURL}${username}/${password}/${email}`);
+      return this.fetchGetUrl(`${Config.loginURL}${username}/${email}/${password}`);
     }
     
     public getUserEmailSent(username: string, email: string): Promise<boolean> {
@@ -25,6 +25,20 @@ class SignInApi {
           }
         });
     }
+
+    private fetchGetUrl(urlString: string) {
+      return fetch(urlString, {method: 'POST', mode: 'cors', headers: new Headers({
+        'Content-Type': 'text/plain'
+      })})
+      .then(response => {
+        global.console.log(response);
+        if (response.ok) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+  }
 }
 
 export default SignInApi;
