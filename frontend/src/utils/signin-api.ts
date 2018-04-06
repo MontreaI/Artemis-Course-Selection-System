@@ -7,7 +7,6 @@ class SignInApi {
     }
 
     public createAccount(username: string, password: string, email: string): Promise<boolean> {
-      global.console.log(password);
       return this.fetchUrl(`${Config.loginURL}${username}/${password}/${email}`);
     }
     
@@ -29,18 +28,3 @@ class SignInApi {
 }
 
 export default SignInApi;
-// if (u.username == req.params.username) {
-//    this.context.router.history.push({
-///        pathname: '/course-outline',
-//        state: {
-//            authenticated: true
-//        }
-//    });
-// }
-// else {
-// this.context.router.history.push({
-//    pathname: '/signin',
-//    state: {
-//        authenticated: false
-//    }
-// });

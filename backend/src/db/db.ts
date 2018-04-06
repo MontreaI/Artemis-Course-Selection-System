@@ -94,7 +94,7 @@ export function findUser(user: User) {
  *Accepts user's email and sends off password to email
 */
 export function emailUser(user: User) {
-    return db.one('SELECT * FROM users WHERE email = $1 AND username = $2', [user.email, user.username])
+    return db.one('SELECT * FROM users WHERE username = $1 AND email = $2', [user.username, user.email])
                  .then((data: User) => data)
                  .catch((err: Error) => {
                      global.console.log(err);
