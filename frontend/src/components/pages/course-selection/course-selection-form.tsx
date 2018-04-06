@@ -205,7 +205,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
           mTermSelected: this.state.mTermSelected,
           mDepartmentSelected: this.state.mDepartmentSelected,
           mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
-          //mCourseSection: this.state.mCourseSection,
+          mCourseSection: this.state.mCourseSection,
           courseSectionData: this.state.courseSectionData[this.state.rowsSelected.indexOf(true)],
         }
       });
