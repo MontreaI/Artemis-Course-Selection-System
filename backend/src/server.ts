@@ -23,9 +23,10 @@ app.get('/terms/:year/:term', apiController.getDepartments);
 app.get('/terms/:year/:term/:department', apiController.getCourseNumbers);
 app.get('/terms/:year/:term/:department/:courseNumber', apiController.getCourseSections);
 app.get('/terms/:year/:term/:department/:courseNumber/:courseSection', apiController.getCourseOutline);
-app.get('/users/:username/:password', apiController.getUserPassword);
-// TODO: add a recover password endpoint.
+app.get('/users/:username/:email', apiController.getUserEmailSent);
+app.get('/users/:username/:email/:password', apiController.createAccount);
 
+app.get('/service/:username/:password', apiController.getUserPassword);
 // General Database Information
 // TODO: don't do this, do a POST to user/:username/:password/:email etc instead of a GET
 app.get('/insert/user/:username/:password/:email', apiController.insertUser);

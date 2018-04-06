@@ -48,9 +48,8 @@ class ForgotPass extends React.Component<{}, State> {
      }
      
     authenticate() {
-        this.state.api.getUserEmailSent(this.state.username, '', this.state.email).then(data => {
-            this.setState({sent: data});
-            if (this.state.sent === true) {
+        this.state.api.getUserEmailSent(this.state.username, this.state.email).then(data => {
+            if (data === true) {
                 this.loadPage();
             } else {
                 alert('Username registered to email is not valid');

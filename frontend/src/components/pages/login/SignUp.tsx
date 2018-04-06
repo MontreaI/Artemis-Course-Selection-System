@@ -66,7 +66,7 @@ class SignUp extends React.Component<{}, State> {
 
     loadPage(): void {
         this.context.router.history.push({
-            pathname: '/course-selection-form',
+            pathname: '/course-selection-layout',
             state: {
             }
         });
