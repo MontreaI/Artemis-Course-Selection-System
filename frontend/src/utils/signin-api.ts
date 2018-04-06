@@ -7,9 +7,14 @@ class SignInApi {
     }
 
     public createAccount(username: string, password: string, email: string): Promise<boolean> {
-        return this.fetchUrl(`${Config.loginURL}${username}/${password}/${email}`);
+      global.console.log(password);
+      return this.fetchUrl(`${Config.loginURL}${username}/${password}/${email}`);
     }
     
+    public getUserEmailSent(username: string, password: string, email: string): Promise<boolean> {
+      return this.fetchUrl(`${Config.loginURL}${username}/${password}/${email}`);
+    }
+
     private fetchUrl(urlString: string) {
         return fetch(urlString)
         .then(response => {

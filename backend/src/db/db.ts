@@ -82,21 +82,24 @@ export function createTableUserCourse() {
  * or just username for admin lookup
 */
 export function findUser(user: User) {
-    if (user.password === '') {
-        return db.one('SELECT * FROM users WHERE username = $1', user.username)
-            .then((data: User) => data)
-            .catch((err: Error) => {
-                global.console.log(err);
-                return { username: '', password: '', email: '' };
-            });
-    } else {
-        return db.one('SELECT * FROM users WHERE username = $1 AND password = $2', [user.username, user.password])
+    return db.one('SELECT * FROM users WHERE username = $1 AND password = $2', [user.username, user.password])
                  .then((data: User) => data)
                  .catch((err: Error) => {
                      global.console.log(err);
                      return { username: '', password: '', email: '' };
                  });
-    }
+}
+
+/*
+ *Accepts user's email and sends off password to email
+*/
+export function emailUser(user: User) {
+    return db.one('SELECT * FROM users WHERE email = $1 AND username = $2', [user.email, user.username])
+                 .then((data: User) => data)
+                 .catch((err: Error) => {
+                     global.console.log(err);
+                     return { username: '', password: '', email: '' };
+                 });
 }
 
 /*

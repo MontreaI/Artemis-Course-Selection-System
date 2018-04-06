@@ -61,7 +61,6 @@ class SignUp extends React.Component<{}, State> {
             this.confirmPass();
         } else {
             alert('Email not valid!');
-            this.setState({email: ''});
         }
     }
 
@@ -89,10 +88,10 @@ class SignUp extends React.Component<{}, State> {
         }
     }
     register() {
-        this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
+        this.state.api.createAccount(this.state.username, this.state.password, this.state.email).then(data => {
             this.setState({created: data});
             global.console.log(data);
-            if (this.state.created === true) {
+            if (data === true) {
                 this.loadPage();
             } else {
                 alert('Could Not Connect to SignUp API');
@@ -116,6 +115,7 @@ class SignUp extends React.Component<{}, State> {
                         className="form-input"
                         type="text"
                         placeholder="email"
+                        onChange={this.onEmailChange}
                     />
                     <br />
                     <input

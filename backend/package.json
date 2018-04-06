@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/nodemailer": "^4.6.0",
     "@types/pg-promise": "^5.4.3",
+    "nodemailer": "^4.6.4",
     "npm": "^5.8.0",
     "pg-promise": "^8.2.2",
     "server.js": "^1.0.0"

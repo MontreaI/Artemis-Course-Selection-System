@@ -80,7 +80,6 @@ class SignIn extends React.Component<{}, State> {
                     this.loadPage();
                 } else {
                     alert('Incorrect Credentials');
-                    this.setState({username: '', password: ''});
                 }
             });
         }

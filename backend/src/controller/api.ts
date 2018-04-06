@@ -2,8 +2,9 @@
 import { Response, Request } from 'express';
 import http from 'http';
 import { isUndefined } from 'util';
-import { findUser, createUser, User  } from '../db/db';
+import { findUser, createUser, emailUser, User  } from '../db/db';
 import * as db from '../db/db';
+const nodemailer = require('nodemailer');
 
 export let getApi = (req: Request, res: Response) => {
     const courses = [{ name: 'CMPT470' }];
@@ -209,6 +210,45 @@ export let getUserPassword = (req: Request, res: Response) => {
     global.console.log(`logging in user ${user.username} ${user.password}`);
     findUser(user).then((u: User) => {
         if ((u.username == req.params.username) && (req.params.username != '')) {
+            res.writeHead(200);
+            res.end();
+        }
+        else {
+            res.writeHead(502);
+            res.end();
+        }
+    });
+};
+
+// Returns if user password is sent to email
+export let getUserEmailSent = (req: Request, res: Response) => {
+    const user: User = { username: req.params.username, password: '', email: req.params.email };
+    global.console.log(`sending email to ${user.email} ${user.username}`);
+    emailUser(user).then((u: User) => {
+        if ((u.username == req.params.username) && (u.email == req.params.email)) {
+            //Someting for emailing here
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                secure: false,
+                port: 25,
+                auth: {
+                    user: 'typewritermonkeys470@gmail.com',
+                    pass: 'artemis470'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+            });
+
+            const HelperOptions = {
+                form: '"Typewriter Support" <typewritermonkeys470@gmail.com>',
+                to: u.email,
+                subject: 'Forgotten Password',
+                text: 'Your password is: ' + u.password
+            };
+            transporter.sendMail(HelperOptions, ()  => {
+                global.console.log('Message sent');
+            });
             res.writeHead(200);
             res.end();
         }

@@ -5,6 +5,7 @@ import './SignIn.css';
 import SignInApi from '../../../utils/signin-api';
 
 interface State {
+    username: string;
     email: string;
     sent: boolean;
     api: SignInApi;
@@ -18,11 +19,13 @@ class ForgotPass extends React.Component<{}, State> {
     constructor(props: {}, context: {}) {
         super(props, context);
         this.state = {
+            username: '',
             email: '',
             sent: false,
             api: new SignInApi(),
         };
         this.onEmailChange = this.onEmailChange.bind(this);
+        this.onNameChange = this.onNameChange.bind(this);
         this.loadPage = this.loadPage.bind(this);
         this.authenticate = this.authenticate.bind(this);
         this.userRegret = this.userRegret.bind(this);
@@ -30,6 +33,10 @@ class ForgotPass extends React.Component<{}, State> {
 
     onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({email: e.target.value.toLowerCase()});
+    }
+
+    onNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({username: e.target.value.toLowerCase()});
     }
 
     loadPage(): void {
@@ -41,13 +48,12 @@ class ForgotPass extends React.Component<{}, State> {
      }
      
     authenticate() {
-        this.state.api.getUserPassword('', '', this.state.email).then(data => {
+        this.state.api.getUserEmailSent(this.state.username, '', this.state.email).then(data => {
             this.setState({sent: data});
             if (this.state.sent === true) {
                 this.loadPage();
             } else {
-                alert('Email is not registered');
-                this.setState({email: ''});
+                alert('Username registered to email is not valid');
             }
         });
     }
@@ -70,6 +76,13 @@ class ForgotPass extends React.Component<{}, State> {
                         type="text"
                         placeholder="email"
                         onChange={this.onEmailChange}
+                    />
+                    <br />
+                    <input
+                        className="form-input"
+                        type="text"
+                        placeholder="username"
+                        onChange={this.onNameChange}
                     />
                     <br />
                     <button onClick={this.authenticate}>
