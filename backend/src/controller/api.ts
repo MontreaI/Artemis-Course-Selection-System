@@ -207,7 +207,7 @@ export let getCourseOutline = (req: Request, res: Response) => {
 export let getUserPassword = (req: Request, res: Response) => {
     const user: User = { username: req.params.username, password: req.params.password, email: req.params.email};
     findUser(user).then((u: User) => {
-        if (u.username == req.params.username) {
+        if ((u.username == req.params.username) && (req.params.username != '')) {
             res.writeHead(200);
             res.end();
         }
