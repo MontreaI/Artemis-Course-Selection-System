@@ -24,7 +24,7 @@ app.get('/terms/:year/:term/:department', apiController.getCourseNumbers);
 app.get('/terms/:year/:term/:department/:courseNumber', apiController.getCourseSections);
 app.get('/terms/:year/:term/:department/:courseNumber/:courseSection', apiController.getCourseOutline);
 app.get('/users/:username/:email', apiController.getUserEmailSent);
-app.get('/users/:username/:email/:password', apiController.createAccount);
+app.get('/users/:username/:password/:email', apiController.createAccount);
 
 app.get('/service/:username/:password', apiController.getUserPassword);
 // General Database Information

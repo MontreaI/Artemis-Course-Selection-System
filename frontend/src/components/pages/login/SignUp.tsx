@@ -41,6 +41,7 @@ class SignUp extends React.Component<{}, State> {
     }
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({username: e.target.value.toLowerCase()});
+        global.console.log(this.state.username);
     }
 
     onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
