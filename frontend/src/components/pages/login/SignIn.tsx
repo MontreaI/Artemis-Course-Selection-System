@@ -1,11 +1,15 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Redirect } from 'react-router-dom';
 import './SignIn.css';
+import SignInApi from '../../../utils/signin-api';
 
 interface State {
     username: string; 
     password: string;
+    email: string;
+    authenticated: boolean;
+    api: SignInApi;
 }
 
 class SignIn extends React.Component<{}, State> {
@@ -17,27 +21,72 @@ class SignIn extends React.Component<{}, State> {
         super(props, context);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            email: '',
+            authenticated: false,
+            api: new SignInApi(),
         };
+        this.onUsernameChange = this.onUsernameChange.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.loadPage = this.loadPage.bind(this);
+        this.goSignUp = this.goSignUp.bind(this);
+        this.goForgot = this.goForgot.bind(this);
+        this.authenticate = this.authenticate.bind(this);
     }
-    validateUsername() {
-        if (!this.state.username) {
-            throw new Error('Enter Username');
-        }
+    
+    onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({username: e.target.value});
     }
-    validatePassword() {
-        if (!this.state.password) {
-            throw new Error('Enter Password');
-        }
+
+    onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({password: e.target.value});
     }
+
     loadPage(): void {
         this.context.router.history.push({
-         pathname: '/course-selection-form',
-         state: {
-           }
-       });
-     }
- 
+            pathname: '/course-selection-layout',
+            state: {
+                username: this.state.username
+            }
+        });
+    }
+    
+    goSignUp() {
+        this.context.router.history.push({
+            pathname: '/signup',
+            state: {
+            }
+        });
+    }
+
+    goForgot() {
+        this.context.router.history.push({
+            pathname: '/forgotpass',
+            state: {
+            }
+        });
+    }
+
+    authenticate() {
+        global.console.log(this.state.authenticated);
+        if (this.state.password === '') {
+            alert('Enter a password!');
+        } else if (this.state.username === '') {
+            alert('Enter a username!');
+        } else { 
+            this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
+                this.setState({authenticated: data});
+                global.console.log(this.state.authenticated);
+                if (this.state.authenticated === true) {
+                    this.loadPage();
+                } else {
+                    alert('Incorrect Credentials');
+                    this.setState({username: '', password: ''});
+                }
+            });
+        }
+    }
+    
     render() {
         return (
             <div className="form-signin">
@@ -48,23 +97,27 @@ class SignIn extends React.Component<{}, State> {
                         className="form-input"
                         type="text"
                         placeholder="username"
-                        onChange={event => this.validateUsername && this.setState({username: event.target.value})}
+                        onChange={this.onUsernameChange}
                     />
                     <br />
                     <input
                         className="form-input"
                         type="password"
                         placeholder="password"
-                        onChange={event => this.validatePassword && this.setState({password: event.target.value})}
+                        onChange={this.onPasswordChange}
                     />
                     <br />
-                    <Link to={'/course-selection-layout'}>
+                    <button onClick={this.authenticate}>
                         Log In
-                    </Link>
+                    </button>
                     <br />
-                    <Link to={'/signup'}>
-                        Don't Have an Account?
-                    </Link>
+                    <button onClick={this.goSignUp}>
+                        Sign Up
+                    </button>
+                    <br />
+                    <button onClick={this.goForgot}>
+                        Forgot Password
+                    </button>
                 </div>
             </div>
         );

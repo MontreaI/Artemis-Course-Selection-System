@@ -14,16 +14,23 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
+import * as PropTypes from 'prop-types';
+import NavigationClosse from 'material-ui/svg-icons/social/school';
+import { BrowserRouter as Router, Link, Redirect } from 'react-router-dom';
 
 const eventIcon = <FontIcon className="material-icons">event</FontIcon>;
-const profileIcon = <FontIcon className="material-icons">face</FontIcon>;
 const courseSearchIcon = <FontIcon className="material-icons">find_in_page</FontIcon>;
+const navigationSchoolIcon = <FontIcon className="material-icons">school</FontIcon>;
 
 interface State {
     selectedIndex: number;
   }
 
 class CourseSelectionLayout extends React.Component<{}, State> {
+
+    static contextTypes = {
+        router: PropTypes.object
+    };
 
     constructor(props: {}) {
         super(props);
@@ -32,6 +39,15 @@ class CourseSelectionLayout extends React.Component<{}, State> {
         };
       }
     
+    loadPage(): void {
+        localStorage.clear();
+        this.context.router.history.push({
+            pathname: '/signin',
+            state: {
+            }
+        });
+    }
+
     select(index: number) {
         this.setState({ selectedIndex: index });
         global.console.log('Hello');
@@ -47,22 +63,25 @@ class CourseSelectionLayout extends React.Component<{}, State> {
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
             <MenuItem primaryText="Help" />
-            <MenuItem primaryText="Sign out" />
+            <MenuItem primaryText="Sign out" onClick={() => this.loadPage()} />
         </IconMenu>
+    )
+
+    logo = (props: {}) => (
+                <IconButton>< NavigationClosse/></IconButton>
     )
 
     render() {
         return (
             <div className="courselayout">
                 <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
-                    <AppBar title="Artemis" iconElementRight={<this.Logged />} />
+        <AppBar className="app-bar" title="Artemis" iconElementRight={<this.Logged />} iconElementLeft={<this.logo />}/>
                     <CourseSelectionForm/>
                     <Paper zDepth={1}>
                         <div className="btmnavigation">
-                            <BottomNavigation selectedIndex={this.state.selectedIndex}>
+                            <BottomNavigation className="bottom-nav" selectedIndex={this.state.selectedIndex}>
                                 <BottomNavigationItem label="Course Search" icon={courseSearchIcon} onClick={() => this.select(0)} />
                                 <BottomNavigationItem label="Timetable" icon={eventIcon} onClick={() => this.select(1)} />
-                                <BottomNavigationItem label="My Profile" icon={profileIcon} onClick={() => this.select(2)} />
                             </BottomNavigation>
                         </div>
                     </Paper>
