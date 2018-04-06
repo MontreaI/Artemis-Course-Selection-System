@@ -196,7 +196,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     }
 
     loadPage(): void {
-       global.console.log('enter here');
+       global.console.log('enter here' + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionCode);
        this.context.router.history.push({
         pathname: '/course-outline',
         state: {
@@ -205,8 +205,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
           mTermSelected: this.state.mTermSelected,
           mDepartmentSelected: this.state.mDepartmentSelected,
           mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
-          mCourseSection: this.state.mCourseSection,
-          // courseSectionData: this.state.courseSectionData,
+          //mCourseSection: this.state.mCourseSection,
+          courseSectionData: this.state.courseSectionData[this.state.rowsSelected.indexOf(true)],
         }
       });
     }
