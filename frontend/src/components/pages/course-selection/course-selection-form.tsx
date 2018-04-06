@@ -182,7 +182,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     loadPage(): void {
        global.console.log('enter here');
        this.context.router.history.push({
-        pathname: '/course-outline',
+        pathname: '/course-outline' + '/' + this.state.mDepartmentSelected + this.state.mCourseSelected.split('-')[0].trim(),
         state: {
             // insert props here, currently coursenumber coursesections not yet implemented, but will be by tomorrow.
           mYearSelected: this.state.mYearSelected,
