@@ -4,53 +4,84 @@ class Course {
     public name: string; // CMPT 225
     public children: Course[];
 
+    // INFO:
+    public degreeLevel: string;
+    public deliveryMethod: string;
     public dept: string;
-    public courseNum: string;
-    public desc: string;
+    public description: string;
+    public designation: string;
+    public number: string;
+    public title: string;
     public prerequisites: string;
     public sections: CSection[];
-    public title: string;
+    public units: string;
+    public term: string;
+    
+    // COURSE SCHEDULE:
+    public campus: string;
+    public days: string;
+    public startTime: string;
+    public endTime: string;
+    public buildingCode: string;
+    public roomNumber: string;
 
     constructor(dept: string, courseNum: string) {
         this.name =  dept + ' ' +  courseNum;
         this.dept = dept;
-        this.courseNum = courseNum;
+        this.number = courseNum;
         this.children = new Array();
     }
 
     // eg. "CMPT 225, MACM 201, MATH 151 (or MATH 150), and MATH 232 or 240."
     public parsePrerequisites() {
-        var arr = this.prerequisites.split(',');
-        
-        for (var i = 0; i < arr.length; i++) {
-            arr[i] = arr[i].replace(/[^ A-Z0-9]/g, '');
-            arr[i] = this.filter(arr[i]);
-        }
-    
-        if (arr[0] !== '' ) { // Check if there is prereqs
-            this.addChildren(arr);
+        var arr = this.prerequisites.replace(/[A-Z]{3,}\s\d{3}\s(and|or)\s\d{3}/g, ''); // MATH 232 or 240
+        var specialMatches = this.prerequisites.match(/[A-Z]{3,}\s\d{3}\s(and|or)\s\d{3}/g);
+        var matches = arr.match(/[A-Z]{3,}\s\d{3}/g); // MATH 232
+
+        if (matches === null && specialMatches != null) {
+            matches = [];
         }
 
-        // global.console.log(this);
+        if (matches != null) {
+
+            if (specialMatches != null ) {
+                specialMatches = this.formatPreReqStr(specialMatches);
+                for (var i = 0; i < specialMatches.length; i++) {
+                    let strArr = specialMatches[i].match(/[A-Z]{3,}\s\d{3}/g);
+                    if (strArr != null) {
+                        for (var j = 0; j < strArr.length; j++) {
+                            matches.push(strArr[j]);
+                        }
+                    }
+                }
+            }
+
+            global.console.log(matches);
+            global.console.log(specialMatches);
+
+            if (matches[0] !== '' ) { // Check if there is prereqs
+                this.addChildren(matches);
+            }
+            global.console.log(matches);
+        }
     }
 
-    private filter(str: string): string {
-        var countSuffix = 0;
-        var modifiedStr = '';
+    private formatPreReqStr(str: string[]): string[] {
+        var unformattedArr = str; 
+        var formattedArr: string[] = [];
 
-        for (var i = 0; i < str.length; i++) {
-            var char = str.charAt(i);
-            if (!isNaN(parseInt(char, 10))) { // Is a number
-                countSuffix++;
-            }
-
-            if (countSuffix === 3) {
-                modifiedStr = str.substr(0, i + 1);
-                break;
+        if (unformattedArr != null) {
+            for (var i = 0; i < unformattedArr.length; i++) {
+                var prefix = unformattedArr[i].match(/[A-Z]{3,}/g); // MATH
+                var oldStr = unformattedArr[i].match(/[A-Z]{3,}\s\d{3}\s(and|or)\s/g); // MATH 232 or 
+                unformattedArr[i] = unformattedArr[i].replace(/[A-Z]{3,}\s\d{3}\s(and|or)\s/g, ''); // 240
+                if (prefix != null && oldStr != null) {
+                    let formattedStr = (oldStr[0] + prefix[0] + ' ' + unformattedArr[i]).match(/[A-Z]{3,}\s\d{3}/g);
+                    formattedArr[i] = oldStr[0] + prefix[0] + ' ' + unformattedArr[i];
+                }
             }
         }
-
-        return modifiedStr.trim();
+        return formattedArr;
     }
 
     private addChildren(preReqs: string[]) {
