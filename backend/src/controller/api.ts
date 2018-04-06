@@ -205,14 +205,10 @@ export let getCourseOutline = (req: Request, res: Response) => {
 
 // Returns if user password is correct or not
 export let getUserPassword = (req: Request, res: Response) => {
-    const user: User = { username: req.params.username, password: req.params.password, email: req.params.email};
+    const user: User = { username: req.params.username, password: req.params.password, email: '' };
+    global.console.log(`logging in user ${user.username} ${user.password}`);
     findUser(user).then((u: User) => {
         if (u.username == req.params.username) {
-            res.writeHead(200);
-            res.end();
-        }
-        else if ((u.email == req.params.email) && (req.params.email != '')) {
-            //Something for emailing password
             res.writeHead(200);
             res.end();
         }
