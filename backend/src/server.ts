@@ -29,7 +29,7 @@ app.get('/users/:username/:password/:email', apiController.getUserPassword);
 app.get('/insert/user/:username/:password/:email', apiController.insertUser);
 app.get('/insert/course/:department/:number/:section/:year/:term', apiController.insertCourse);
 app.get('/get/userCourse/:department/:number/:section/:year/:term', apiController.findCourse);
-app.get('/insert/userCourse/:username/:courseID', apiController.insertUserCourse);
+app.get('/insert/userCourse/:username/:department/:number/:section/:year/:term', apiController.insertUserCourse);
 
 /*
 export interface Course {

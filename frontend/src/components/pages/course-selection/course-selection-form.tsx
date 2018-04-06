@@ -100,7 +100,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
             isLECSelected: true,
             isSECSelected: true,
             open: false,
-            snackbarMessage: '',
+            snackbarMessage: savedCourseFailure,
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -141,6 +141,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 if (response.ok) {
                     return response.json();
                 } else {
+                    this.setState({snackbarMessage: savedCourseFailure});
                     throw new Error('Could not fetch from server');
                 }
             })
@@ -306,49 +307,11 @@ class CourseSelectionForm extends React.Component<{}, State> {
     // /get/course/:department/:number/:section/:year/:term/'
     saveCourse() {
         // find course and retrieve ID
-        let findCourseURL = 'http://localhost:3376/get/userCourse/' + this.state.mDepartmentSelected + '/' +
+        let findCourseURL = 'http://localhost:3376/insert/userCourse/' + sessionStorage.getItem('username') + '/' + this.state.mDepartmentSelected + '/' +
             this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
             this.state.mYearSelected + '/' + this.state.mTermSelected;
-        let courseData = this.fetchUrl(findCourseURL).then((data) => {
-            global.console.log('here' + data);
-            if (data === -1) {
-                global.console.log('Congratulations its undefined');
-                let insertCourseURL = 'http://localhost:3376/insert/course/' + this.state.mDepartmentSelected + '/' +
-                    this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
-                    this.state.mYearSelected + '/' + this.state.mTermSelected;
-                let createdCourseData = this.fetchUrl(insertCourseURL).then((data1) => {
-                    if (data1 === -1) {
-                        global.console.log('Please try again or refresh the page');
-                        this.setState({ snackbarMessage: savedCourseFailure });
-                    } else {
-                        global.console.log('Congratulations, the ID is ' + data1);
-                        let createdCourseData2 = this.fetchUrl('http://localhost:3376/insert/userCourse/' + sessionStorage.getItem('username') + '/' + data1).then((data2) => {
-                            if (data2 === -1) {
-                                global.console.log('Please try again or refresh the page');
-                                this.setState({ snackbarMessage: savedCourseFailure });
-                            } else {
-                                global.console.log('Congratulations, course inserted');
-                                this.setState({ snackbarMessage: savedCourseSuccess });
-                            }
-                        });
-                    }
-                });
-
-            } else {
-                global.console.log('Congratulations course id returned is' + data);
-                let createdCourseData = this.fetchUrl('http://localhost:3376/insert/userCourse/' + sessionStorage.getItem('username') + '/' + data).then((data1) => {
-                    if (data1 === -1) {
-                        global.console.log('Please try again or refresh the page');
-                        this.setState({ snackbarMessage: savedCourseFailure });
-                    } else {
-                        global.console.log('Congratulations, course inserted');
-                        this.setState({ snackbarMessage: savedCourseSuccess });
-                    }
-                });
-
-            }
-        });
-        this.setState({ open: true });
+        let courseData = this.fetchUrl(findCourseURL);
+        this.setState({ open: true, snackbarMessage: savedCourseSuccess });
     }
     handleRequestClose = () => {
         this.setState({
