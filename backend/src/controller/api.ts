@@ -208,7 +208,7 @@ export let getUserPassword = (req: Request, res: Response) => {
     const user: User = { username: req.params.username, password: req.params.password, email: '' };
     global.console.log(`logging in user ${user.username} ${user.password}`);
     findUser(user).then((u: User) => {
-        if (u.username == req.params.username) {
+        if ((u.username == req.params.username) && (req.params.username != '')) {
             res.writeHead(200);
             res.end();
         }
