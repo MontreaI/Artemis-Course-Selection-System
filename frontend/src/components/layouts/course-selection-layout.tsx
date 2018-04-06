@@ -17,25 +17,32 @@ import Paper from 'material-ui/Paper';
 import * as PropTypes from 'prop-types';
 import NavigationClosse from 'material-ui/svg-icons/social/school';
 import { BrowserRouter as Router, Link, Redirect } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 const eventIcon = <FontIcon className="material-icons">event</FontIcon>;
 const courseSearchIcon = <FontIcon className="material-icons">find_in_page</FontIcon>;
 const navigationSchoolIcon = <FontIcon className="material-icons">school</FontIcon>;
 
 interface State {
+    isLoggedIn: boolean;
     selectedIndex: number;
   }
 
-class CourseSelectionLayout extends React.Component<{}, State> {
+interface CourseSelectionLayoutProps extends RouteComponentProps<CourseSelectionLayout> {
+}
+
+class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSelectionLayout>, State> {
 
     static contextTypes = {
         router: PropTypes.object
     };
 
-    constructor(props: {}) {
+    constructor(props: RouteComponentProps<CourseSelectionLayout>) {
         super(props);
         this.state = {
-          selectedIndex: 0
+          selectedIndex: 0,
+          isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true',
         };
       }
     
@@ -48,9 +55,19 @@ class CourseSelectionLayout extends React.Component<{}, State> {
         });
     }
 
+    componentWillMount() {
+        global.console.log('here' + this.state.isLoggedIn);
+        if (!(this.state.isLoggedIn)) {
+            this.context.router.history.push({
+                pathname: '/signin',
+                state: {
+                }
+            });
+        }
+    }
+
     select(index: number) {
         this.setState({ selectedIndex: index });
-        global.console.log('Hello');
     }
 
     Logged = (props: {}) => (
@@ -62,7 +79,6 @@ class CourseSelectionLayout extends React.Component<{}, State> {
             targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         >
-            <MenuItem primaryText="Help" />
             <MenuItem primaryText="Sign out" onClick={() => this.loadPage()} />
         </IconMenu>
     )
@@ -91,4 +107,4 @@ class CourseSelectionLayout extends React.Component<{}, State> {
     }
 }
 
-export default CourseSelectionLayout;
+export default withRouter(CourseSelectionLayout);

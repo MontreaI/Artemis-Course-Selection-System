@@ -251,7 +251,7 @@ export let insertUser = (req: Request, res: Response) => {
     }
     else {
         console.log('Insertion of new user failed');
-        res.status(404);
+        res.status(502);
     }
     res.end();
 };
@@ -269,79 +269,117 @@ export interface Course {
 */
 
 export let insertCourse = (req: Request, res: Response) => {
+    console.log('insertCourse');
     const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number,
+        number: req.params.number as number,
         section: req.params.section,
-        year: req.params.year,
+        year: req.params.year as number,
         term: req.params.term,
-        description: req.params.description
+        description: '',
     };
     const courseID = db.createCourse(course);
-    if ( courseID != 0) {
-        console.log('Insertion of new course was successful');
-        try {
-            res.write(courseID);
-        } catch (e) {
-            console.error(e.message);
+    courseID.then((data: number) => {
+        if (data != -1) {
+            try {
+                res.write('' + data);
+                res.end();
+            } catch (e) {
+                console.error(e.message);
+            }
         }
-        res.status(200);
-    }
-    else {
-        console.log('Insertion of new user failed');
-        res.status(404);
-    }
-    res.end();
+        else {
+            console.log('insert course failed');
+            try {
+                res.status(502);
+                res.write('-1');
+                res.end();
+            } catch (e) {
+                console.error(e.message);
+            }
+        }
+    });
 };
 
 
 export let insertUserCourse = (req: Request, res: Response) => {
     const course: db.Course = {
-        id: req.params.courseID,
-        department: req.params.department,
-        number: req.params.number,
-        section: req.params.section,
-        year: req.params.year,
-        term: req.params.term,
-        description: req.params.description
-    };
-    const insertResult: boolean = db.addUserCourse(req.params.username, req.params.courseID);
-    if (insertResult) {
-        console.log('Insertion of new course to user with id ' + course.id + ' was successful');
-        res.status(200);
-    }
-    else {
-        console.log('Insertion of new course to user failed');
-        res.status(404);
-    }
-    res.end();
-};
-
-
-export let findCourse = (req: Request, res: Response) => {
-    const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number,
+        number: req.params.number as number,
         section: req.params.section,
-        year: req.params.year,
+        year: req.params.year as number,
         term: req.params.term,
         description: '',
     };
     const courseID = db.findCourse(course);
-    if ( courseID != -1) {
-        console.log('Search of course was successful');
-        try {
-            res.write(courseID);
-        } catch (e) {
-            console.error(e.message);
+    courseID.then((data: db.Course) => {
+        if (data.id !== -1) {
+            const insertResult: boolean = db.addUserCourse(req.params.username, data.id);
+            if (insertResult) {
+                console.log('Insertion of new course to user with id ' + data.id + ' was successful');
+            }
+            else {
+                console.log('Insertion of new course to user failed');
+                res.status(502);
+            }
         }
-        res.status(200);
-    }
-    else {
-        console.log('Seatch of course failed');
-        res.status(404);
-    }
-    res.end();
+        else {
+            console.log('Search of course failed. Inserting into database the missing course.');
+            const courseID = db.createCourse(course);
+            courseID.then((data: number) => {
+                if (data !== -1) {
+                    const insertResult: boolean = db.addUserCourse(req.params.username, data);
+                    if (insertResult) {
+                        console.log('Insertion of new course to user with id ' + data + ' was successful');
+                    }
+                    else {
+                        console.log('Insertion of new course to user failed');
+                        res.status(502);
+                    }
+                }
+                else {
+                    console.log('Insertion of new course to user failed');
+                    res.status(502);
+                }
+            });
+        }
+        res.end;
+    });
+};
+
+
+export let findCourse = (req: Request, res: Response) => {
+    console.log('findCourse');
+    const course: db.Course = {
+        id: 0,
+        department: req.params.department,
+        number: req.params.number as number,
+        section: req.params.section,
+        year: req.params.year as number,
+        term: req.params.term,
+        description: '',
+    };
+    const courseID = db.findCourse(course);
+    courseID.then((data: db.Course) => {
+        if (data.id != -1) {
+            try {
+                res.write('' + data.id);
+                res.end();
+            } catch (e) {
+                console.error(e.message);
+            }
+        }
+        else {
+            console.log('Search of course failed. Inserting into database the missing course.');
+            try {
+                res.status(502);
+                res.write('-1');
+                res.end();
+            } catch (e) {
+                console.error(e.message);
+            }
+        }
+    });
 };
