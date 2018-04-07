@@ -149,7 +149,6 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
     }
 
     componentWillMount() {
-      
       this.fetchOutline();
     }
 
@@ -172,9 +171,10 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
         this.state.mTermSelected, 
         this.state.mDepartmentSelected, 
         this.state.mCourseNumberSelected, 
-        this.state.mSelectedSection).then(data => {
+        this.state.mSelectedSection.sectionNum).then(data => {
           
           data.parsePrerequisites();
+          global.console.log(this.state);
           var tree: Course[] = [];
           tree[0] = data; // Constructs tree
 
@@ -233,7 +233,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
          mTermSelected: term,
          mDepartmentSelected: dept,
          mCourseNumberSelected: courseNumber,
-         mCourseSection: sectionData,
+         mSectionData: sectionData,
          mSelectedSection: this.getMainSection(sectionData)
        }
      });
@@ -355,34 +355,39 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
                   <div className="sub-box">
                     <MuiThemeProvider>
                       <List>
-                        <ListItem 
-                          leftAvatar={locIcon} 
-                          primaryText="Location:" 
-                          secondaryText={
-                            <span className="list-secondary-text"> 
-                              {
-                                this.state.courseOutline.campus + ' ' + 
-                                this.state.courseOutline.buildingCode +
-                                this.state.courseOutline.roomNumber
-                              } 
-                            </span>} 
-                          className="list-override"
-                        />
-                        <Divider/>
-                        <ListItem 
-                          leftAvatar={timeIcon} 
-                          primaryText="Time:" 
-                          secondaryText={
-                            <span className="list-secondary-text"> 
-                              {
-                                this.state.courseOutline.days + ' | ' +
-                                this.state.courseOutline.startTime + ' ~ ' +
-                                this.state.courseOutline.endTime
-                              } 
-                            </span>} 
-                          className="list-override"
-                        />
-                        <Divider />
+                        {
+                          this.state.courseOutline.courseSchedule.map((schedule, index) =>
+                            <List key={`${schedule.campus}${index}`}> 
+                              <ListItem 
+                                leftAvatar={locIcon} 
+                                primaryText="Location:" 
+                                secondaryText={
+                                  <span className="list-secondary-text"> 
+                                    {
+                                      schedule.campus + ' ' + 
+                                      schedule.buildingCode +
+                                      schedule.roomNumber
+                                    } 
+                                  </span>} 
+                                className="list-override"
+                              />
+                              <ListItem 
+                                leftAvatar={timeIcon} 
+                                primaryText="Time:" 
+                                secondaryText={
+                                  <span className="list-secondary-text"> 
+                                    {
+                                      schedule.days + ' | ' +
+                                      schedule.startTime + ' ~ ' +
+                                      schedule.endTime
+                                    } 
+                                  </span>} 
+                                className="list-override"
+                              />
+                              <Divider/>
+                            </List>          
+                          )
+                        }
                         <ListItem 
                           leftAvatar={descIcon} 
                           primaryText="Section:" 
@@ -410,7 +415,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
 
                         <TableBody>
                             {this.state.mSectionData.map((row, index) => (
-                                <TableRow >
+                                <TableRow key={row.sectionNum}>
                                     <TableRowColumn>{row.sectionCode}</TableRowColumn>
                                     <TableRowColumn>{row.name}</TableRowColumn>
                                 </TableRow>
@@ -422,7 +427,6 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
                   </div>
                 </div>
               }
-              
           </div>
         );
       }

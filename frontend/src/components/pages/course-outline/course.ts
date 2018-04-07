@@ -1,6 +1,72 @@
 import CSection from './csection';
 
-class Course {
+interface CourseSchedule {
+    buildingCode: string;
+    campus: string;
+    days: string;
+    endTime: string;
+    endDate: string;
+    isExam: boolean;
+    roomNumber: string;
+    sectionCode: string;
+    startDate: string;
+    startTime: string;
+}
+
+interface CourseInfo {
+    classNumber: string;
+    corequisites: string;
+    courseDetails: string;
+    degreeLevel: string;
+    deliveryMethod: string;
+    departmentalUgradNotes: string;
+    dept: string;
+    description: string;
+    designation: string;
+    gradingNotes: string;
+    materials: string;
+    name: string;
+    notes: string;
+    number: string;
+    outlinePath: string;
+    prerequisites: string;
+    registrarNotes: string;
+    section: string;
+    shortNote: string;
+    specialTopic: string;
+    term: string;
+    title: string;
+    type: string;
+    units: string;
+}
+
+interface Instructor {
+    commonName: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    name: string;
+    office: string;
+    officeHours: string;
+    phone: string;
+    profileUrl: string;
+    roleCode: string;
+}
+
+interface TextBook {
+    details: string;
+    isbn: string;
+}
+
+export interface CourseJsonObj {
+    courseSchedule: CourseSchedule[];
+    examSchedule: CourseSchedule[];
+    info: CourseInfo;
+    instructor: Instructor[];
+    requiredText: TextBook[];
+}
+
+export class Course {
     public name: string; // CMPT 225
     public children: Course[];
 
@@ -18,21 +84,18 @@ class Course {
     public term: string;
     
     // COURSE SCHEDULE:
-    public campus: string;
-    public days: string;
-    public startTime: string;
-    public endTime: string;
-    public buildingCode: string;
-    public roomNumber: string;
+    public courseSchedule: CourseSchedule[];
 
     constructor(dept: string, courseNum: string) {
         this.name =  dept + ' ' +  courseNum;
         this.dept = dept;
         this.number = courseNum;
         this.children = new Array();
+        this.courseSchedule = new Array();
     }
 
     // eg. "CMPT 225, MACM 201, MATH 151 (or MATH 150), and MATH 232 or 240."
+    // eg. MATH 232 or 240 is a special match
     public parsePrerequisites() {
         var arr = this.prerequisites.replace(/[A-Z]{3,}\s\d{3}\s(and|or)\s\d{3}/g, ''); // MATH 232 or 240
         var specialMatches = this.prerequisites.match(/[A-Z]{3,}\s\d{3}\s(and|or)\s\d{3}/g);
@@ -56,13 +119,9 @@ class Course {
                 }
             }
 
-            global.console.log(matches);
-            global.console.log(specialMatches);
-
             if (matches[0] !== '' ) { // Check if there is prereqs
                 this.addChildren(matches);
             }
-            global.console.log(matches);
         }
     }
 
