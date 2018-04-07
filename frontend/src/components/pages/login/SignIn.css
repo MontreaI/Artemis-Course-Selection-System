@@ -4,13 +4,13 @@ body {
 h1 {
     background-color: #000;
     text-align: center;
-    font: Verdana;
+    font-family: "Quicksand";
     color: #fff;
     font-size: 50px;
 }
 h2 {
     display: block;
-    font: Verdana;
+    font-family: "Quicksand";
     color: #eee;
     font-size: 20px;
 }
