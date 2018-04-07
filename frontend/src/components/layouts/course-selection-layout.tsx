@@ -19,6 +19,7 @@ import NavigationClosse from 'material-ui/svg-icons/social/school';
 import { BrowserRouter as Router, Link, Redirect } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
+import WeeklyView from '../calendar/weekly';
 
 const eventIcon = <FontIcon className="material-icons">event</FontIcon>;
 const courseSearchIcon = <FontIcon className="material-icons">find_in_page</FontIcon>;
@@ -88,11 +89,20 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
     )
 
     render() {
+        let currentElem: JSX.Element;
+        switch (this.state.selectedIndex) {
+            default:
+            case 0:
+                currentElem = <CourseSelectionForm />;
+                break;
+            case 1:
+                currentElem = <WeeklyView />;
+                break;
+        }
         return (
             <div className="courselayout">
                 <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
-        <AppBar className="app-bar" title="Artemis" iconElementRight={<this.Logged />} iconElementLeft={<this.logo />}/>
-                    <CourseSelectionForm/>
+                    <AppBar className="app-bar" title="Artemis" iconElementRight={<this.Logged />} iconElementLeft={<this.logo />}/>
                     <Paper zDepth={1}>
                         <div className="btmnavigation">
                             <BottomNavigation className="bottom-nav" selectedIndex={this.state.selectedIndex}>
@@ -101,6 +111,7 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
                             </BottomNavigation>
                         </div>
                     </Paper>
+                    {currentElem}
                 </MuiThemeProvider>
             </div>
         );
