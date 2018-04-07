@@ -39,7 +39,7 @@ class SignIn extends React.Component<{}, State> {
         sessionStorage.setItem('username', '');
     }
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({username: e.target.value});
+        this.setState({username: e.target.value.toLowerCase()});
     }
 
     onPasswordChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -79,14 +79,12 @@ class SignIn extends React.Component<{}, State> {
         } else if (this.state.username === '') {
             alert('Enter a username!');
         } else { 
-            this.state.api.getUserPassword(this.state.username, this.state.password, this.state.email).then(data => {
+            this.state.api.getUserPassword(this.state.username, this.state.password).then(data => {
                 this.setState({authenticated: data});
-                global.console.log(this.state.authenticated);
-                if (this.state.authenticated === true) {
+                if (data === true) {
                     this.loadPage();
                 } else {
                     alert('Incorrect Credentials');
-                    this.setState({username: '', password: ''});
                 }
             });
         }

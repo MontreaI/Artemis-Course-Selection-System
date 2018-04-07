@@ -23,9 +23,12 @@ app.get('/terms/:year/:term', apiController.getDepartments);
 app.get('/terms/:year/:term/:department', apiController.getCourseNumbers);
 app.get('/terms/:year/:term/:department/:courseNumber', apiController.getCourseSections);
 app.get('/terms/:year/:term/:department/:courseNumber/:courseSection', apiController.getCourseOutline);
-app.get('/users/:username/:password/:email', apiController.getUserPassword);
+app.get('/users/:username/:email', apiController.getUserEmailSent);
+app.post('/users/:username/:email/:password', apiController.createAccount);
 
+app.get('/service/:username/:password', apiController.getUserPassword);
 // General Database Information
+// TODO: don't do this, do a POST to user/:username/:password/:email etc instead of a GET
 app.get('/insert/user/:username/:password/:email', apiController.insertUser);
 app.get('/insert/course/:department/:number/:section/:year/:term', apiController.insertCourse);
 app.get('/get/userCourse/:department/:number/:section/:year/:term', apiController.findCourse);
@@ -42,8 +45,9 @@ export interface Course {
     description: string;
 }
 */
-app.get('/', function(req, res, next) {
-    global.console.log('got root request');
+app.use('/', (req, res, next) => {
+    console.log(req.method, 'request:', req.url);
+    next();
 });
 
 http.createServer(app).listen(port);
