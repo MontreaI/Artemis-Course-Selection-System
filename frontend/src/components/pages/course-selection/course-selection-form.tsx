@@ -40,7 +40,6 @@ interface State {
     courses: string[];
     mSectionData: CSection[];
     api: CourseApi;
-    username: string;
     height: string;
     fixedHeader: boolean;
     fixedFooter: boolean;
@@ -84,7 +83,6 @@ class CourseSelectionForm extends React.Component<{}, State> {
             courses: [],
             mSectionData: [],
             api: new CourseApi(),
-            username: 'rca71',
             height: '238px',
             fixedHeader: true,
             fixedFooter: true,
