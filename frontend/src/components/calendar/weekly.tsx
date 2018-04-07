@@ -111,8 +111,7 @@ class WeeklyView extends React.Component<{}, State> {
 
                             if (t % 2 === 0) {
                                 hour = (t / 2) + 8;
-                            }
-                            else {
+                            } else {
                                 halfHour = true;
                                 hour = ((t - 1) / 2) + 8;
                             }
@@ -125,16 +124,14 @@ class WeeklyView extends React.Component<{}, State> {
                                         courses.push(course.name);
                                     }
                                 }
-                            }
-                            else if (hour === time.end.hour) {
+                            } else if (hour === time.end.hour) {
                                 if (!halfHour) {
                                     if (time.end.half) {
                                         courses.push(course.name);
                                     }
                                 }
-                            }
-                            else if (hour > time.start.hour &&
-                                     hour < time.end.hour) {
+                            } else if (hour > time.start.hour &&
+                                       hour < time.end.hour) {
                                      courses.push(course.name);
                             }
                         }
