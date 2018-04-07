@@ -24,7 +24,6 @@ ReactDOM.render(
       <Route path="/signup" component={SignUp} />
       <Route path="/signin" component={SignIn} />
       <Route path="/forgotpass" component={ForgotPass} />
-      <Route path="/weekly" component={WeeklyView} />
     </div>
   </BrowserRouter>,
   document.getElementById('root') as HTMLElement

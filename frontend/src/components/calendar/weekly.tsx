@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { TableHeader, TableHeaderColumn, TableRow, Table, TableBody, TableRowColumn } from 'material-ui';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import customBaseTheme from '../themes/customBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { BrowserRouter as Router } from 'react-router-dom';
+import * as PropTypes from 'prop-types';
+import { Course, CourseJsonObj } from '../pages/course-outline/course'; 
 import './weekly.css';
 
 //enum Day {
@@ -32,66 +31,30 @@ interface ClassDateTime {
     end: ClassTime;
 }
 
-interface Course {
+interface WeeklyCourse {
     name: string;
     time: ClassDateTime[];
 }
 
 interface State {
-    courses: Course[];
+    courses: WeeklyCourse[];
 }
 
 class WeeklyView extends React.Component<{}, State> {
-    constructor(props: {}) {
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    constructor(props: {}, context: {}) {
         super(props);
         this.state = {
-            courses: [
-                {
-                    name: 'CMPT470',
-                    time: [
-                        {
-                            day: Day.Thursday,
-                            start: {
-                                hour: 13,
-                                half: true
-                            },
-                            end: {
-                                hour: 15,
-                                half: true
-                            }
-                        },
-                        {
-                            day: Day.Monday,
-                            start: {
-                                hour: 13,
-                                half: true
-                            },
-                            end: {
-                                hour: 14,
-                                half: true
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'CMPT469',
-                    time: [
-                        {
-                            day: Day.Thursday,
-                            start: {
-                                hour: 15,
-                                half: false
-                            },
-                            end: {
-                                hour: 18,
-                                half: false
-                            }
-                        }
-                    ]
-                },
-
-            ]
+            courses: []
         };
+    }
+
+    componentDidMount() {
+        let user = sessionStorage.getItem('username');
+        
     }
 
     render() {
