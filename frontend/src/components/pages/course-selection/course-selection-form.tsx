@@ -114,20 +114,12 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.onUnloadCleanup = this.onUnloadCleanup.bind(this);
     }
     onUnloadCleanup(event: Event) {
-        global.console.log('unloading');
+        global.console.log('Unloading Triggered');
         event.preventDefault();
         return 'unloading';
     }
     componentDidMount() {
-        /*
-         Upon loading page, the years must be always fetched because the most basic query requires at least the year...
-         Furthermore, any query can be formed after getting the year.
-         */
-        this.state.api.getYears().then(data => {
-            this.setState({ years: data });
-            global.console.log('call to year...');
-        });
-
+        this.setState({ years: ['2015', '2016', '2017', '2018'] });
         window.addEventListener('beforeunload', this.onUnloadCleanup);
     }
     componentWillUnmount() {
@@ -320,7 +312,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     render() {
         return (
             <div>
-                <div className="searchform" id="testw">
+                <div className="searchform">
                     <div className="courseSelect">
                         <br /><div id="year">
                             <label>Year</label><br />
