@@ -194,19 +194,19 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
                 </ul>
               </div>
 
-              {(this.state.courseOutline.deliveryMethod === 'In Person') &&
                 <div>
-                  <h1>Course Time + Location</h1>
-                  <ul>
-                    <li>Campus: {this.state.courseOutline.campus}</li>
-                    <li>Building code: {this.state.courseOutline.buildingCode}</li>
-                    <li>Room Number: {this.state.courseOutline.roomNumber}</li>
-                    <li>Days: {this.state.courseOutline.days}</li>
-                    <li>Start Time: {this.state.courseOutline.startTime}</li>
-                    <li>End Time: {this.state.courseOutline.endTime}</li>
-                  </ul>
+                <h1>Course Time + Location</h1>
+                {this.state.courseOutline.courseSchedule.map((schedule, index) =>
+                    <ul key={`scheduleList${index}`}>
+                        <li key={`schedulecampus${index}`}>Campus: {schedule.campus}</li>
+                        <li key={`schedulebuilding${index}`}>Building code: {schedule.buildingCode}</li>
+                        <li key={`scheduleroom${index}`}>Room Number: {schedule.roomNumber}</li>
+                        <li key={`scheduledays${index}`}>Days: {schedule.days}</li>
+                        <li key={`schedulestart${index}`}>Start Time: {schedule.startTime}</li>
+                        <li key={`scheduleend${index}`}>End Time: {schedule.endTime}</li>
+                    </ul>)
+                  }
                 </div>
-              }
               
           </div>
         );
