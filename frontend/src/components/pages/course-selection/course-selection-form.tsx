@@ -38,7 +38,7 @@ interface State {
     years: string[];
     departments: string[];
     courses: string[];
-    mCourseSection: CSection[];
+    mSectionData: CSection[];
     api: CourseApi;
     username: string;
     height: string;
@@ -82,7 +82,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
             years: [],
             departments: [],
             courses: [],
-            mCourseSection: [],
+            mSectionData: [],
             api: new CourseApi(),
             username: 'rca71',
             height: '238px',
@@ -191,7 +191,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 for (var i = 0; i < data.length; i++) {
                     rowSizeArray[i] = false;
                 }
-                this.setState({ mCourseSection: data, courseSectionData: data, rowsSelected: rowSizeArray });
+                this.setState({ mSectionData: data, courseSectionData: data, rowsSelected: rowSizeArray });
             });
         });
     }
@@ -199,15 +199,15 @@ class CourseSelectionForm extends React.Component<{}, State> {
     loadPage(): void {
         global.console.log('enter here' + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionCode);
         this.context.router.history.push({
-            pathname: '/course-outline',
+            pathname: '/course-outline' + '/' + this.state.mDepartmentSelected + this.state.mCourseSelected.split('-')[0].trim(),
             state: {
                 // insert props here, currently coursenumber coursesections not yet implemented, but will be by tomorrow.
                 mYearSelected: this.state.mYearSelected,
                 mTermSelected: this.state.mTermSelected,
                 mDepartmentSelected: this.state.mDepartmentSelected,
                 mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
-                mCourseSection: this.state.mCourseSection,
-                courseSectionData: this.state.courseSectionData[this.state.rowsSelected.indexOf(true)],
+                mSectionData: this.state.mSectionData,
+                mSelectedSection: this.state.courseSectionData[this.state.rowsSelected.indexOf(true)],
             }
         });
     }
@@ -308,7 +308,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     saveCourse() {
         // find course and retrieve ID
         let findCourseURL = 'http://localhost:3376/insert/userCourse/' + sessionStorage.getItem('username') + '/' + this.state.mDepartmentSelected + '/' +
-            this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
+            this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mSectionData[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
             this.state.mYearSelected + '/' + this.state.mTermSelected;
         let courseData = this.fetchUrl(findCourseURL);
         this.setState({ open: true, snackbarMessage: savedCourseSuccess });
@@ -363,8 +363,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                             enableSelectAll={this.state.enableSelectAll}
                         >
                             <TableRow>
-                                <TableHeaderColumn tooltip="The Section">Section</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="The Course Code">Code</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="The Section Code">Code</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="The Section Number">Number</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Index">Type</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>

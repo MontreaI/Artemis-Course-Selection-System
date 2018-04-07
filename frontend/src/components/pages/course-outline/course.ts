@@ -95,6 +95,7 @@ export class Course {
     }
 
     // eg. "CMPT 225, MACM 201, MATH 151 (or MATH 150), and MATH 232 or 240."
+    // eg. MATH 232 or 240 is a special match
     public parsePrerequisites() {
         var arr = this.prerequisites.replace(/[A-Z]{3,}\s\d{3}\s(and|or)\s\d{3}/g, ''); // MATH 232 or 240
         var specialMatches = this.prerequisites.match(/[A-Z]{3,}\s\d{3}\s(and|or)\s\d{3}/g);
@@ -118,13 +119,9 @@ export class Course {
                 }
             }
 
-            global.console.log(matches);
-            global.console.log(specialMatches);
-
             if (matches[0] !== '' ) { // Check if there is prereqs
                 this.addChildren(matches);
             }
-            global.console.log(matches);
         }
     }
 
