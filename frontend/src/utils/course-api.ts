@@ -103,6 +103,19 @@ class CourseApi {
             return data;
         });
     }
+
+    public getCourse(id: number): Course {
+
+    }
+
+    public getUserCourses(username: string) {
+        return this.fetchUrl(Config.userCourseURL + username)
+                   .then((data: number[]) => {
+                       data.map(id => {
+                           this.fetchUrl()
+                       })
+        });
+    }
 }
 
 export default CourseApi;
