@@ -166,21 +166,26 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
 
     fetchOutline() {
       // let mSection = this.getMainSection(this.state.mSectionData);
-      this.state.api.getCourseOutline(
-        this.state.mYearSelected, 
-        this.state.mTermSelected, 
-        this.state.mDepartmentSelected, 
-        this.state.mCourseNumberSelected, 
-        this.state.mSelectedSection.sectionNum).then(data => {
-          
-          data.parsePrerequisites();
-          global.console.log(this.state);
-          var tree: Course[] = [];
-          tree[0] = data; // Constructs tree
-
-          this.setState({courseTree: tree});
-          this.setState({courseOutline: data});
-      });
+      setTimeout(
+        () => {
+          this.state.api.getCourseOutline(
+            this.state.mYearSelected, 
+            this.state.mTermSelected, 
+            this.state.mDepartmentSelected, 
+            this.state.mCourseNumberSelected, 
+            this.state.mSelectedSection.sectionNum).then(data => {
+              
+              data.parsePrerequisites();
+              global.console.log(this.state);
+              var tree: Course[] = [];
+              tree[0] = data; // Constructs tree
+    
+              this.setState({courseTree: tree});
+              this.setState({courseOutline: data});
+          }); 
+        }, 
+        1000
+      );
     }
 
     getMainSection(sections: CSection[]): CSection {
