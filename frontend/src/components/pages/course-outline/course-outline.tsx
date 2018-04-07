@@ -9,14 +9,24 @@ import * as PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 // Material Imports
+import AppBar from 'material-ui/AppBar';
 import { List, ListItem } from 'material-ui/List';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FontIcon from 'material-ui/FontIcon';
 import muiTheme from '../../themes/customListTheme';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
-import AppBar from 'material-ui/AppBar';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Dialog from 'material-ui/Dialog';
+import {
+  Table,
+  TableBody,
+  TableFooter,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 
 interface State {
   mYearSelected: string;
@@ -24,6 +34,7 @@ interface State {
   mDepartmentSelected: string;
   mCourseNumberSelected: string;
   mSectionData: CSection[];
+  mSelectedSection: CSection;
   courseTree: Course[];
   courseOutline: Course;
   dialogOpen: boolean;
@@ -40,6 +51,10 @@ const alertIcon = <FontIcon className="material-icons">error_outline</FontIcon>;
 const locIcon = <FontIcon className="material-icons">room</FontIcon>;
 const timeIcon = <FontIcon className="material-icons">schedule</FontIcon>;
 
+// Center of screen
+const centerX = (window.screen.width / 2);
+const centerY = (window.screen.height / 2);
+
 // * Tree STYLING * //
 const svgSquare = {
     shape: 'rect',
@@ -54,8 +69,8 @@ const svgSquare = {
 }; 
 
 const position = {
-    x: 800,
-    y: 100
+    x: centerX - (window.screen.width * 0.15),
+    y: (window.screen.height * 0.1)
 };
 
 const anchor = {
@@ -113,12 +128,14 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
 
     constructor(props: RouteComponentProps<CourseOutline>) {
         super(props);
+
         this.state = {
           mYearSelected: this.props.location.state.mYearSelected,
           mTermSelected: this.props.location.state.mTermSelected,
           mDepartmentSelected: this.props.location.state.mDepartmentSelected,
           mCourseNumberSelected: this.props.location.state.mCourseNumberSelected,
-          mSectionData: this.props.location.state.mCourseSection,
+          mSectionData: this.props.location.state.mSectionData,
+          mSelectedSection: this.props.location.state.mSelectedSection,
           courseOutline: new Course('CMPT', '222'),
           courseTree: [],
           dialogOpen: false,
@@ -132,7 +149,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
     }
 
     componentWillMount() {
-      global.console.log('course-outline comp being mounted');
+      
       this.fetchOutline();
     }
 
@@ -148,30 +165,34 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
       this.setState({dialogOpen: false});
     }
 
-    // Constructs tree
     fetchOutline() {
-      let mSection = this.getMainSection(this.state.mSectionData);
-      this.state.api.getCourseOutline(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseNumberSelected, mSection).then(data => {
-          data.parsePrerequisites();
+      // let mSection = this.getMainSection(this.state.mSectionData);
+      this.state.api.getCourseOutline(
+        this.state.mYearSelected, 
+        this.state.mTermSelected, 
+        this.state.mDepartmentSelected, 
+        this.state.mCourseNumberSelected, 
+        this.state.mSelectedSection).then(data => {
           
+          data.parsePrerequisites();
           var tree: Course[] = [];
-          tree[0] = data;
+          tree[0] = data; // Constructs tree
 
           this.setState({courseTree: tree});
           this.setState({courseOutline: data});
       });
     }
 
-    getMainSection(sections: CSection[]): string {
-      let mSection = '';
+    getMainSection(sections: CSection[]): CSection {
+      var mSection: CSection;
 
       for (var section of sections) {
         if (section.sectionCode === 'LEC' || section.sectionCode === 'SEM') {
-          return mSection = section.sectionNum;
+          return mSection = section;
         }
       }
 
-      return mSection = sections[0].sectionNum;
+      return mSection = sections[0];
     }
 
     openCourseNode(node: Course) {
@@ -213,6 +234,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
          mDepartmentSelected: dept,
          mCourseNumberSelected: courseNumber,
          mCourseSection: sectionData,
+         mSelectedSection: this.getMainSection(sectionData)
        }
      });
 
@@ -243,7 +265,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
 
               <div className="box-sizing">
                 <h3>Overview</h3>
-                <div className="overview">
+                <div className="sub-box">
                   <MuiThemeProvider>
                     <List>
                       <ListItem 
@@ -303,7 +325,6 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
                         secondaryTextLines={2}
                         onClick={this.descriptionOpen}
                       />
-                      <Divider />
                     </List>
                   </MuiThemeProvider>
                 </div>
@@ -312,7 +333,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
               {(this.state.courseOutline.prerequisites !== '') &&
                 <div className="box-sizing">
                   <h3>Prerequisites</h3>
-                  <div className="location">
+                  <div className="sub-box">
                     <MuiThemeProvider>
                       <List>
                         <ListItem 
@@ -331,7 +352,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
               {(this.state.courseOutline.deliveryMethod === 'In Person') &&
                 <div className="box-sizing">
                   <h3>Course Time + Location</h3>
-                  <div className="location">
+                  <div className="sub-box">
                     <MuiThemeProvider>
                       <List>
                         <ListItem 
@@ -362,7 +383,41 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
                           className="list-override"
                         />
                         <Divider />
-                      </List>
+                        <ListItem 
+                          leftAvatar={descIcon} 
+                          primaryText="Section:" 
+                          secondaryText={<span className="list-secondary-text"> {(this.state.mSelectedSection.sectionNum).toUpperCase() + '; ' + this.state.mSelectedSection.sectionCode} </span>} 
+                          className="list-override"
+                        />
+                        </List>
+                    </MuiThemeProvider>
+                  </div>
+                </div>
+              }
+
+              {(this.state.mSectionData.length > 0) &&
+                <div className="box-sizing">
+                  <h3>All Sections</h3>
+                  <div className="sub-box">
+                    <MuiThemeProvider>
+                      <Table selectable={false} style={{borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHeaderColumn className="list-override">Section Code</TableHeaderColumn>
+                            <TableHeaderColumn className="list-override">Number</TableHeaderColumn>   
+                          </TableRow>
+                        </TableHeader>
+
+                        <TableBody>
+                            {this.state.mSectionData.map((row, index) => (
+                                <TableRow >
+                                    <TableRowColumn>{row.sectionCode}</TableRowColumn>
+                                    <TableRowColumn>{row.name}</TableRowColumn>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+
+                      </Table>
                     </MuiThemeProvider>
                   </div>
                 </div>
@@ -372,7 +427,19 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
         );
       }
       
-      return <h1>Loading</h1>;
+      return (
+          <div className="spinner">
+            <MuiThemeProvider>
+              <RefreshIndicator
+                size={100}
+                left={centerX - (window.screen.width * 0.03)}
+                loadingColor="red"
+                top={centerY - (window.screen.height * 0.15)}
+                status="loading"
+              />
+            </MuiThemeProvider>
+          </div>
+      );
     }
 }
 

@@ -11,7 +11,7 @@ class CSection {
         this.sectionNum = sectionNum;
         this.courseTitle = courseTitle;
         this.classType = classType;
-        this.sectionCode = sectionCode;
+        this.sectionCode = sectionCode; // LEC, TUT, SEM, LAB
         this.associatedClass = associatedClass;
     }
 }

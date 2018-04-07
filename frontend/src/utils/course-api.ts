@@ -58,10 +58,10 @@ class CourseApi {
         });
     }
 
-    public getCourseOutline(year: string, term: string, department: string, courseNum: string, courseSec: string): Promise<Course> {
+    public getCourseOutline(year: string, term: string, department: string, courseNum: string, courseSec: CSection): Promise<Course> {
         let course: Course;
        
-        return this.fetchUrl(Config.termsURL + year + '/' + term + '/' + department + '/' + courseNum + '/' + courseSec).then(data => {
+        return this.fetchUrl(Config.termsURL + year + '/' + term + '/' + department + '/' + courseNum + '/' + courseSec.sectionNum).then(data => {
 
             if (data.info !== undefined) {
                 global.console.log('getting course data-outline info...');

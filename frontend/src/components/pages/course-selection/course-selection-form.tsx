@@ -9,6 +9,7 @@ import * as PropTypes from 'prop-types';
 import CourseApi from '../../../utils/course-api';
 import CourseOutline from '../course-outline/course';
 import CSection from '../course-outline/csection';
+import Snackbar from 'material-ui/Snackbar';
 
 import {
     Table,
@@ -18,13 +19,15 @@ import {
     TableHeaderColumn,
     TableRow,
     TableRowColumn,
-  } from 'material-ui/Table';
+} from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 
+var savedCourseSuccess = 'Course has been successfully saved to your timetable!';
+var savedCourseFailure = 'Course has failed to be saved to your timetable, please try again!';
 var rowSizeArray: boolean[] = new Array(1);
 var mCourseSectionsSelected: CSection[];
 var courseSectionDataEmpty: CSection[] = [];
-  
+
 interface State {
     selected: number;
     mYearSelected: string;
@@ -35,7 +38,7 @@ interface State {
     years: string[];
     departments: string[];
     courses: string[];
-    mCourseSection: CSection[];
+    mSectionData: CSection[];
     api: CourseApi;
     username: string;
     height: string;
@@ -52,6 +55,8 @@ interface State {
     rowsSelected: boolean[];
     isLECSelected: boolean;
     isSECSelected: boolean;
+    open: boolean;
+    snackbarMessage: string;
 }
 
 // dropdown titles
@@ -68,32 +73,34 @@ class CourseSelectionForm extends React.Component<{}, State> {
     constructor(props: {}, context: {}) {
         super(props, context);
         this.state = {
-          selected: 0,
-          mYearSelected: yearDropdownTitle,
-          mTermSelected: termDropdownTitle,
-          mDepartmentSelected: departmentDropdownTitle,
-          mCourseSelected: courseDropdownTitle,
-          terms: [],
-          years: [],
-          departments: [],
-          courses: [],
-          mCourseSection: [],
-          api: new CourseApi(),
-          username: 'rca71',
-          height: '238px',
-          fixedHeader: true,
-          fixedFooter: true,
-          stripedRows: false,
-          showRowHover: false,
-          selectable: true,
-          multiSelectable: false,
-          enableSelectAll: false,
-          deselectOnClickaway: false,
-          showCheckboxes: true,
-          courseSectionData: courseSectionDataEmpty,
-          rowsSelected: [false],
-          isLECSelected: true,
-          isSECSelected: true,
+            selected: 0,
+            mYearSelected: yearDropdownTitle,
+            mTermSelected: termDropdownTitle,
+            mDepartmentSelected: departmentDropdownTitle,
+            mCourseSelected: courseDropdownTitle,
+            terms: [],
+            years: [],
+            departments: [],
+            courses: [],
+            mSectionData: [],
+            api: new CourseApi(),
+            username: 'rca71',
+            height: '238px',
+            fixedHeader: true,
+            fixedFooter: true,
+            stripedRows: false,
+            showRowHover: false,
+            selectable: true,
+            multiSelectable: false,
+            enableSelectAll: false,
+            deselectOnClickaway: false,
+            showCheckboxes: true,
+            courseSectionData: courseSectionDataEmpty,
+            rowsSelected: [false],
+            isLECSelected: true,
+            isSECSelected: true,
+            open: false,
+            snackbarMessage: savedCourseFailure,
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -105,94 +112,104 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.generalFetch = this.generalFetch.bind(this);
         this.saveCourse = this.saveCourse.bind(this);
         this.onSectionSelect = this.onSectionSelect.bind(this);
-      }
-    
+        this.clearForm = this.clearForm.bind(this);
+        this.onUnloadCleanup = this.onUnloadCleanup.bind(this);
+    }
+    onUnloadCleanup(event: Event) {
+        global.console.log('unloading');
+        event.preventDefault();
+        return 'unloading';
+    }
     componentDidMount() {
         /*
          Upon loading page, the years must be always fetched because the most basic query requires at least the year...
          Furthermore, any query can be formed after getting the year.
          */
         this.state.api.getYears().then(data => {
-            this.setState({years: data});
+            this.setState({ years: data });
             global.console.log('call to year...');
         });
-    }
 
+        window.addEventListener('beforeunload', this.onUnloadCleanup);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('beforeunload', this.onUnloadCleanup);
+    }
     fetchUrl(urlString: string) {
         return fetch(urlString)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            global.console.log('Successfully fetched from server');
-            throw new Error('Could not fetch from server');
-          }
-        })
-        .then(data => {
-            return data;
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    this.setState({snackbarMessage: savedCourseFailure});
+                    throw new Error('Could not fetch from server');
+                }
+            })
+            .then(data => {
+                return data;
+            });
     }
 
     onSelectYear(option: Option): void {
-        this.setState({mYearSelected: option.label});
-        
+        this.setState({ mYearSelected: option.label });
+
         this.state.api.getTerms(option.label).then(data => {
-            this.setState({terms: data});
+            this.setState({ terms: data });
         });
 
         this.onChangeClearChildOptions(yearDropdownTitle);
     }
 
     onSelectTerm(option: Option): void {
-        this.setState({mTermSelected: option.label});
+        this.setState({ mTermSelected: option.label });
 
         this.state.api.getDepartments(this.state.mYearSelected, option.label).then(data => {
-            this.setState({departments: data});
+            this.setState({ departments: data });
         });
 
         this.onChangeClearChildOptions(termDropdownTitle);
     }
 
     onSelectDepartment(option: Option): void {
-        this.setState({mDepartmentSelected: option.label});
+        this.setState({ mDepartmentSelected: option.label });
 
         this.state.api.getCourses(this.state.mYearSelected, this.state.mTermSelected, option.label).then(data => {
             let options: string[] = [];
             for (var i = 0; i < data.length; i++) {
                 options[i] = data[i].number + ' - ' + data[i].title;
             }
-            this.setState({courses: options});
+            this.setState({ courses: options });
         });
 
         this.onChangeClearChildOptions(departmentDropdownTitle);
     }
 
     onSelectCourse(option: Option): void {
-        this.setState({mCourseSelected: option.label}, () => {
+        this.setState({ mCourseSelected: option.label }, () => {
             this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseSelected.split('-')[0].trim()).then(data => {
                 rowSizeArray = new Array(data.length);
                 for (var i = 0; i < data.length; i++) {
                     rowSizeArray[i] = false;
                 }
-                this.setState({mCourseSection: data, courseSectionData: data, rowsSelected: rowSizeArray});
+                this.setState({ mSectionData: data, courseSectionData: data, rowsSelected: rowSizeArray });
             });
         });
     }
 
     loadPage(): void {
-       global.console.log('enter here');
-       this.context.router.history.push({
-        pathname: '/course-outline' + '/' + this.state.mDepartmentSelected + this.state.mCourseSelected.split('-')[0].trim(),
-        state: {
-            // insert props here, currently coursenumber coursesections not yet implemented, but will be by tomorrow.
-          mYearSelected: this.state.mYearSelected,
-          mTermSelected: this.state.mTermSelected,
-          mDepartmentSelected: this.state.mDepartmentSelected,
-          mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
-          mCourseSection: this.state.mCourseSection,
-          // courseSectionData: this.state.courseSectionData,
-        }
-      });
+        global.console.log('enter here' + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionCode);
+        this.context.router.history.push({
+            pathname: '/course-outline' + '/' + this.state.mDepartmentSelected + this.state.mCourseSelected.split('-')[0].trim(),
+            state: {
+                // insert props here, currently coursenumber coursesections not yet implemented, but will be by tomorrow.
+                mYearSelected: this.state.mYearSelected,
+                mTermSelected: this.state.mTermSelected,
+                mDepartmentSelected: this.state.mDepartmentSelected,
+                mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
+                mSectionData: this.state.mSectionData,
+                mSelectedSection: this.state.courseSectionData[this.state.rowsSelected.indexOf(true)],
+            }
+        });
     }
 
     onChangeClearChildOptions(dropdown: string): void {
@@ -205,7 +222,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                     mCourseSelected: courseDropdownTitle,
                     courseSectionData: courseSectionDataEmpty,
                     isLECSelected: true,
-                    isSECSelected: true});
+                    isSECSelected: true
+                });
                 break;
             case termDropdownTitle:
                 global.console.log('Clearing child dropdowns of term dropdown');
@@ -214,7 +232,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                     mCourseSelected: courseDropdownTitle,
                     courseSectionData: courseSectionDataEmpty,
                     isLECSelected: true,
-                    isSECSelected: true});
+                    isSECSelected: true
+                });
                 break;
             case departmentDropdownTitle:
                 global.console.log('Clearing child dropdowns of department dropdown');
@@ -222,7 +241,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                     mCourseSelected: courseDropdownTitle,
                     courseSectionData: courseSectionDataEmpty,
                     isLECSelected: true,
-                    isSECSelected: true});
+                    isSECSelected: true
+                });
                 break;
             default:
                 global.console.log('default');
@@ -232,23 +252,34 @@ class CourseSelectionForm extends React.Component<{}, State> {
 
     generalFetch(mURL: string) {
         fetch(mURL)
-        .then(response => {
-          if (response.ok) {
-            global.console.log('Successfully fetched from server');
-          } else {
-            global.console.log('Successfully fetched from server');
-            throw new Error('Could not fetch from server');
-          }
-        });
+            .then(response => {
+                if (response.ok) {
+                    global.console.log('Successfully fetched from server');
+                } else {
+                    global.console.log('Successfully fetched from server');
+                    throw new Error('Could not fetch from server');
+                }
+            });
     }
 
+    clearForm(): void {
+        this.setState({
+            mYearSelected: yearDropdownTitle,
+            mTermSelected: termDropdownTitle,
+            mDepartmentSelected: departmentDropdownTitle,
+            mCourseSelected: courseDropdownTitle,
+            courseSectionData: courseSectionDataEmpty,
+            isLECSelected: true,
+            isSECSelected: true
+        });
+    }
     onSectionSelect(rows: number[]) {
         let isLEC = true;
         let isSEC = true;
         let options: CSection[] = [];
         if (rows.length > 0 && rowSizeArray.length > 0) {
             for (var r = 0; r < rowSizeArray.length; r++) {
-                for (var t = 0; t < rows.length; t ++) {
+                for (var t = 0; t < rows.length; t++) {
                     if (r === rows[t] && rowSizeArray[r] !== true) {
                         rowSizeArray[r] = true;
                     } else {
@@ -269,96 +300,91 @@ class CourseSelectionForm extends React.Component<{}, State> {
             rowSizeArray[index] = false;
         }
 
-        this.setState({rowsSelected: rowSizeArray, isLECSelected: isLEC, isSECSelected: isSEC});
+        this.setState({ rowsSelected: rowSizeArray, isLECSelected: isLEC, isSECSelected: isSEC });
         global.console.log(rowSizeArray);
     }
 
     // /get/course/:department/:number/:section/:year/:term/'
     saveCourse() {
         // find course and retrieve ID
-         // let courseData = this.fetchUrl('http://localhost:3376/get/course/' + this.state.mDepartmentSelected + '/' + this.state.mCourseSelected.split('-')[0].trim() );
-        // if ID is -1 insert course
-        // insert course to user
-        /*
-        global.console.log('Storing data to user database');
-        fetch('http://localhost:3376/user')
-        .then(response => {
-          if (response.ok) {
-            global.console.log('Successfully fetched from server');
-          } else {
-            global.console.log('Successfully fetched from server');
-            throw new Error('Could not fetch from server');
-          }
+        let findCourseURL = 'http://localhost:3376/insert/userCourse/' + sessionStorage.getItem('username') + '/' + this.state.mDepartmentSelected + '/' +
+            this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mSectionData[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
+            this.state.mYearSelected + '/' + this.state.mTermSelected;
+        let courseData = this.fetchUrl(findCourseURL);
+        this.setState({ open: true, snackbarMessage: savedCourseSuccess });
+    }
+    handleRequestClose = () => {
+        this.setState({
+            open: false,
         });
-        */
-       // this.fetchUrl('http://localhost:3376/user');
     }
 
     render() {
         return (
             <div>
-            <div className="searchform" id="testw">
-                <div className="courseSelect">
-                <br/><div id="year">
-                    <label>Year</label><br/>
-                    <Dropdown className="yeardropdown" options={this.state.years} onChange={this.onSelectYear} value={undefined} placeholder={this.state.mYearSelected}/>
+                <div className="searchform" id="testw">
+                    <div className="courseSelect">
+                        <br /><div id="year">
+                            <label>Year</label><br />
+                            <Dropdown className="yeardropdown" options={this.state.years} onChange={this.onSelectYear} value={undefined} placeholder={this.state.mYearSelected} />
+                        </div>
+                        <div id="term">
+                            <label>Term</label><br />
+                            <Dropdown className="termdropdown" options={this.state.terms} onChange={this.onSelectTerm} value={undefined} placeholder={this.state.mTermSelected} />
+                        </div>
+                        <div id="department">
+                            <label>Department</label><br />
+                            <Dropdown className="departmentdropdown" options={this.state.departments} onChange={this.onSelectDepartment} value={undefined} placeholder={this.state.mDepartmentSelected} />
+                        </div>
+                        <div id="course">
+                            <label>Course</label><br />
+                            <Dropdown className="coursedropdown" options={this.state.courses} onChange={this.onSelectCourse} value={undefined} placeholder={this.state.mCourseSelected} />
+                        </div>
+                        <div id="buttons">
+                            <RaisedButton className="clearbtn" label="Clear" primary={true} onClick={this.clearForm} />
+                            <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse} disabled={this.state.isSECSelected} />
+                            <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={this.state.isLECSelected} />
+                        </div>
+                    </div>
                 </div>
-                <div id="term">
-                    <label>Term</label><br/>
-                    <Dropdown className="termdropdown" options={this.state.terms} onChange={this.onSelectTerm} value={undefined} placeholder={this.state.mTermSelected}/>
+                <div className="courseSection">
+                    <p>Course Sections and Tutorials</p>
+                    <Table
+                        height={this.state.height}
+                        fixedHeader={this.state.fixedHeader}
+                        fixedFooter={this.state.fixedFooter}
+                        selectable={this.state.selectable}
+                        multiSelectable={this.state.multiSelectable}
+                        onRowSelection={this.onSectionSelect}
+                    >
+                        <TableHeader
+                            displaySelectAll={this.state.showCheckboxes}
+                            adjustForCheckbox={this.state.showCheckboxes}
+                            enableSelectAll={this.state.enableSelectAll}
+                        >
+                            <TableRow>
+                                <TableHeaderColumn tooltip="The Section Code">Code</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="The Section Number">Number</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="Index">Type</TableHeaderColumn>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody
+                            displayRowCheckbox={this.state.showCheckboxes}
+                            deselectOnClickaway={this.state.deselectOnClickaway}
+                            showRowHover={this.state.showRowHover}
+                            stripedRows={this.state.stripedRows}
+                        >
+                            {this.state.courseSectionData.map((row, index) => (
+                                <TableRow key={index} selected={this.state.rowsSelected[index]}>
+                                    <TableRowColumn>{row.sectionCode}</TableRowColumn>
+                                    <TableRowColumn>{row.name}</TableRowColumn>
+                                    <TableRowColumn>{row.classType}</TableRowColumn>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </div>
-                <div id="department">
-                    <label>Department</label><br/>
-                    <Dropdown className="departmentdropdown" options={this.state.departments} onChange={this.onSelectDepartment} value={undefined} placeholder={this.state.mDepartmentSelected}/>
-                </div>
-                <div id="course">
-                    <label>Course</label><br/>
-                    <Dropdown className="coursedropdown" options={this.state.courses} onChange={this.onSelectCourse} value={undefined} placeholder={this.state.mCourseSelected}/>
-                </div>
-                <div id="buttons">
-                <RaisedButton className="clearbtn" label="Clear" primary={true}/>
-                <RaisedButton className="savebtn" label="Save" primary={true} onClick={this.saveCourse}  disabled={this.state.isSECSelected}/>
-                <RaisedButton className="searchbtn" label="Search" primary={true} onClick={this.loadPage} disabled={this.state.isLECSelected}/>
-                </div>
-                </div>
-            </div>
-            <div className="courseSection">
-            <p>Course Sections and Tutorials</p>
-        <Table
-          height={this.state.height}
-          fixedHeader={this.state.fixedHeader}
-          fixedFooter={this.state.fixedFooter}
-          selectable={this.state.selectable}
-          multiSelectable={this.state.multiSelectable}
-          onRowSelection={this.onSectionSelect}
-        >
-          <TableHeader
-            displaySelectAll={this.state.showCheckboxes}
-            adjustForCheckbox={this.state.showCheckboxes}
-            enableSelectAll={this.state.enableSelectAll}
-          >
-            <TableRow>
-              <TableHeaderColumn tooltip="The Section">Section</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The Course Code">Code</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Index">Type</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={this.state.showCheckboxes}
-            deselectOnClickaway={this.state.deselectOnClickaway}
-            showRowHover={this.state.showRowHover}
-            stripedRows={this.state.stripedRows}
-          >
-            {this.state.courseSectionData.map( (row, index) => (
-              <TableRow key={index} selected={this.state.rowsSelected[index]}>
-                <TableRowColumn>{row.sectionCode}</TableRowColumn>
-                <TableRowColumn>{row.name}</TableRowColumn>
-                <TableRowColumn>{row.classType}</TableRowColumn>
-              </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-            </div>
+                <Snackbar open={this.state.open} message={this.state.snackbarMessage} autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
             </div>
         );
     }

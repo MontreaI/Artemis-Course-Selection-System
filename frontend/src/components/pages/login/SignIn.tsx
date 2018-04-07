@@ -34,6 +34,10 @@ class SignIn extends React.Component<{}, State> {
         this.authenticate = this.authenticate.bind(this);
     }
     
+    componentDidMount() {
+        sessionStorage.setItem('isLoggedIn', 'false');
+        sessionStorage.setItem('username', '');
+    }
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({username: e.target.value});
     }
@@ -43,10 +47,11 @@ class SignIn extends React.Component<{}, State> {
     }
 
     loadPage(): void {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('username', this.state.username);
         this.context.router.history.push({
             pathname: '/course-selection-layout',
             state: {
-                username: this.state.username
             }
         });
     }
