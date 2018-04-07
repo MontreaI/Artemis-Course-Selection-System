@@ -197,15 +197,12 @@ class CourseSelectionForm extends React.Component<{}, State> {
     loadPage(): void {
         global.console.log('enter here' + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionCode);
         this.context.router.history.push({
-            pathname: '/course-outline' + '/' + this.state.mDepartmentSelected + this.state.mCourseSelected.split('-')[0].trim(),
+            pathname: '/course-outline/' + this.state.mYearSelected + '/' 
+                                         + this.state.mTermSelected + '/'
+                                         + this.state.mDepartmentSelected + '/' 
+                                         + this.state.mCourseSelected.split('-')[0].trim() + '/'
+                                         + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionNum,
             state: {
-                // insert props here, currently coursenumber coursesections not yet implemented, but will be by tomorrow.
-                mYearSelected: this.state.mYearSelected,
-                mTermSelected: this.state.mTermSelected,
-                mDepartmentSelected: this.state.mDepartmentSelected,
-                mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
-                mSectionData: this.state.mSectionData,
-                mSelectedSection: this.state.courseSectionData[this.state.rowsSelected.indexOf(true)],
             }
         });
     }

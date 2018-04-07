@@ -33,6 +33,7 @@ interface State {
   mTermSelected: string;
   mDepartmentSelected: string;
   mCourseNumberSelected: string;
+  mSectionNumberSelected: string;
   mSectionData: CSection[];
   mSelectedSection: CSection;
   courseTree: Course[];
@@ -41,7 +42,12 @@ interface State {
   api: CourseApi;
 }
 
-interface CourseOutlineProps extends RouteComponentProps<CourseOutline> {
+interface CourseOutlineProps {
+  year: string;
+  term: string;
+  dept: string;
+  number: string;
+  section: string;
 }
 
 // Icons //
@@ -51,7 +57,8 @@ const alertIcon = <FontIcon className="material-icons">error_outline</FontIcon>;
 const locIcon = <FontIcon className="material-icons">room</FontIcon>;
 const timeIcon = <FontIcon className="material-icons">schedule</FontIcon>;
 
-// Center of screen
+// Consts
+const queryString = require('query-string');
 const centerX = (window.screen.width / 2);
 const centerY = (window.screen.height / 2);
 
@@ -120,23 +127,24 @@ const styles = {
 };
 // * END OF STYLING * //
 
-class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, State> {
+class CourseOutline extends React.Component<RouteComponentProps<CourseOutlineProps>, State> {
 
     static contextTypes = {
       router: PropTypes.object
     };
 
-    constructor(props: RouteComponentProps<CourseOutline>) {
+    constructor(props: RouteComponentProps<CourseOutlineProps>) {
         super(props);
 
         this.state = {
-          mYearSelected: this.props.location.state.mYearSelected,
-          mTermSelected: this.props.location.state.mTermSelected,
-          mDepartmentSelected: this.props.location.state.mDepartmentSelected,
-          mCourseNumberSelected: this.props.location.state.mCourseNumberSelected,
-          mSectionData: this.props.location.state.mSectionData,
-          mSelectedSection: this.props.location.state.mSelectedSection,
-          courseOutline: new Course('CMPT', '222'),
+          mYearSelected: this.props.match.params.year,
+          mTermSelected: this.props.match.params.term,
+          mDepartmentSelected: this.props.match.params.dept,
+          mCourseNumberSelected: this.props.match.params.number,
+          mSectionNumberSelected: this.props.match.params.section, 
+          mSectionData: [],
+          mSelectedSection: new CSection('', '', '', '', '', ''),
+          courseOutline: new Course('', ''),
           courseTree: [],
           dialogOpen: false,
           api: new CourseApi(),
@@ -163,26 +171,43 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
     descriptionClose() {
       this.setState({dialogOpen: false});
     }
-
+  
     fetchOutline() {
       // let mSection = this.getMainSection(this.state.mSectionData);
       setTimeout(
         () => {
+
+          // Call to Course-Outline
           this.state.api.getCourseOutline(
             this.state.mYearSelected, 
             this.state.mTermSelected, 
             this.state.mDepartmentSelected, 
             this.state.mCourseNumberSelected, 
-            this.state.mSelectedSection.sectionNum).then(data => {
+            this.state.mSectionNumberSelected).then(data => {
               
               data.parsePrerequisites();
-              global.console.log(this.state);
               var tree: Course[] = [];
               tree[0] = data; // Constructs tree
     
               this.setState({courseTree: tree});
               this.setState({courseOutline: data});
-          }); 
+          });
+
+          // Call To Section Data
+          this.state.api.getCourseSections(
+            this.state.mYearSelected, 
+            this.state.mTermSelected, 
+            this.state.mDepartmentSelected, 
+            this.state.mCourseNumberSelected 
+          ).then(sectionData => {
+            sectionData.forEach(section => {
+              if (section.sectionNum === this.state.mSectionNumberSelected) {
+                this.setState({mSelectedSection: section});
+              }
+            });
+            this.setState({mSectionData: sectionData});
+          });
+
         }, 
         1000
       );
@@ -223,30 +248,23 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutline>, 
           alert('Could not find course for this semester');
         } else {
           this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, node.dept, node.number).then(sectionData => {
-            sections = sectionData;
-            this.loadPage(this.state.mYearSelected, this.state.mTermSelected, node.dept, node.number, sections);
+            let section = this.getMainSection(sectionData);
+            this.loadPage(this.state.mYearSelected, this.state.mTermSelected, node.dept, node.number, section.sectionNum);
           });
         }
       });
     }
 
-    loadPage(year: string, term: string, dept: string, courseNumber: string, sectionData: CSection[]): void {
+    loadPage(year: string, term: string, dept: string, courseNumber: string, sectionNum: string): void {
       this.context.router.history.push({
-       pathname: '/course-outline' + '/' + dept + courseNumber,
+       pathname: '/course-outline/' + year + '/' + term + '/' + dept + '/' + courseNumber + '/' + sectionNum,
        state: {
-         mYearSelected: year,
-         mTermSelected: term,
-         mDepartmentSelected: dept,
-         mCourseNumberSelected: courseNumber,
-         mSectionData: sectionData,
-         mSelectedSection: this.getMainSection(sectionData)
        }
      });
 
    }
 
     render() {
-
       if (this.state.courseTree.length > 0) {
         return (
           <div className="Wrapper">

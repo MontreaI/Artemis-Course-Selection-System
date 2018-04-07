@@ -5,11 +5,13 @@
   "dependencies": {
     "@okta/okta-signin-widget": "^2.3.0",
     "@types/prop-types": "^15.5.2",
+    "@types/query-string": "^5.1.0",
     "@types/react-router": "^4.0.23",
     "@types/react-router-dom": "^4.2.5",
     "material-ui": "^0.20.0",
     "orgchart": "^2.1.1",
     "prop-types": "^15.6.1",
+    "query-string": "^6.0.0",
     "react": "^16.2.0",
     "react-d3-tree": "^1.10.1",
     "react-dom": "^16.2.0",
@@ -24,7 +26,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
-  "proxy":  "http://localhost:3376/",
+  "proxy": "http://localhost:3376/",
   "devDependencies": {
     "@types/jest": "^22.2.0",
     "@types/material-ui": "^0.21.1",
