@@ -354,6 +354,7 @@ export let insertUserCourse = (req: Request, res: Response) => {
         if (data.id !== -1) {
             const insertResult: boolean = db.addUserCourse(req.params.username, data.id);
             if (insertResult) {
+                res.status(200);
                 console.log('Insertion of new course to user with id ' + data.id + ' was successful');
             }
             else {
@@ -368,6 +369,7 @@ export let insertUserCourse = (req: Request, res: Response) => {
                 if (data !== -1) {
                     const insertResult: boolean = db.addUserCourse(req.params.username, data);
                     if (insertResult) {
+                        res.status(200);
                         console.log('Insertion of new course to user with id ' + data + ' was successful');
                     }
                     else {
@@ -381,7 +383,7 @@ export let insertUserCourse = (req: Request, res: Response) => {
                 }
             });
         }
-        res.end;
+        res.end();
     });
 };
 
