@@ -38,9 +38,8 @@ interface State {
     years: string[];
     departments: string[];
     courses: string[];
-    mCourseSection: CSection[];
+    mSectionData: CSection[];
     api: CourseApi;
-    username: string;
     height: string;
     fixedHeader: boolean;
     fixedFooter: boolean;
@@ -82,9 +81,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
             years: [],
             departments: [],
             courses: [],
-            mCourseSection: [],
+            mSectionData: [],
             api: new CourseApi(),
-            username: 'rca71',
             height: '238px',
             fixedHeader: true,
             fixedFooter: true,
@@ -109,27 +107,18 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.loadPage = this.loadPage.bind(this);
         this.onSelectCourse = this.onSelectCourse.bind(this);
         this.onChangeClearChildOptions = this.onChangeClearChildOptions.bind(this);
-        this.generalFetch = this.generalFetch.bind(this);
         this.saveCourse = this.saveCourse.bind(this);
         this.onSectionSelect = this.onSectionSelect.bind(this);
         this.clearForm = this.clearForm.bind(this);
         this.onUnloadCleanup = this.onUnloadCleanup.bind(this);
     }
     onUnloadCleanup(event: Event) {
-        global.console.log('unloading');
+        global.console.log('Unloading Triggered');
         event.preventDefault();
         return 'unloading';
     }
     componentDidMount() {
-        /*
-         Upon loading page, the years must be always fetched because the most basic query requires at least the year...
-         Furthermore, any query can be formed after getting the year.
-         */
-        this.state.api.getYears().then(data => {
-            this.setState({ years: data });
-            global.console.log('call to year...');
-        });
-
+        this.setState({ years: ['2015', '2016', '2017', '2018'] });
         window.addEventListener('beforeunload', this.onUnloadCleanup);
     }
     componentWillUnmount() {
@@ -139,59 +128,68 @@ class CourseSelectionForm extends React.Component<{}, State> {
         return fetch(urlString)
             .then(response => {
                 if (response.ok) {
+                    this.setState({snackbarMessage: savedCourseSuccess});
                     return response.json();
                 } else {
-                    this.setState({snackbarMessage: savedCourseFailure});
                     throw new Error('Could not fetch from server');
                 }
             })
             .then(data => {
                 return data;
-            });
+            }).catch((error) => {
+                global.console.log('Error in fetching');
+                this.setState({snackbarMessage: savedCourseFailure});
+                return undefined;
+        });
     }
 
     onSelectYear(option: Option): void {
         this.setState({ mYearSelected: option.label });
 
         this.state.api.getTerms(option.label).then(data => {
-            this.setState({ terms: data });
+            if (data !== undefined) {
+                this.setState({ terms: data });
+                this.onChangeClearChildOptions(yearDropdownTitle);
+            }
         });
-
-        this.onChangeClearChildOptions(yearDropdownTitle);
     }
 
     onSelectTerm(option: Option): void {
         this.setState({ mTermSelected: option.label });
 
         this.state.api.getDepartments(this.state.mYearSelected, option.label).then(data => {
-            this.setState({ departments: data });
+            if (data !== undefined) {
+                this.setState({ departments: data });
+                this.onChangeClearChildOptions(termDropdownTitle);
+            }
         });
-
-        this.onChangeClearChildOptions(termDropdownTitle);
     }
 
     onSelectDepartment(option: Option): void {
         this.setState({ mDepartmentSelected: option.label });
 
         this.state.api.getCourses(this.state.mYearSelected, this.state.mTermSelected, option.label).then(data => {
-            let options: string[] = [];
-            for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].number + ' - ' + data[i].title;
+            if (data !== undefined) {
+                let options: string[] = [];
+                for (var i = 0; i < data.length; i++) {
+                    options[i] = data[i].number + ' - ' + data[i].title;
+                }
+                this.setState({ courses: options });
+                this.onChangeClearChildOptions(departmentDropdownTitle);
             }
-            this.setState({ courses: options });
         });
-
-        this.onChangeClearChildOptions(departmentDropdownTitle);
     }
 
     onSelectCourse(option: Option): void {
         this.setState({ mCourseSelected: option.label }, () => {
             this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseSelected.split('-')[0].trim()).then(data => {
-                rowSizeArray = new Array(data.length);
-                for (var i = 0; i < data.length; i++) {
-                    rowSizeArray[i] = false;
+                if (data !== undefined) {
+                    rowSizeArray = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        rowSizeArray[i] = false;
+                    }
+                    this.setState({ mSectionData: data, courseSectionData: data, rowsSelected: rowSizeArray });
                 }
-                this.setState({ mCourseSection: data, courseSectionData: data, rowsSelected: rowSizeArray });
             });
         });
     }
@@ -199,15 +197,12 @@ class CourseSelectionForm extends React.Component<{}, State> {
     loadPage(): void {
         global.console.log('enter here' + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionCode);
         this.context.router.history.push({
-            pathname: '/course-outline',
+            pathname: '/course-outline/' + this.state.mYearSelected + '/' 
+                                         + this.state.mTermSelected + '/'
+                                         + this.state.mDepartmentSelected + '/' 
+                                         + this.state.mCourseSelected.split('-')[0].trim() + '/'
+                                         + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionNum,
             state: {
-                // insert props here, currently coursenumber coursesections not yet implemented, but will be by tomorrow.
-                mYearSelected: this.state.mYearSelected,
-                mTermSelected: this.state.mTermSelected,
-                mDepartmentSelected: this.state.mDepartmentSelected,
-                mCourseNumberSelected: this.state.mCourseSelected.split('-')[0].trim(),
-                mCourseSection: this.state.mCourseSection,
-                courseSectionData: this.state.courseSectionData[this.state.rowsSelected.indexOf(true)],
             }
         });
     }
@@ -248,18 +243,6 @@ class CourseSelectionForm extends React.Component<{}, State> {
                 global.console.log('default');
         }
 
-    }
-
-    generalFetch(mURL: string) {
-        fetch(mURL)
-            .then(response => {
-                if (response.ok) {
-                    global.console.log('Successfully fetched from server');
-                } else {
-                    global.console.log('Successfully fetched from server');
-                    throw new Error('Could not fetch from server');
-                }
-            });
     }
 
     clearForm(): void {
@@ -308,10 +291,10 @@ class CourseSelectionForm extends React.Component<{}, State> {
     saveCourse() {
         // find course and retrieve ID
         let findCourseURL = 'http://localhost:3376/insert/userCourse/' + sessionStorage.getItem('username') + '/' + this.state.mDepartmentSelected + '/' +
-            this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mCourseSection[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
+            this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mSectionData[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
             this.state.mYearSelected + '/' + this.state.mTermSelected;
         let courseData = this.fetchUrl(findCourseURL);
-        this.setState({ open: true, snackbarMessage: savedCourseSuccess });
+        this.setState({ open: true });
     }
     handleRequestClose = () => {
         this.setState({
@@ -322,7 +305,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     render() {
         return (
             <div>
-                <div className="searchform" id="testw">
+                <div className="searchform">
                     <div className="courseSelect">
                         <br /><div id="year">
                             <label>Year</label><br />
@@ -363,8 +346,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
                             enableSelectAll={this.state.enableSelectAll}
                         >
                             <TableRow>
-                                <TableHeaderColumn tooltip="The Section">Section</TableHeaderColumn>
-                                <TableHeaderColumn tooltip="The Course Code">Code</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="The Section Code">Code</TableHeaderColumn>
+                                <TableHeaderColumn tooltip="The Section Number">Number</TableHeaderColumn>
                                 <TableHeaderColumn tooltip="Index">Type</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>

@@ -1,5 +1,48 @@
 .treeWrapper {
     border: 1px solid black;
-    width: 100%;
-    height: 500px;
+    width: 70%;
+    height: 25em;
+    margin: auto;
+    background-color: rgb(242,242,242);
+    border-radius: 5px;
+    margin-bottom: 2%;
+    margin-top: 5%;
 }
+
+.box-sizing {
+    border: 1px solid black;
+    width: 40%;
+    float: left;
+    margin-left: 6.75%;
+    margin-top: 1%;
+    border-radius: 5px;
+    background-color: gray;
+}
+
+.box-sizing h3 {
+    padding: 20px;
+    margin: auto;
+    color: black;
+}
+
+.sub-box {
+    width: auto;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #f2f2f2;
+}
+
+.list-override {
+    color: black !important;
+    font-weight: bold !important;
+}
+
+.subHeaders {
+    font-weight: bold !important;
+}
+
+.list-secondary-text {
+    color: darkblue !important;
+    font-weight: lighter !important;
+}
+

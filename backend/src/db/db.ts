@@ -18,7 +18,7 @@ export interface User {
 export interface Course {
     id: number;
     department: string;
-    number: number;
+    number: string;
     section: string;
     year: number;
     term: string;
