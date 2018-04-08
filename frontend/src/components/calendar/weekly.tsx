@@ -3,14 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
 import { Course, CourseJsonObj } from '../pages/course-outline/course'; 
 import './weekly.css';
-
-//enum Day {
-//    Monday      = 'Monday',
-//    Tuesday     = 'Tuesday',
-//    Wednesday   = 'Wednesday',
-//    Thursday    = 'Thursday',
-//    Friday      = 'Friday'
-//}
+import CourseApi from '../../utils/course-api';
 
 enum Day {
     Monday,
@@ -54,7 +47,8 @@ class WeeklyView extends React.Component<{}, State> {
 
     componentDidMount() {
         let user = sessionStorage.getItem('username');
-        
+        let api = new CourseApi();
+        api.getUserCourses
     }
 
     render() {

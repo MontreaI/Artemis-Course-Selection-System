@@ -105,14 +105,17 @@ class CourseApi {
     }
 
     public getCourse(id: number): Course {
+        this.fetchUrl(`${Config.courseURL}${id}`)
+            .then((data: Course) => data)
+            .catch((err: Error) => {
 
+            });
     }
 
     public getUserCourses(username: string) {
         return this.fetchUrl(Config.userCourseURL + username)
                    .then((data: number[]) => {
                        data.map(id => {
-                           this.fetchUrl()
                        })
         });
     }
