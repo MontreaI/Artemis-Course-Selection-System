@@ -17,7 +17,10 @@ class CourseApi {
         let terms: string[];
 
         return this.fetchUrl(Config.termsURL + year).then((data: string[]) => {
-            return terms = data;
+            if (data !== undefined) {
+                terms = data;
+            }
+            return terms;
         });
     }
 
@@ -25,7 +28,10 @@ class CourseApi {
         let departments: string[];
 
         return this.fetchUrl(Config.termsURL + year + '/' + term).then((data: string[]) => {
-            return departments = data;
+            if (data !== undefined) {
+                departments = data;
+            }
+            return departments;
         });
     }
 
@@ -34,12 +40,13 @@ class CourseApi {
 
         return this.fetchUrl(Config.termsURL + year + '/' + term + '/' + department).then(data => {
             courses = new Array();
-            for (var i = 0; i < data.length; i++) {
-                let course = new Course(department, data[i].value);
-                course.title = data[i].title;
-                courses.push(course);
+            if (data !== undefined) {
+                for (var i = 0; i < data.length; i++) {
+                    let course = new Course(department, data[i].value);
+                    course.title = data[i].title;
+                    courses.push(course);
+                }
             }
-
             return courses;
         });
     }
@@ -49,11 +56,12 @@ class CourseApi {
 
         return this.fetchUrl(Config.termsURL + year + '/' + term + '/' + department + '/' + courseNum).then(data => {
             sections = new Array();
-            for (var i = 0; i < data.length; i++) {
-                let section = new CSection(data[i].text, data[i].value, data[i].title, data[i].classType, data[i].sectionCode, data[i].associatedClass);
-                sections.push(section);
+            if (data !== undefined) {
+                for (var i = 0; i < data.length; i++) {
+                    let section = new CSection(data[i].text, data[i].value, data[i].title, data[i].classType, data[i].sectionCode, data[i].associatedClass);
+                    sections.push(section);
+                }
             }
-
             return sections;
         });
     }
@@ -82,7 +90,6 @@ class CourseApi {
                 course.courseSchedule = data.courseSchedule;
             } else {
                 global.console.log(data);
-                throw new Error('Data is perhaps corrupted');
             }
            
             return course;
@@ -101,7 +108,10 @@ class CourseApi {
         })
         .then(data => {
             return data;
-        });
+        }).catch((error) => {
+            global.console.log('Error in fetching');
+            return undefined;
+    });
     }
 }
 

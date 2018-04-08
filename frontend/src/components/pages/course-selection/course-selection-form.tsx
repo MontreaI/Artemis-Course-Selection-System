@@ -107,7 +107,6 @@ class CourseSelectionForm extends React.Component<{}, State> {
         this.loadPage = this.loadPage.bind(this);
         this.onSelectCourse = this.onSelectCourse.bind(this);
         this.onChangeClearChildOptions = this.onChangeClearChildOptions.bind(this);
-        this.generalFetch = this.generalFetch.bind(this);
         this.saveCourse = this.saveCourse.bind(this);
         this.onSectionSelect = this.onSectionSelect.bind(this);
         this.clearForm = this.clearForm.bind(this);
@@ -129,59 +128,68 @@ class CourseSelectionForm extends React.Component<{}, State> {
         return fetch(urlString)
             .then(response => {
                 if (response.ok) {
+                    this.setState({snackbarMessage: savedCourseSuccess});
                     return response.json();
                 } else {
-                    this.setState({snackbarMessage: savedCourseFailure});
                     throw new Error('Could not fetch from server');
                 }
             })
             .then(data => {
                 return data;
-            });
+            }).catch((error) => {
+                global.console.log('Error in fetching');
+                this.setState({snackbarMessage: savedCourseFailure});
+                return undefined;
+        });
     }
 
     onSelectYear(option: Option): void {
         this.setState({ mYearSelected: option.label });
 
         this.state.api.getTerms(option.label).then(data => {
-            this.setState({ terms: data });
+            if (data !== undefined) {
+                this.setState({ terms: data });
+                this.onChangeClearChildOptions(yearDropdownTitle);
+            }
         });
-
-        this.onChangeClearChildOptions(yearDropdownTitle);
     }
 
     onSelectTerm(option: Option): void {
         this.setState({ mTermSelected: option.label });
 
         this.state.api.getDepartments(this.state.mYearSelected, option.label).then(data => {
-            this.setState({ departments: data });
+            if (data !== undefined) {
+                this.setState({ departments: data });
+                this.onChangeClearChildOptions(termDropdownTitle);
+            }
         });
-
-        this.onChangeClearChildOptions(termDropdownTitle);
     }
 
     onSelectDepartment(option: Option): void {
         this.setState({ mDepartmentSelected: option.label });
 
         this.state.api.getCourses(this.state.mYearSelected, this.state.mTermSelected, option.label).then(data => {
-            let options: string[] = [];
-            for (var i = 0; i < data.length; i++) {
-                options[i] = data[i].number + ' - ' + data[i].title;
+            if (data !== undefined) {
+                let options: string[] = [];
+                for (var i = 0; i < data.length; i++) {
+                    options[i] = data[i].number + ' - ' + data[i].title;
+                }
+                this.setState({ courses: options });
+                this.onChangeClearChildOptions(departmentDropdownTitle);
             }
-            this.setState({ courses: options });
         });
-
-        this.onChangeClearChildOptions(departmentDropdownTitle);
     }
 
     onSelectCourse(option: Option): void {
         this.setState({ mCourseSelected: option.label }, () => {
             this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, this.state.mDepartmentSelected, this.state.mCourseSelected.split('-')[0].trim()).then(data => {
-                rowSizeArray = new Array(data.length);
-                for (var i = 0; i < data.length; i++) {
-                    rowSizeArray[i] = false;
+                if (data !== undefined) {
+                    rowSizeArray = new Array(data.length);
+                    for (var i = 0; i < data.length; i++) {
+                        rowSizeArray[i] = false;
+                    }
+                    this.setState({ mSectionData: data, courseSectionData: data, rowsSelected: rowSizeArray });
                 }
-                this.setState({ mSectionData: data, courseSectionData: data, rowsSelected: rowSizeArray });
             });
         });
     }
@@ -237,18 +245,6 @@ class CourseSelectionForm extends React.Component<{}, State> {
 
     }
 
-    generalFetch(mURL: string) {
-        fetch(mURL)
-            .then(response => {
-                if (response.ok) {
-                    global.console.log('Successfully fetched from server');
-                } else {
-                    global.console.log('Successfully fetched from server');
-                    throw new Error('Could not fetch from server');
-                }
-            });
-    }
-
     clearForm(): void {
         this.setState({
             mYearSelected: yearDropdownTitle,
@@ -298,7 +294,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
             this.state.mCourseSelected.split('-')[0].trim() + '/' + this.state.mSectionData[this.state.rowsSelected.indexOf(true)].sectionNum + '/' +
             this.state.mYearSelected + '/' + this.state.mTermSelected;
         let courseData = this.fetchUrl(findCourseURL);
-        this.setState({ open: true, snackbarMessage: savedCourseSuccess });
+        this.setState({ open: true });
     }
     handleRequestClose = () => {
         this.setState({
