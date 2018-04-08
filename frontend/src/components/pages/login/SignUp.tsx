@@ -91,11 +91,10 @@ class SignUp extends React.Component<{}, State> {
     register() {
         this.state.api.createAccount(this.state.username, this.state.password, this.state.email).then(data => {
             this.setState({created: data});
-            global.console.log(data);
             if (data === true) {
                 this.loadPage();
             } else {
-                alert('Could Not Connect to SignUp API');
+                alert('There is a problem creating your account. Try a different username');
             }      
         });   
     }   
