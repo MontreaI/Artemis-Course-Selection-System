@@ -33,6 +33,24 @@ interface State {
     courses: WeeklyCourse[];
 }
 
+function mapDayStringsToDays(days: string[]) {
+    return days.map(d => {
+        switch (d) {
+            default:
+            case 'Mo':
+                return Day.Monday;
+            case 'Tu':
+                return Day.Tuesday;
+            case 'We':
+                return Day.Wednesday;
+            case 'Th':
+                return Day.Thursday;
+            case 'Fr':
+                return Day.Friday;
+        }
+    });
+}
+
 class WeeklyView extends React.Component<{}, State> {
     static contextTypes = {
         router: PropTypes.object
@@ -47,8 +65,53 @@ class WeeklyView extends React.Component<{}, State> {
 
     componentDidMount() {
         let user = sessionStorage.getItem('username');
-        let api = new CourseApi();
-        api.getUserCourses
+        if (user !== null) {
+            global.console.log(`getting courses for ${user}`);
+            let api = new CourseApi();
+            api.getUserCourses(user).then((courses: Course[]) => {
+                global.console.log(`got ${courses.length} courses`);
+                let wCourses: WeeklyCourse[] = [];
+                for (let c of courses) {
+                    let course: WeeklyCourse = {
+                        name: c.name,
+                        time: []
+                    };
+
+                    for (let schedule of c.courseSchedule) {
+                        let startTimes = schedule.startTime.split(':');
+                        let startHalf: boolean = (startTimes[1] !== '00');
+                        let startTime: ClassTime = {
+                            hour: parseInt(startTimes[0], 10),
+                            half: startHalf
+                        };
+
+                        let endTimes = schedule.endTime.split(':');
+                        let endHalf: boolean = (endTimes[1] !== '00');
+                        let endTime: ClassTime = {
+                            hour: parseInt(endTimes[0], 10),
+                            half: endHalf
+                        };
+
+                        let days = mapDayStringsToDays(schedule.days.split(','));
+                        for (let day of days) {
+                            let time: ClassDateTime = {
+                                day: day,
+                                start: startTime,
+                                end: endTime
+                            };
+
+                            course.time.push(time);
+                        }
+                    }
+
+                    wCourses.push(course);
+                }
+
+                this.setState({
+                    courses: wCourses
+                });
+            });
+        }
     }
 
     render() {

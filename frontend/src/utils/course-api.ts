@@ -3,6 +3,14 @@ import Config from './config';
 import { Course, CourseJsonObj } from '../components/pages/course-outline/course';
 import CSection from '../components/pages/course-outline/csection';
 
+interface BackendCourse {
+    department: string;
+    number: string;
+    section: string;
+    year: string;
+    term: string;
+}
+
 class CourseApi {
 
     public getYears(): Promise<string[]> {
@@ -89,6 +97,23 @@ class CourseApi {
         });
     }
 
+    public getCourse(id: number): Promise<BackendCourse> {
+        return this.fetchUrl(`${Config.courseURL}${id}`)
+            .then((data: BackendCourse) => data)
+            .catch((err: Error) => {
+                throw err;
+            });
+    }
+
+    public getUserCourses(username: string): Promise<Course[]> {
+        return this.fetchUrl(Config.userCourseURL + username)
+            .then((ids: number[]) =>
+                Promise.all(ids.map(id => this.getCourse(id))).then((courses: BackendCourse[]) =>
+                    Promise.all(courses.map(c => this.getCourseOutline(c.year, c.term, c.department, c.number, c.section)))
+                )
+            );
+    }
+
     private fetchUrl(urlString: string) {
         return fetch(urlString)
         .then(response => {
@@ -101,22 +126,6 @@ class CourseApi {
         })
         .then(data => {
             return data;
-        });
-    }
-
-    public getCourse(id: number): Course {
-        this.fetchUrl(`${Config.courseURL}${id}`)
-            .then((data: Course) => data)
-            .catch((err: Error) => {
-
-            });
-    }
-
-    public getUserCourses(username: string) {
-        return this.fetchUrl(Config.userCourseURL + username)
-                   .then((data: number[]) => {
-                       data.map(id => {
-                       })
         });
     }
 }
