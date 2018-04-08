@@ -1,5 +1,6 @@
 table {
-    align-self: center;
+    margin-right: auto;
+    margin-left: 35%;
 }
 .timeRow {
     margin: 0;
