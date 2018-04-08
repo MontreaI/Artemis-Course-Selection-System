@@ -28,7 +28,9 @@ data structure:
 export let getYears = (req: Request, res: Response) => {
     http.get('http://www.sfu.ca/bin/wcm/course-outlines', (response) => {
         if (response.statusCode != 200) {
-            throw new Error('Could not fetch from server');
+            console.error('Could not fetch from server');
+            res.status(response.statusCode);
+            res.end();
         }
         else {
             let jsonData = '';
@@ -62,7 +64,9 @@ data structure:
 export let getTerms = (req: Request, res: Response) => {
     http.get('http://www.sfu.ca/bin/wcm/course-outlines?' +  req.params.year, (response) => {
         if (response.statusCode != 200) {
-            console.error('Could not fetch terms from server');
+            console.error('Could not fetch from server');
+            res.status(response.statusCode);
+            res.end();
         }
         else {
             let jsonData = '';
@@ -98,7 +102,9 @@ data structure:
 export let getDepartments = (req: Request, res: Response) => {
     http.get('http://www.sfu.ca/bin/wcm/course-outlines?' +  req.params.year + '/' + req.params.term, (response) => {
         if (response.statusCode != 200) {
-            console.error('Could not fetch departments from server');
+            console.error('Could not fetch from server');
+            res.status(response.statusCode);
+            res.end();
         }
         else {
             let jsonData = '';
@@ -131,7 +137,9 @@ data structure:
 export let getCourseNumbers = (req: Request, res: Response) => {
     http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department, (response) => {
         if (response.statusCode != 200) {
-            throw new Error('Could not fetch course numbersfrom server');
+            console.error('Could not fetch from server');
+            res.status(response.statusCode);
+            res.end();
         }
         else {
             let jsonData = '';
@@ -165,7 +173,9 @@ export let getCourseNumbers = (req: Request, res: Response) => {
 export let getCourseSections = (req: Request, res: Response) => {
     http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params. department + '/' + req.params.courseNumber, (response) => {
         if (response.statusCode != 200) {
-            throw new Error('Could not fetch from server');
+            console.error('Could not fetch from server');
+            res.status(response.statusCode);
+            res.end();
         }
         else {
             let jsonData = '';
@@ -187,7 +197,9 @@ export let getCourseSections = (req: Request, res: Response) => {
 export let getCourseOutline = (req: Request, res: Response) => {
     http.get('http://www.sfu.ca/bin/wcm/course-outlines?' + req.params.year + '/' + req.params.term + '/' + req.params.department + '/' + req.params.courseNumber + '/' + req.params.courseSection, (response) => {
         if (response.statusCode != 200) {
-            throw new Error('Could not fetch from server');
+            console.error('Could not fetch from server');
+            res.status(response.statusCode);
+            res.end();
         }
         else {
             let jsonData = '';
@@ -309,7 +321,7 @@ export let insertCourse = (req: Request, res: Response) => {
     const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number as number,
+        number: req.params.number,
         section: req.params.section,
         year: req.params.year as number,
         term: req.params.term,
@@ -343,7 +355,7 @@ export let insertUserCourse = (req: Request, res: Response) => {
     const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number as number,
+        number: req.params.number,
         section: req.params.section,
         year: req.params.year as number,
         term: req.params.term,
@@ -355,11 +367,14 @@ export let insertUserCourse = (req: Request, res: Response) => {
             const insertResult: boolean = db.addUserCourse(req.params.username, data.id);
             if (insertResult) {
                 res.status(200);
+                res.write('1');
+                res.end();
                 console.log('Insertion of new course to user with id ' + data.id + ' was successful');
             }
             else {
                 console.log('Insertion of new course to user failed');
                 res.status(502);
+                res.end();
             }
         }
         else {
@@ -370,20 +385,23 @@ export let insertUserCourse = (req: Request, res: Response) => {
                     const insertResult: boolean = db.addUserCourse(req.params.username, data);
                     if (insertResult) {
                         res.status(200);
-                        console.log('Insertion of new course to user with id ' + data + ' was successful');
+                        res.write('1');
+                        res.end();
+                        console.log('Insert new course to user with id ' + data + ' was successful');
                     }
                     else {
-                        console.log('Insertion of new course to user failed');
+                        console.log('Insertion of new course to user failed here');
                         res.status(502);
+                        res.end();
                     }
                 }
                 else {
-                    console.log('Insertion of new course to user failed');
+                    console.log('Insert of new course to user failed');
                     res.status(502);
+                    res.end();
                 }
             });
         }
-        res.end();
     });
 };
 
@@ -393,7 +411,7 @@ export let findCourse = (req: Request, res: Response) => {
     const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number as number,
+        number: req.params.number,
         section: req.params.section,
         year: req.params.year as number,
         term: req.params.term,

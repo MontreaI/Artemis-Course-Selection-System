@@ -40,6 +40,7 @@ interface State {
   courseOutline: Course;
   dialogOpen: boolean;
   api: CourseApi;
+  height: string;
 }
 
 interface CourseOutlineProps {
@@ -148,6 +149,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutlinePro
           courseTree: [],
           dialogOpen: false,
           api: new CourseApi(),
+          height: '238px',
         }; 
 
         this.openCourseNode = this.openCourseNode.bind(this);
@@ -428,7 +430,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutlinePro
                   <h3>All Sections</h3>
                   <div className="sub-box">
                     <MuiThemeProvider>
-                      <Table selectable={false} style={{borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}>
+                      <Table selectable={false} height={this.state.height} style={{borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}>
                         <TableHeader>
                           <TableRow>
                             <TableHeaderColumn className="list-override">Section Code</TableHeaderColumn>
