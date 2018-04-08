@@ -74,10 +74,12 @@ class SignIn extends React.Component<{}, State> {
 
     authenticate() {
         global.console.log(this.state.authenticated);
-        if (this.state.password === '') {
-            alert('Enter a password!');
+        if ((this.state.password === '') && (this.state.username === '')) {
+            alert('Please fill all fields!');
         } else if (this.state.username === '') {
             alert('Enter a username!');
+        } else if (this.state.password === '') {
+            alert('Enter a password!');
         } else { 
             this.state.api.getUserPassword(this.state.username, this.state.password).then(data => {
                 this.setState({authenticated: data});
