@@ -443,7 +443,7 @@ export let findCourse = (req: Request, res: Response) => {
 export function getUserCourses(req: Request, res: Response) {
     db.getUserCourses(req.params.username).then(data => {
         res.writeHead(200);
-        res.write(data);
+        res.write(JSON.stringify(data));
         res.end();
     });
 }
@@ -452,11 +452,12 @@ export function getCourseById(req: Request, res: Response) {
     db.findCourseByID(req.params.id)
         .then(data => {
             res.writeHead(200);
-            res.write(data);
+            res.write(JSON.stringify(data));
             res.end();
         })
         .catch(err => {
-            res.writeHead(404);
+            global.console.log(err);
+            //res.writeHead(404);
             res.end();
         });
 }

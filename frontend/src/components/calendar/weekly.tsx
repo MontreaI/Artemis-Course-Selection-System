@@ -35,8 +35,8 @@ interface State {
 
 function mapDayStringsToDays(days: string[]) {
     return days.map(d => {
-        switch (d) {
-            default:
+        let day = d.trim();
+        switch (day) {
             case 'Mo':
                 return Day.Monday;
             case 'Tu':
@@ -47,6 +47,8 @@ function mapDayStringsToDays(days: string[]) {
                 return Day.Thursday;
             case 'Fr':
                 return Day.Friday;
+            default:
+                return Day.Monday;
         }
     });
 }
@@ -70,8 +72,8 @@ class WeeklyView extends React.Component<{}, State> {
             let api = new CourseApi();
             api.getUserCourses(user).then((courses: Course[]) => {
                 global.console.log(`got ${courses.length} courses`);
-                let wCourses: WeeklyCourse[] = [];
-                for (let c of courses) {
+                let wCourses = courses.map(c => {
+                    global.console.log(c);
                     let course: WeeklyCourse = {
                         name: c.name,
                         time: []
@@ -103,10 +105,9 @@ class WeeklyView extends React.Component<{}, State> {
                             course.time.push(time);
                         }
                     }
-
-                    wCourses.push(course);
-                }
-
+                    return course;
+                });
+                global.console.log(wCourses);
                 this.setState({
                     courses: wCourses
                 });

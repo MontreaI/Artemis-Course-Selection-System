@@ -181,22 +181,26 @@ export function addUserCourse(username: string, courseID: number) {
         });
 }
 
-export function getUserCourses(username: string): Promise<number[]> {
+export function getUserCourses(username: string): Promise<string[]> {
+    interface Result {
+        id: string;
+    }
     return db.manyOrNone('SELECT id FROM UserCourse WHERE username = $1', [username])
-        .then((data: number[]) => {
-            return data;
+        .then((data: Result[]) => {
+            return data.map(d => d.id);
         })
-        .catch((err: Error): number[] => {
+        .catch((err: Error): string[] => {
             return [];
         });
 }
 
 export function findCourseByID(id: number): Promise<Course> {
     return db.one('SELECT * FROM courses WHERE id=$1', [id])
-              .then((data: Course) => {
-                  return data;
+             .then((data: Course) => {
+                return data;
               })
-              .catch((err: Error) => {
-                  throw err;
+             .catch((err: Error) => {
+                global.console.log(`DBError: ${err}`);
+                throw err;
               });
 }

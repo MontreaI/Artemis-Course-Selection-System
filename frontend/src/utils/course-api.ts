@@ -104,7 +104,7 @@ class CourseApi {
         });
     }
 
-    public getCourse(id: number): Promise<BackendCourse> {
+    public getCourse(id: string): Promise<BackendCourse> {
         return this.fetchUrl(`${Config.courseURL}${id}`)
             .then((data: BackendCourse) => data)
             .catch((err: Error) => {
@@ -114,11 +114,14 @@ class CourseApi {
 
     public getUserCourses(username: string): Promise<Course[]> {
         return this.fetchUrl(Config.userCourseURL + username)
-            .then((ids: number[]) =>
+            .then((ids: string[]) =>
                 Promise.all(ids.map(id => this.getCourse(id))).then((courses: BackendCourse[]) =>
                     Promise.all(courses.map(c => this.getCourseOutline(c.year, c.term, c.department, c.number, c.section)))
                 )
-            );
+            ).catch(err => {
+                global.console.log(err);
+                return [];
+            });
     }
 
     private fetchUrl(urlString: string) {
@@ -135,6 +138,7 @@ class CourseApi {
             return data;
         }).catch((error) => {
             global.console.log('Error in fetching');
+            global.console.log(error);
             return undefined;
     });
     }
