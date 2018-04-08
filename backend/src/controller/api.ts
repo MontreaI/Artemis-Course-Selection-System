@@ -321,7 +321,7 @@ export let insertCourse = (req: Request, res: Response) => {
     const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number as number,
+        number: req.params.number,
         section: req.params.section,
         year: req.params.year as number,
         term: req.params.term,
@@ -355,7 +355,7 @@ export let insertUserCourse = (req: Request, res: Response) => {
     const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number as number,
+        number: req.params.number,
         section: req.params.section,
         year: req.params.year as number,
         term: req.params.term,
@@ -411,7 +411,7 @@ export let findCourse = (req: Request, res: Response) => {
     const course: db.Course = {
         id: 0,
         department: req.params.department,
-        number: req.params.number as number,
+        number: req.params.number,
         section: req.params.section,
         year: req.params.year as number,
         term: req.params.term,
