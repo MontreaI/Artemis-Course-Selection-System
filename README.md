@@ -3,6 +3,8 @@ Artemis
 
 ## Architecture
 
+The application is built on React.js for the front end. The backend is built on Express.js. PostgreSQL is our database of choice.
+
 ## Features
 
 #### Login Page
@@ -40,6 +42,10 @@ by "SFU's Course Outlines REST API"
 
 A list of all sections that the user has selected on the Course Selection Page in order to preview their schedule.
 
+Clicking on a course will navigate to Course Outline Page for details about the course.
+
+Clicking on the X button will remove the course from the users list of courses.
+
 ###### **Removing Unwanted Courses**
 
 Users may decide to opt out of an course by selecting the 'X' icon next to a course label on the timetable.
@@ -56,7 +62,11 @@ Users may decide to opt out of an course by selecting the 'X' icon next to a cou
 
  
 
-## URL
+## Deployment
+
+To deploy the website, go to deployment folder and run `vagrant up`. This will bring up the VM and build the website. 
+Due to the VM might not have sufficient memory, the build process might fail. In that case, running `vagrant reload --provision` should fix the problem.
+After deployment, navigate to `http://localhost:3376/` to access the application.
 
 ## Issues
 
