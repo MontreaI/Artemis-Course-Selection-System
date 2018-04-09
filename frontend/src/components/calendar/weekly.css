@@ -1,7 +1,9 @@
 .timetable {
-    margin-right: auto;
-    margin-left: 35%;
+    margin: auto;
+    margin-top: 3%;
+    padding-bottom: 150px;
 }
+
 .timeRow {
     margin: 0;
 }
@@ -10,6 +12,7 @@
     background-color: white;
     height: 5px;
     padding: 5px 20px;
+    border: 2px solid black;
     margin: 0;
 }
 

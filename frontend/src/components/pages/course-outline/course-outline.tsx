@@ -274,7 +274,7 @@ class CourseOutline extends React.Component<CourseOutlineProps, State> {
     render() {
       if (this.state.courseTree.length > 0) {
         return (
-          <div className="Wrapper">
+          <div className="wrapper">
 
               <div>
                 <MuiThemeProvider>
@@ -457,6 +457,8 @@ class CourseOutline extends React.Component<CourseOutlineProps, State> {
                   </div>
                 </div>
               }
+
+              <div className="footer"/>
           </div>
         );
       }

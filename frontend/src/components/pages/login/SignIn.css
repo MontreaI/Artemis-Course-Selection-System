@@ -1,6 +1,11 @@
 body {
     background-color: #008B8B;
+    background-image: url("sfu_wallpaper.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size:cover;
 }
+
 h1 {
     background-color: #000;
     text-align: center;
