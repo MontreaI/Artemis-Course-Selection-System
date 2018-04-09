@@ -176,7 +176,7 @@ class WeeklyView extends React.Component<{}, State> {
         }
 
         return (
-            <table>
+            <table className="timetable">
                 <tr>
                     {daysCols}
                 </tr>

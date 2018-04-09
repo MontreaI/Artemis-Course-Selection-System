@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { BrowserRouter as Router } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
 import CourseApi from '../../../utils/course-api';
-import CourseOutline from '../course-outline/course';
+import CourseOutline from '../course-outline/course-outline';
 import CSection from '../course-outline/csection';
 import Snackbar from 'material-ui/Snackbar';
 
@@ -56,6 +56,8 @@ interface State {
     isSECSelected: boolean;
     open: boolean;
     snackbarMessage: string;
+    showModal: boolean;
+    courseOutline: JSX.Element;
 }
 
 // dropdown titles
@@ -64,12 +66,16 @@ var termDropdownTitle: string = 'Term';
 var departmentDropdownTitle: string = 'Department';
 var courseDropdownTitle: string = 'Course';
 
-class CourseSelectionForm extends React.Component<{}, State> {
+interface Props {
+    viewCourseOutlineCallback: (elem: JSX.Element) => void;
+}
+
+class CourseSelectionForm extends React.Component<Props, State> {
     static contextTypes = {
         router: PropTypes.object
     };
 
-    constructor(props: {}, context: {}) {
+    constructor(props: Props, context: {}) {
         super(props, context);
         this.state = {
             selected: 0,
@@ -99,6 +105,8 @@ class CourseSelectionForm extends React.Component<{}, State> {
             isSECSelected: true,
             open: false,
             snackbarMessage: savedCourseFailure,
+            showModal: false,
+            courseOutline: <CourseOutline year={'2015'} term={'summer'} dept={'cmpt'} number={'225'} section={'d100'} />
         };
 
         this.onSelectYear = this.onSelectYear.bind(this);
@@ -124,6 +132,7 @@ class CourseSelectionForm extends React.Component<{}, State> {
     componentWillUnmount() {
         window.removeEventListener('beforeunload', this.onUnloadCleanup);
     }
+
     fetchUrl(urlString: string) {
         return fetch(urlString)
             .then(response => {
@@ -196,15 +205,16 @@ class CourseSelectionForm extends React.Component<{}, State> {
 
     loadPage(): void {
         global.console.log('enter here' + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionCode);
-        this.context.router.history.push({
-            pathname: '/course-outline/' + this.state.mYearSelected + '/' 
-                                         + this.state.mTermSelected + '/'
-                                         + this.state.mDepartmentSelected + '/' 
-                                         + this.state.mCourseSelected.split('-')[0].trim() + '/'
-                                         + this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionNum,
-            state: {
-            }
-        });
+        let elem = (
+            <CourseOutline
+                year={this.state.mYearSelected}
+                term={this.state.mTermSelected}
+                dept={this.state.mDepartmentSelected}
+                number={this.state.mCourseSelected.split('-')[0].trim()}
+                section={this.state.courseSectionData[this.state.rowsSelected.indexOf(true)].sectionNum}
+            />
+        );
+        this.props.viewCourseOutlineCallback(elem);
     }
 
     onChangeClearChildOptions(dropdown: string): void {
