@@ -52,6 +52,8 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
     
     loadPage(): void {
         localStorage.clear();
+        sessionStorage.clear();
+        this.setState({isLoggedIn: false});
         this.context.router.history.push({
             pathname: '/signin',
             state: {

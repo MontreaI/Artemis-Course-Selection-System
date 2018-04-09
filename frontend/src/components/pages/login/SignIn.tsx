@@ -34,9 +34,14 @@ class SignIn extends React.Component<{}, State> {
         this.authenticate = this.authenticate.bind(this);
     }
     
-    componentDidMount() {
-        sessionStorage.setItem('isLoggedIn', 'false');
-        sessionStorage.setItem('username', '');
+    componentWillMount() {
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            this.context.router.history.push({
+                pathname: '/course-selection-layout',
+                state: {
+                }
+            });
+        }
     }
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({username: e.target.value.toLowerCase()});
