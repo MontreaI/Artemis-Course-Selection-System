@@ -58,11 +58,16 @@ class SignUp extends React.Component<{}, State> {
 
     emailRegexCheck() {
         const emailRegex = /\S+@\S+\.\S+/;
-        if (emailRegex.test(this.state.email)) {
-            this.confirmPass();
+        if ((this.state.username !== '') && (this.state.password !== '') && (this.state.email !== '')) {
+            if (emailRegex.test(this.state.email)) {
+                this.confirmPass();
+            } else {
+                alert('Email not valid!');
+            }
         } else {
-            alert('Email not valid!');
+            alert('Please fill all fields');
         }
+        
     }
 
     loadPage(): void {
@@ -81,11 +86,15 @@ class SignUp extends React.Component<{}, State> {
         });
     }
     confirmPass() {
-        if (this.state.password === this.state.conPass) {
-            this.register();
+        if (this.state.password.length < 4) {
+            alert('Password length is less than 4 characters long! Enter a longer password');
         } else {
-            alert('Passwords do not match! Please enter passwords again');
-            this.setState({password: '', conPass: ''});
+            if (this.state.password === this.state.conPass) {
+                this.register();
+            } else {
+                alert('Passwords do not match! Please enter passwords again');
+                this.setState({password: '', conPass: ''});
+            }
         }
     }
     register() {
