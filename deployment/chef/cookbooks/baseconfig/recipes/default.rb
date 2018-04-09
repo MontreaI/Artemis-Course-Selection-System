@@ -27,3 +27,7 @@ end
 execute 'ntp_restart' do
   command 'service ntp restart'
 end
+
+execute 'npm_installs' do 
+  command 'npm install -g pm2'
+end
