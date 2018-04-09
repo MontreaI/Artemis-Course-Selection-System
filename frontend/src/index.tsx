@@ -19,7 +19,6 @@ ReactDOM.render(
       <link href="http://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" type="text/css"/>
       </header>
       <Route exact={true} path="/" component={App} />
-      <Route path="/course-outline/:year/:term/:dept/:number/:section" component={CourseOutline} />
       <Route path="/course-selection-layout" component={CourseSelectionLayout} />
       <Route path="/signup" component={SignUp} />
       <Route path="/signin" component={SignIn} />
