@@ -111,6 +111,7 @@ class SignUp extends React.Component<{}, State> {
         this.state.api.createAccount(this.state.username, this.state.password, this.state.email).then(data => {
             this.setState({created: data});
             if (data === true) {
+                alert('Sign up success!');
                 this.loadPage();
             } else {
                 alert('There is a problem creating your account. Try a different username');
