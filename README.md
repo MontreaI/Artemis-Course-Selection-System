@@ -15,12 +15,12 @@ The Login page is very minimalistic, authentication only requires a username and
 
 ##### **Sign Up**
 
-Registration of an account requires an user to select the 'Sign Up' button which will redirect you to another page to input required details.
+Registration of an account requires an user to select the 'Sign Up' button which will redirect you to another page to input required details. 
 
 ##### **Password Reset**
 
 Resetting a password requires an user to select the 'Password Reset' button which will ask for the username whose password you want to reset
-and the the email which you want the password to be sent to.
+and the the email associated with the username for the password to be sent to.
 
 ####  -- Course Selection Page --
 
