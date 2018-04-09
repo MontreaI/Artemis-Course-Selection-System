@@ -1,24 +1,13 @@
-Project is divided into 2 parts right now: Front-end and Back-end.
+Artemis
+======
 
-To add an UI component:
-1. Go to frontend project.
-2. Go to src/components folder.
-3. Create component.
+## Set-up
 
-To add a backend API:
-1. Go to backend project.
-2. Go to src/controller folder.
-3. Open api.ts file.
-4. Create api.
-5. Open src/app.ts.
-6. Add API usage in the form app.*method*(*API end point*, api.*api function*).
+## Features
 
-Build and run:
-1. Have 2 terminals open, 1 navigate to backend folder, 1 to front end folder.
-2. For backend, do "npm run build" and fix any error.
-3. For backend, do "npm start" to start server.
-(I'll look into hotloading code for backend as well)
+## Accounts
 
-4. For front end, do "npm start" and start live editing code.
+## URL
 
-# Test
+## Issues
+
