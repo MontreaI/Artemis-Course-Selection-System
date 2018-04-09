@@ -71,7 +71,7 @@ Navigation bars attached to the top and bottom of each page, excluding login pag
 
 | Username        | Password    |
 | ------------- |:-------------:| 
-| rca71    | rca71 | 
+| thain    | admin | 
 
 ## Deployment
 
