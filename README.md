@@ -1,8 +1,6 @@
 Artemis
 ======
 
-## Architecture
-
 ## Features
 
 #### Login Page
