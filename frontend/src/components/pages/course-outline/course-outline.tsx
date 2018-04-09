@@ -59,7 +59,6 @@ const locIcon = <FontIcon className="material-icons">room</FontIcon>;
 const timeIcon = <FontIcon className="material-icons">schedule</FontIcon>;
 
 // Consts
-const queryString = require('query-string');
 const centerX = (window.screen.width / 2);
 const centerY = (window.screen.height / 2);
 
