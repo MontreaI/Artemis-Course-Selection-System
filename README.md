@@ -1,24 +1,64 @@
-Project is divided into 2 parts right now: Front-end and Back-end.
+Artemis
+======
 
-To add an UI component:
-1. Go to frontend project.
-2. Go to src/components folder.
-3. Create component.
+## Architecture
 
-To add a backend API:
-1. Go to backend project.
-2. Go to src/controller folder.
-3. Open api.ts file.
-4. Create api.
-5. Open src/app.ts.
-6. Add API usage in the form app.*method*(*API end point*, api.*api function*).
+## Features
 
-Build and run:
-1. Have 2 terminals open, 1 navigate to backend folder, 1 to front end folder.
-2. For backend, do "npm run build" and fix any error.
-3. For backend, do "npm start" to start server.
-(I'll look into hotloading code for backend as well)
+#### Login Page
 
-4. For front end, do "npm start" and start live editing code.
+The Login page is very minimalistic, authentication only requires a username and password to access an user's account.
 
-# Test
+##### **Sign Up**
+
+Registration of an account requires an user to select the 'Sign Up' button which will redirect you to another page to input required details.
+
+##### **Password Reset**
+
+Resetting a password requires an user to select the 'Password Reset' button which will ask for the username whose password you want to reset
+and the the email which you want the password to be sent to.
+
+#### Course Selection Page
+
+The Course Selection page allows the user to search up courses up to as early as 2015 and the current year. It utilizes SFU's "Course Outlines REST API"
+to populate the dropdown menues and table lsit of selectable section types. 
+
+##### **Clearing Form** 
+
+Clear already selected options on the form to start over for pure convenience of users.
+
+##### **Saving Courses to Timetable**
+
+Courses can be saved to the user's timetable which can be accessed on the lower navigation bar available on every page except login.
+
+##### **Searching Course Outlines**
+
+A user may look up more details of a course; however, this feature only supports sections of type *'LEC'* because only lectures have a course outline supplied
+by "SFU's Course Outlines REST API"
+
+#### Timetable Page
+
+A list of all sections that the user has selected on the Course Selection Page in order to preview their schedule.
+
+###### **Removing Unwanted Courses**
+
+Users may decide to opt out of an course by selecting the 'X' icon next to a course label on the timetable.
+
+#### Course Outline Page
+
+## Accounts
+
+#### Test Accounts
+
+| Username        | Password    |
+| ------------- |:-------------:| 
+| rca71    | rca71 | 
+
+ 
+
+## URL
+
+## Issues
+
+## Important Notes
+
