@@ -31,6 +31,16 @@ class ForgotPass extends React.Component<{}, State> {
         this.userRegret = this.userRegret.bind(this);
     }
 
+    componentWillMount() {
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            this.context.router.history.push({
+                pathname: '/course-selection-layout',
+                state: {
+                }
+            });
+        }
+    }
+    
     onEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({email: e.target.value.toLowerCase()});
     }

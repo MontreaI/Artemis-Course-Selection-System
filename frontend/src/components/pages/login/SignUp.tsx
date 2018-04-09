@@ -39,6 +39,16 @@ class SignUp extends React.Component<{}, State> {
         this.goBack = this.goBack.bind(this);
         this.register = this.register.bind(this);
     }
+    componentWillMount() {
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            this.context.router.history.push({
+                pathname: '/course-selection-layout',
+                state: {
+                }
+            });
+        }
+    }
+    
     onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({username: e.target.value.toLowerCase()});
         global.console.log(this.state.username);
