@@ -49,6 +49,16 @@ export interface Course {
     description: string;
 }
 */
+const options = {
+    dotfiles: 'ignore',
+    etag: false,
+    extensions: ['htm', 'html', 'js', '.svg', '.json', '.css'],
+    index: 'index.html'
+};
+
+app.use('/', express.static('../../frontend/build/', options));
+
+
 app.use('/', (req, res, next) => {
     console.log(req.method, 'request:', req.url);
     next();
