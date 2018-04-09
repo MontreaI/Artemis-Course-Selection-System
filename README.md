@@ -76,6 +76,3 @@ Due to the VM might not have sufficient memory, the build process might fail. In
 After deployment, navigate to `http://localhost:3376/` to access the application.
 
 ## Issues
-
-## Important Notes
-
