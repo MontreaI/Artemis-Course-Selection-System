@@ -46,7 +46,7 @@ export function createTableCourses() {
             '(' +
             'id serial PRIMARY KEY,' +
             'department varchar(4) NOT NULL,' +
-            'number integer NOT NULL,' +
+            'number text NOT NULL,' +
             'section text NOT NULL,' +
             'year integer NOT NULL,' +
             'term text NOT NULL,' +
@@ -65,7 +65,7 @@ export function createTableUserCourse() {
     return db.none('CREATE TABLE IF NOT EXISTS UserCourse ' +
         '(' +
         'username text NOT NULL,' +
-        'id integer NOT NULL,' +
+        'id text NOT NULL,' +
         'PRIMARY KEY (username, id)' +
         ')')
     .then(() => {
@@ -203,4 +203,24 @@ export function findCourseByID(id: number): Promise<Course> {
                 global.console.log(`DBError: ${err}`);
                 throw err;
               });
+}
+
+export function findCourseOfUser(username: string, course: Course): Promise<string> {
+    interface Result {
+        id: string;
+    }
+    return db.one('SELECT courses.id ' +
+                  'FROM UserCourse INNER JOIN courses ON UserCourse.id = courses.id ' +
+                  'WHERE UserCourse.username = $1 AND ' +
+        'courses.department = $2 AND courses.number = $3 AND courses.section = $4 AND courses.year = $5 AND courses.term = $6',
+        [username, course.department.toLowerCase(), course.number.toLowerCase(), course.section.toLowerCase(), course.year, course.term.toLowerCase()])
+        .then((data: Result) => data.id)
+        .catch((err: Error) => {
+            global.console.log(`DBError: ${err}`);
+            throw err;
+        });
+}
+
+export function deleteUserCourse(username: string, id: string) {
+    return db.none('DELETE FROM UserCourse WHERE username = $1 AND id = $2', [username, id]).catch((err: Error) => { throw err; });
 }

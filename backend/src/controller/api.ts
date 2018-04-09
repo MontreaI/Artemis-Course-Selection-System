@@ -461,3 +461,36 @@ export function getCourseById(req: Request, res: Response) {
             res.end();
         });
 }
+
+export function deleteUserCourse(req: Request, res: Response) {
+    return db.deleteUserCourse(req.params.username, req.params.id).then(() => {
+        res.writeHead(200);
+        res.end();
+    }).catch((err: Error) => {
+        global.console.log(err);
+        res.writeHead(502);
+        res.end();
+    });
+}
+
+export function getCourseOfUser(req: Request, res: Response) {
+    const course: db.Course = {
+        id: 0,
+        department: req.params.department,
+        number: req.params.number,
+        section: req.params.section,
+        year: req.params.year as number,
+        term: req.params.term,
+        description: '',
+    };
+    return db.findCourseOfUser(req.params.username, course).then(data => {
+        res.writeHead(200);
+        res.write(JSON.stringify(data));
+        res.end();
+    })
+    .catch(err => {
+        global.console.log(err);
+        res.writeHead(404);
+        res.end();
+    });
+}
