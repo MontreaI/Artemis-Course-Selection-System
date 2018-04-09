@@ -1,5 +1,8 @@
 # Artemis
 
+Artemis, a revamp of an already existing solution known as GoSFU. This website is designed to be a more simple web application for students to search courses, 
+save them and view their current course load through our custom timetable.
+
 ## Architecture
 
 The application is built on React.js for the front end. The backend is built on Express.js. PostgreSQL is our database of choice.
