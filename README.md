@@ -79,4 +79,7 @@ To deploy the website, go to deployment folder and run `vagrant up`. This will b
 Due to the VM might not have sufficient memory, the build process might fail. In that case, running `vagrant reload --provision` should fix the problem.
 After deployment, navigate to `http://localhost:3376/` to access the application.
 
-## Issues
+## Important Notes
+
+1. On Course Selection Page, you cannot see the time of the course section, only on the course timetable after adding it will the user see the time.
+2. A user can only select one course section at a time, this is an intended feature. Multiple selections was disabled for simplicity.
