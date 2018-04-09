@@ -61,6 +61,10 @@ as well as all the related sections.
 In addition the course outline page also contains a rendered tree. This tree structure contains information about the prereqs/any related courses. A user may click on any of the
 nodes in the tree (with exception to the root) which will update the course outline to that course (same semester). The user can quickly navigate through the course prereqs this way.
 
+####  -- Navigation Bars -- 
+
+Navigation bars attached to the top and bottom of each page, excluding login page, for users to navigate more easily to desired pages on Artemis.
+
 ## Accounts
 
 ####  -- Test Accounts --
@@ -68,8 +72,6 @@ nodes in the tree (with exception to the root) which will update the course outl
 | Username        | Password    |
 | ------------- |:-------------:| 
 | rca71    | rca71 | 
-
- 
 
 ## Deployment
 
