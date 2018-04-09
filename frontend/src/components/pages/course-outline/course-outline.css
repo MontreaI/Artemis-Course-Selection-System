@@ -1,3 +1,8 @@
+.wrapper {
+    overflow: hidden;
+    padding-bottom: 150px;
+}
+
 .treeWrapper {
     border: 1px solid black;
     width: 70%;
@@ -17,6 +22,7 @@
     margin-top: 1%;
     border-radius: 5px;
     background-color: gray;
+    overflow: auto;
 }
 
 .box-sizing h3 {
