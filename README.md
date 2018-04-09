@@ -52,6 +52,13 @@ Users may decide to opt out of an course by selecting the 'X' icon next to a cou
 
 #### Course Outline Page
 
+This page displays details about the searched course. It contains a general overview of the course, the prereqs to take it, course location and time, 
+as well as all the related sections.
+
+###### **Prereq Tree**
+In addition the course outline page also contains a rendered tree. This tree structure contains information about the prereqs/any related courses. A user may click on any of the
+nodes in the tree (with exception to the root) which will update the course outline to that course (same semester). The user can quickly navigate through the course prereqs this way.
+
 ## Accounts
 
 #### Test Accounts
