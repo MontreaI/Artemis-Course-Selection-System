@@ -8,9 +8,10 @@ Artemis
 #### Login
 
 
-| Tables        |
+
+| Tables        | Are           | Cool  |
 | ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned sdfdfsdf| $1600 |
+| col 3 is      | right-aligned test etset ets| $1600 |
 | col 2 is      | centered      |   $12 |
 | zebra stripes | are neat      |    $1 |
 
