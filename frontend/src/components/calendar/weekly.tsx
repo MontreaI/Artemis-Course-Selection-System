@@ -1,17 +1,9 @@
 import * as React from 'react';
-import { TableHeader, TableHeaderColumn, TableRow, Table, TableBody, TableRowColumn } from 'material-ui';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import customBaseTheme from '../themes/customBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { BrowserRouter as Router } from 'react-router-dom';
+import * as PropTypes from 'prop-types';
+import { Course, CourseJsonObj } from '../pages/course-outline/course'; 
 import './weekly.css';
-
-//enum Day {
-//    Monday      = 'Monday',
-//    Tuesday     = 'Tuesday',
-//    Wednesday   = 'Wednesday',
-//    Thursday    = 'Thursday',
-//    Friday      = 'Friday'
-//}
+import CourseApi from '../../utils/course-api';
 
 enum Day {
     Monday,
@@ -32,66 +24,95 @@ interface ClassDateTime {
     end: ClassTime;
 }
 
-interface Course {
+interface WeeklyCourse {
     name: string;
     time: ClassDateTime[];
 }
 
 interface State {
-    courses: Course[];
+    courses: WeeklyCourse[];
+}
+
+function mapDayStringsToDays(days: string[]) {
+    return days.map(d => {
+        let day = d.trim();
+        switch (day) {
+            case 'Mo':
+                return Day.Monday;
+            case 'Tu':
+                return Day.Tuesday;
+            case 'We':
+                return Day.Wednesday;
+            case 'Th':
+                return Day.Thursday;
+            case 'Fr':
+                return Day.Friday;
+            default:
+                return Day.Monday;
+        }
+    });
 }
 
 class WeeklyView extends React.Component<{}, State> {
-    constructor(props: {}) {
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    constructor(props: {}, context: {}) {
         super(props);
         this.state = {
-            courses: [
-                {
-                    name: 'CMPT470',
-                    time: [
-                        {
-                            day: Day.Thursday,
-                            start: {
-                                hour: 13,
-                                half: true
-                            },
-                            end: {
-                                hour: 15,
-                                half: true
-                            }
-                        },
-                        {
-                            day: Day.Monday,
-                            start: {
-                                hour: 13,
-                                half: true
-                            },
-                            end: {
-                                hour: 14,
-                                half: true
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'CMPT469',
-                    time: [
-                        {
-                            day: Day.Thursday,
-                            start: {
-                                hour: 15,
-                                half: false
-                            },
-                            end: {
-                                hour: 18,
-                                half: false
-                            }
-                        }
-                    ]
-                },
-
-            ]
+            courses: []
         };
+    }
+
+    componentDidMount() {
+        let user = sessionStorage.getItem('username');
+        if (user !== null) {
+            global.console.log(`getting courses for ${user}`);
+            let api = new CourseApi();
+            api.getUserCourses(user).then((courses: Course[]) => {
+                global.console.log(`got ${courses.length} courses`);
+                let wCourses = courses.map(c => {
+                    global.console.log(c);
+                    let course: WeeklyCourse = {
+                        name: c.name,
+                        time: []
+                    };
+
+                    for (let schedule of c.courseSchedule) {
+                        let startTimes = schedule.startTime.split(':');
+                        let startHalf: boolean = (startTimes[1] !== '00');
+                        let startTime: ClassTime = {
+                            hour: parseInt(startTimes[0], 10),
+                            half: startHalf
+                        };
+
+                        let endTimes = schedule.endTime.split(':');
+                        let endHalf: boolean = (endTimes[1] !== '00');
+                        let endTime: ClassTime = {
+                            hour: parseInt(endTimes[0], 10),
+                            half: endHalf
+                        };
+
+                        let days = mapDayStringsToDays(schedule.days.split(','));
+                        for (let day of days) {
+                            let time: ClassDateTime = {
+                                day: day,
+                                start: startTime,
+                                end: endTime
+                            };
+
+                            course.time.push(time);
+                        }
+                    }
+                    return course;
+                });
+                global.console.log(wCourses);
+                this.setState({
+                    courses: wCourses
+                });
+            });
+        }
     }
 
     render() {
@@ -155,7 +176,7 @@ class WeeklyView extends React.Component<{}, State> {
         }
 
         return (
-            <table>
+            <table className="timetable">
                 <tr>
                     {daysCols}
                 </tr>

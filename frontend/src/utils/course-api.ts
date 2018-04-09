@@ -3,6 +3,14 @@ import Config from './config';
 import { Course, CourseJsonObj } from '../components/pages/course-outline/course';
 import CSection from '../components/pages/course-outline/csection';
 
+interface BackendCourse {
+    department: string;
+    number: string;
+    section: string;
+    year: string;
+    term: string;
+}
+
 class CourseApi {
 
     public getYears(): Promise<string[]> {
@@ -96,6 +104,26 @@ class CourseApi {
         });
     }
 
+    public getCourse(id: string): Promise<BackendCourse> {
+        return this.fetchUrl(`${Config.courseURL}${id}`)
+            .then((data: BackendCourse) => data)
+            .catch((err: Error) => {
+                throw err;
+            });
+    }
+
+    public getUserCourses(username: string): Promise<Course[]> {
+        return this.fetchUrl(Config.userCourseURL + username)
+            .then((ids: string[]) =>
+                Promise.all(ids.map(id => this.getCourse(id))).then((courses: BackendCourse[]) =>
+                    Promise.all(courses.map(c => this.getCourseOutline(c.year, c.term, c.department, c.number, c.section)))
+                )
+            ).catch(err => {
+                global.console.log(err);
+                return [];
+            });
+    }
+
     private fetchUrl(urlString: string) {
         return fetch(urlString)
         .then(response => {
@@ -110,6 +138,7 @@ class CourseApi {
             return data;
         }).catch((error) => {
             global.console.log('Error in fetching');
+            global.console.log(error);
             return undefined;
     });
     }

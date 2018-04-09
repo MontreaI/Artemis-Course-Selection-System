@@ -180,3 +180,27 @@ export function addUserCourse(username: string, courseID: number) {
             return false;
         });
 }
+
+export function getUserCourses(username: string): Promise<string[]> {
+    interface Result {
+        id: string;
+    }
+    return db.manyOrNone('SELECT id FROM UserCourse WHERE username = $1', [username])
+        .then((data: Result[]) => {
+            return data.map(d => d.id);
+        })
+        .catch((err: Error): string[] => {
+            return [];
+        });
+}
+
+export function findCourseByID(id: number): Promise<Course> {
+    return db.one('SELECT * FROM courses WHERE id=$1', [id])
+             .then((data: Course) => {
+                return data;
+              })
+             .catch((err: Error) => {
+                global.console.log(`DBError: ${err}`);
+                throw err;
+              });
+}

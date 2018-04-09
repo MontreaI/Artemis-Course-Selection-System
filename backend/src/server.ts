@@ -34,6 +34,9 @@ app.get('/insert/course/:department/:number/:section/:year/:term', apiController
 app.get('/get/userCourse/:department/:number/:section/:year/:term', apiController.findCourse);
 app.get('/insert/userCourse/:username/:department/:number/:section/:year/:term', apiController.insertUserCourse);
 
+app.get('/userCourse/:username', apiController.getUserCourses);
+app.get('/courses/:id', apiController.getCourseById);
+
 /*
 export interface Course {
     id: number;

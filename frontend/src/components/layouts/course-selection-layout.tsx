@@ -28,6 +28,7 @@ const navigationSchoolIcon = <FontIcon className="material-icons">school</FontIc
 interface State {
     isLoggedIn: boolean;
     selectedIndex: number;
+    currentElem: JSX.Element;
   }
 
 interface CourseSelectionLayoutProps extends RouteComponentProps<CourseSelectionLayout> {
@@ -41,9 +42,11 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
 
     constructor(props: RouteComponentProps<CourseSelectionLayout>) {
         super(props);
+        this.viewCourseOutline = this.viewCourseOutline.bind(this);
         this.state = {
-          selectedIndex: 0,
-          isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true',
+            selectedIndex: 0,
+            isLoggedIn: sessionStorage.getItem('isLoggedIn') === 'true',
+            currentElem: <CourseSelectionForm viewCourseOutlineCallback={this.viewCourseOutline} />
         };
       }
     
@@ -53,6 +56,12 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
             pathname: '/signin',
             state: {
             }
+        });
+    }
+
+    viewCourseOutline(elem: JSX.Element) {
+        this.setState({
+            currentElem: elem
         });
     }
 
@@ -69,6 +78,15 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
 
     select(index: number) {
         this.setState({ selectedIndex: index });
+        switch (index) {
+            default:
+            case 0:
+                this.setState({ currentElem: <CourseSelectionForm viewCourseOutlineCallback={this.viewCourseOutline} /> });
+                break;
+            case 1:
+                this.setState({ currentElem: <WeeklyView /> });
+                break;
+        }
     }
 
     Logged = (props: {}) => (
@@ -89,16 +107,6 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
     )
 
     render() {
-        let currentElem: JSX.Element;
-        switch (this.state.selectedIndex) {
-            default:
-            case 0:
-                currentElem = <CourseSelectionForm />;
-                break;
-            case 1:
-                currentElem = <WeeklyView />;
-                break;
-        }
         return (
             <div className="courselayout">
                 <MuiThemeProvider muiTheme={getMuiTheme(customBaseTheme)}>
@@ -111,7 +119,7 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
                             </BottomNavigation>
                         </div>
                     </Paper>
-                    {currentElem}
+                    {this.state.currentElem}
                 </MuiThemeProvider>
             </div>
         );

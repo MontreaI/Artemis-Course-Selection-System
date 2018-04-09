@@ -128,21 +128,21 @@ const styles = {
 };
 // * END OF STYLING * //
 
-class CourseOutline extends React.Component<RouteComponentProps<CourseOutlineProps>, State> {
+class CourseOutline extends React.Component<CourseOutlineProps, State> {
 
     static contextTypes = {
       router: PropTypes.object
     };
 
-    constructor(props: RouteComponentProps<CourseOutlineProps>) {
+    constructor(props: CourseOutlineProps) {
         super(props);
 
         this.state = {
-          mYearSelected: this.props.match.params.year,
-          mTermSelected: this.props.match.params.term,
-          mDepartmentSelected: this.props.match.params.dept,
-          mCourseNumberSelected: this.props.match.params.number,
-          mSectionNumberSelected: this.props.match.params.section, 
+          mYearSelected: this.props.year,
+          mTermSelected: this.props.term,
+          mDepartmentSelected: this.props.dept,
+          mCourseNumberSelected: this.props.number,
+          mSectionNumberSelected: this.props.section, 
           mSectionData: [],
           mSelectedSection: new CSection('', '', '', '', '', ''),
           courseOutline: new Course('', ''),
@@ -211,7 +211,7 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutlinePro
           });
 
         }, 
-        1000
+        500
       );
     }
 
@@ -241,7 +241,6 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutlinePro
         
         courseData.forEach(element => {
           if (element.number === node.number) {
-            alert('We have found ' + node.dept + ' ' + node.number + ' in ' + this.state.mTermSelected);
             found = true;
           }
         });
@@ -250,8 +249,15 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutlinePro
           alert('Could not find course for this semester');
         } else {
           this.state.api.getCourseSections(this.state.mYearSelected, this.state.mTermSelected, node.dept, node.number).then(sectionData => {
-            let section = this.getMainSection(sectionData);
-            this.loadPage(this.state.mYearSelected, this.state.mTermSelected, node.dept, node.number, section.sectionNum);
+              let section = this.getMainSection(sectionData);
+              this.setState({
+                  mDepartmentSelected: node.dept,
+                  mCourseNumberSelected: node.number,
+                  mSectionNumberSelected: section.sectionNum,
+                  courseTree: []
+              });
+              this.fetchOutline();
+            //this.loadPage(this.state.mYearSelected, this.state.mTermSelected, node.dept, node.number, section.sectionNum);
           });
         }
       });
@@ -472,4 +478,4 @@ class CourseOutline extends React.Component<RouteComponentProps<CourseOutlinePro
     }
 }
 
-export default withRouter(CourseOutline);
+export default CourseOutline;
