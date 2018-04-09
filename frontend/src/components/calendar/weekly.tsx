@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import * as PropTypes from 'prop-types';
 import { Course, CourseJsonObj } from '../pages/course-outline/course'; 
 import './weekly.css';
 import CourseApi from '../../utils/course-api';
+import CourseOutline from '../pages/course-outline/course-outline';
 
 enum Day {
     Monday,
@@ -27,6 +26,11 @@ interface ClassDateTime {
 interface WeeklyCourse {
     name: string;
     time: ClassDateTime[];
+    term: string;
+    dept: string;
+    number: string;
+    year: string;
+    section: string;
 }
 
 interface State {
@@ -52,20 +56,43 @@ function mapDayStringsToDays(days: string[]) {
         }
     });
 }
+interface Props {
+    viewCourseOutlineCallback: (elem: JSX.Element) => void;
+}
 
-class WeeklyView extends React.Component<{}, State> {
-    static contextTypes = {
-        router: PropTypes.object
-    };
-
-    constructor(props: {}, context: {}) {
+class WeeklyView extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             courses: []
         };
+
+        this.deleteCourse = this.deleteCourse.bind(this);
+        this.getCourses = this.getCourses.bind(this);
     }
 
-    componentDidMount() {
+    deleteCourse(course: WeeklyCourse) {
+        let user = sessionStorage.getItem('username');
+        if (user !== null) {
+            let api = new CourseApi();
+            let username: string = user;
+            global.console.log(`deleting course for user ${username}`);
+            api.getCourseOfUser(username, course.year, course.term, course.dept, course.number, course.section)
+                .then((id: string) => {
+                    let idStr = id.toString();
+                    if (idStr.length > 0) {
+                        global.console.log(`deleting ${id}`);
+                        api.deleteUserCourse(username, idStr).then(() => {
+                            this.getCourses();
+                        });
+                    } else {
+                        global.console.log(`id is ${id} of type ${typeof id}`);
+                    }
+                }); 
+        }
+    }
+
+    getCourses() {
         let user = sessionStorage.getItem('username');
         if (user !== null) {
             global.console.log(`getting courses for ${user}`);
@@ -73,11 +100,18 @@ class WeeklyView extends React.Component<{}, State> {
             api.getUserCourses(user).then((courses: Course[]) => {
                 global.console.log(`got ${courses.length} courses`);
                 let wCourses = courses.map(c => {
-                    global.console.log(c);
                     let course: WeeklyCourse = {
                         name: c.name,
-                        time: []
+                        time: [],
+                        term: '',
+                        section: c.sectionNum,
+                        dept: c.dept,
+                        number: c.number,
+                        year: '2015'
                     };
+                    course.term = c.term.split(' ')[0];
+                    let ts = c.courseSchedule[0].startDate.split(' ');
+                    course.year = ts[ts.length - 1];
 
                     for (let schedule of c.courseSchedule) {
                         let startTimes = schedule.startTime.split(':');
@@ -115,10 +149,13 @@ class WeeklyView extends React.Component<{}, State> {
         }
     }
 
+    componentDidMount() {
+        this.getCourses();
+    }
+
     render() {
         let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         let daysCols = days.map((day: string) => <th className={'timeCell'} key={day} >{day}</th>);
-
         let rows = [];
         for (let t = 0; t < (22 - 8) * 2; t++) {
             let elems = [];
@@ -160,11 +197,40 @@ class WeeklyView extends React.Component<{}, State> {
                 }
 
                 if (courses.length > 0) {
+
                     if (courses.length > 1) {
                         let coursesStr = courses.join(' ');
                         elems.push(<td className={'timeCell timeDup'} key={`${coursesStr}${d}`}>{coursesStr}</td>);
                     } else {
-                        elems.push(<td className={'timeCell classTime'} key={`${courses[0]}${d}`}>{courses[0]}</td>);
+                        let courseObject = this.state.courses.find((c => c.name === courses[0]));
+                        if (courseObject !== undefined) {
+                            let c: WeeklyCourse = courseObject;
+                            let elem = (
+                                <CourseOutline
+                                    year={courseObject.year}
+                                    term={courseObject.term}
+                                    dept={courseObject.dept}
+                                    number={courseObject.number}
+                                    section={courseObject.section}
+                                />);
+                            elems.push(
+                                <td
+                                    className={'timeCell classTime'}
+                                    key={`${courses[0]}${d}`}
+                                    
+                                >
+                                    <button className="courseNameButton" onClick={() => this.props.viewCourseOutlineCallback(elem)} >{courses[0]}</button>
+                                    <button className="deleteButton" onClick={() => this.deleteCourse(c)} >X</button>
+                                </td>);
+                        } else {
+                            elems.push(
+                                <td
+                                    className={'timeCell classTime'}
+                                    key={`${courses[0]}${d}`}
+                                >
+                                    {courses[0]}
+                                </td>);
+                        }
                     }
                 } else {
                     let timeString = t % 2 === 0 ? `${(t / 2) + 8}:00` : `${((t - 1) / 2) + 8}:30`;

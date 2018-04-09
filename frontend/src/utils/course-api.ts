@@ -93,6 +93,7 @@ class CourseApi {
                 course.prerequisites =  data.info.prerequisites;
                 course.units = data.info.units;
                 course.term = data.info.term;
+                course.sectionNum = courseSec;
 
                 //// COURSE SCHEDULE:
                 course.courseSchedule = data.courseSchedule;
@@ -124,8 +125,29 @@ class CourseApi {
             });
     }
 
-    private fetchUrl(urlString: string) {
-        return fetch(urlString)
+    public getCourseOfUser(username: string, year: string, term: string, department: string, courseNum: string, courseSec: string): Promise<string> {
+        return this.fetchUrl(`${Config.userCourseURL}${username}/${department}/${courseNum}/${courseSec}/${year}/${term}`)
+            .then((id: string) => id)
+            .catch(err => {
+                global.console.log(err);
+                return '';
+            });
+    }
+
+    public deleteUserCourse(username: string, id: string): Promise<boolean> {
+        global.console.log('deleting course for user');
+        return this.fetchUrl(`${Config.userCourseURL}${username}/${id}`, 'DELETE')
+            .then(() => true)
+            .catch(err => {
+                global.console.log(err);
+                return false;
+            });
+    }
+
+    private fetchUrl(urlString: string, m: string = 'GET') {
+        return fetch(urlString, {
+            method: m
+        })
         .then(response => {
           if (response.ok) {
             return response.json();

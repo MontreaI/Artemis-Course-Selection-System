@@ -82,6 +82,7 @@ export class Course {
     public sections: CSection[];
     public units: string;
     public term: string;
+    public sectionNum: string;
     
     // COURSE SCHEDULE:
     public courseSchedule: CourseSchedule[];

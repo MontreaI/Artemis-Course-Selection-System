@@ -84,7 +84,7 @@ class CourseSelectionLayout extends React.Component<RouteComponentProps<CourseSe
                 this.setState({ currentElem: <CourseSelectionForm viewCourseOutlineCallback={this.viewCourseOutline} /> });
                 break;
             case 1:
-                this.setState({ currentElem: <WeeklyView /> });
+                this.setState({ currentElem: <WeeklyView viewCourseOutlineCallback={this.viewCourseOutline} /> });
                 break;
         }
     }
