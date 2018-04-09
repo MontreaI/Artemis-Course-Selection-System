@@ -31,3 +31,25 @@ end
 execute 'npm_installs' do 
   command 'npm install -g pm2'
 end
+
+execute 'show_dir' do 
+  command 'ls'
+end
+
+execute 'build-frontend' do
+  cwd './vagrant/frontend'
+  command 'ls'
+  command 'npm install'
+  command 'npm run build'
+end
+
+execute 'build-backend' do
+  cwd './vagrant/backend'
+  command 'npm install'
+  command 'npm run build'
+end
+
+execute 'run-backend' do
+  cwd './vagrant/backend/dist'
+  command 'pm2 start ./server.js'
+end

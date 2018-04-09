@@ -9,7 +9,7 @@ VAGRANTFILE_API_VERSION = "2"
 # atlas.hashicorp.com, which means that removal broke the fetching and
 # updating of boxes (since the old URL doesn't work).  See
 # https://github.com/hashicorp/vagrant/issues/9442
-Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
+# Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/xenial64"
@@ -18,12 +18,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 80, host: 3376
+  config.vm.network "forwarded_port", guest: 3376, host: 3376
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   config.vm.synced_folder "./chef/cookbooks/baseconfig/files/", "/vagrant"
+  config.vm.synced_folder "../frontend", "/vagrant/frontend"
+  config.vm.synced_folder "../backend", "/vagrant/backend"
   # config.vm.synced_folder "../data", "/vagrant_data"
 
   # Provider-specific configuration so you can fine-tune various
@@ -31,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # If you need to more than double the defaults for this course, you have
   # done something wrong.
   cpus = "1"
-  memory = "512" # MB
+  memory = "1024" # MB
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--cpus", cpus, "--memory", memory]
     vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"] # speed up boot https://bugs.launchpad.net/cloud-images/+bug/1627844
