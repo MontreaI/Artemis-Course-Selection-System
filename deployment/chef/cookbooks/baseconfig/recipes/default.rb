@@ -40,6 +40,7 @@ execute 'build-frontend' do
   cwd './vagrant/frontend'
   command 'ls'
   command 'npm install'
+  command 'npm i react-scripts-ts'
   command 'npm run build'
 end
 
